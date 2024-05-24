@@ -1,0 +1,12 @@
+com.example.test2ambw.app-jetified-window-java-1.0.0-beta04-0 C:\Users\HP\.gradle\caches\transforms-3\43f0f7a8da99ce7f3d06f54e70644320\transformed\jetified-window-java-1.0.0-beta04\res
+com.example.test2ambw.app-core-1.6.0-1 C:\Users\HP\.gradle\caches\transforms-3\57d2891dda6b6f5971418432f20e3ce6\transformed\core-1.6.0\res
+com.example.test2ambw.app-jetified-window-1.0.0-beta04-2 C:\Users\HP\.gradle\caches\transforms-3\9705774bd5874e3ca31abbb9def0e54f\transformed\jetified-window-1.0.0-beta04\res
+com.example.test2ambw.app-jetified-annotation-experimental-1.1.0-3 C:\Users\HP\.gradle\caches\transforms-3\e8534f4657b5f0d33d7e8bf7dc6542f2\transformed\jetified-annotation-experimental-1.1.0\res
+com.example.test2ambw.app-debug-4 C:\xampp\htdocs\test2ambw\android\app\src\debug\res
+com.example.test2ambw.app-main-5 C:\xampp\htdocs\test2ambw\android\app\src\main\res
+com.example.test2ambw.app-pngs-6 C:\xampp\htdocs\test2ambw\build\app\generated\res\pngs\debug
+com.example.test2ambw.app-resValues-7 C:\xampp\htdocs\test2ambw\build\app\generated\res\resValues\debug
+com.example.test2ambw.app-rs-8 C:\xampp\htdocs\test2ambw\build\app\generated\res\rs\debug
+com.example.test2ambw.app-mergeDebugResources-9 C:\xampp\htdocs\test2ambw\build\app\intermediates\incremental\debug\mergeDebugResources\merged.dir
+com.example.test2ambw.app-mergeDebugResources-10 C:\xampp\htdocs\test2ambw\build\app\intermediates\incremental\debug\mergeDebugResources\stripped.dir
+com.example.test2ambw.app-merged_res-11 C:\xampp\htdocs\test2ambw\build\app\intermediates\merged_res\debug
