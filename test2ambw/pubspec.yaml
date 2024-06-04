@@ -19,13 +19,13 @@ flutter:
   uses-material-design: true
 
 assets:
-  - lib/assets/images/googlelogo1.png
+  - assets/images/googlelogo1.png
 
 fonts:
   - family: Lexend
     fonts:
-      - asset: lib/assets/fonts/Lexend/Lexend-Light.ttf
-      - asset: lib/assets/fonts/Lexend/Lexend-Regular.ttf
-      - asset: lib/assets/fonts/Lexend/Lexend-Bold.ttf
+      - asset: assets/fonts/Lexend/Lexend-Light.ttf
+      - asset: assets/fonts/Lexend/Lexend-Regular.ttf
+      - asset: assets/fonts/Lexend/Lexend-Bold.ttf
         # style: italic
         # weight: 700
