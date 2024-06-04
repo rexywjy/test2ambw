@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:test2ambw/components/loginbutton.dart';
 import '../components/loginTextField.dart';
 
 class LoginPage extends StatelessWidget {
@@ -6,6 +7,7 @@ class LoginPage extends StatelessWidget {
 
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
+  final Color mainBlue = Color.fromARGB(255, 3, 174, 210);
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +22,7 @@ class LoginPage extends StatelessWidget {
               Icon(
                 Icons.airplane_ticket_rounded, 
                 size: 100, 
-                color: Colors.grey[600]
+                color: mainBlue,
                 ),
               SizedBox(height: 50,),
 
@@ -46,7 +48,7 @@ class LoginPage extends StatelessWidget {
                 controller: passwordController, 
                 hintText: 'Password', 
                 obscureText: true, 
-                iconInput: Icon(Icons.lock)
+                iconInput: Icon(Icons.lock) 
                 ),
               SizedBox(height: 10,),
 
@@ -64,7 +66,10 @@ class LoginPage extends StatelessWidget {
                   ],
                 ),
               ),
+              SizedBox(height: 20,),
+
               // sign in button
+              LoginButton(),
               // or continue with
               // google sign in buttons
               // register button
