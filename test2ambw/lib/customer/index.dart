@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'login.dart';
 
 class HomeCustomer extends StatelessWidget {
   const HomeCustomer({super.key});
@@ -7,11 +8,7 @@ class HomeCustomer extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: Center(
-          child: Text('WOI CUSTOMER!'),
-        ),
-      ),
+      home: LoginPage(),
     );
   }
 }
