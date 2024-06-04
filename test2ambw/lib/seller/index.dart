@@ -7,6 +7,7 @@ class HomeSeller extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(fontFamily: 'Lexend'),
       home: Scaffold(
         body: Center(
           child: Text('WOI SELLER!'),

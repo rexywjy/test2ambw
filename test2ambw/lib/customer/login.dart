@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:test2ambw/components/loginbutton.dart';
+import '../components/loginbutton.dart';
 import '../components/loginTextField.dart';
 
 class LoginPage extends StatelessWidget {
@@ -8,10 +8,20 @@ class LoginPage extends StatelessWidget {
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
   final Color mainBlue = Color.fromARGB(255, 3, 174, 210);
+  final Color mainBlue2 = Color.fromARGB(255, 71, 147, 175);
+  final Color mainYellow = Color.fromARGB(255, 253, 222, 85);
+  final Color mainPastelYellow = Color.fromARGB(255, 254, 239, 173);
+
+  // sign in user button method
+  void signInUser() {
+    print('Username: ${usernameController.text}');
+    print('Password: ${passwordController.text}');
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // backgroundColor: mainBlue,
       backgroundColor: Colors.grey[200],
       body: SafeArea(
         child: Center(
@@ -22,7 +32,7 @@ class LoginPage extends StatelessWidget {
               Icon(
                 Icons.airplane_ticket_rounded, 
                 size: 100, 
-                color: mainBlue,
+                color: mainBlue2,
                 ),
               SizedBox(height: 50,),
 
@@ -69,7 +79,9 @@ class LoginPage extends StatelessWidget {
               SizedBox(height: 20,),
 
               // sign in button
-              LoginButton(),
+              LoginButton(
+                onTap: signInUser,
+              ),
               // or continue with
               // google sign in buttons
               // register button

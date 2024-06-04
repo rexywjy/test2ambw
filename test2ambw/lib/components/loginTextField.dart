@@ -7,7 +7,10 @@ class LoginTextField extends StatelessWidget {
   final Icon iconInput;
 
   static const Color mainBlue = Color.fromARGB(255, 3, 174, 210);
+  static const Color mainBlue2 = Color.fromARGB(255, 71, 147, 175);
   static const Color mainLightGrey = Color.fromARGB(255, 209, 209, 209);
+  static const Color mainYellow = Color.fromARGB(255, 253, 222, 85);
+  static const Color mainPastelYellow = Color.fromARGB(255, 254, 239, 173);
 
   const LoginTextField({
     super.key,
@@ -35,7 +38,7 @@ class LoginTextField extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: mainBlue),
+            borderSide: BorderSide(color: mainBlue2),
             borderRadius: BorderRadius.circular(10),
           ),
         ),
