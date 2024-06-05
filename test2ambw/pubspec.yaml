@@ -25,7 +25,10 @@ fonts:
   - family: Lexend
     fonts:
       - asset: assets/fonts/Lexend/Lexend-Light.ttf
+        weight: 300
       - asset: assets/fonts/Lexend/Lexend-Regular.ttf
+        weight: 500
       - asset: assets/fonts/Lexend/Lexend-Bold.ttf
+        weight: 700
         # style: italic
         # weight: 700

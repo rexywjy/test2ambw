@@ -21,6 +21,7 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset : false,
       // backgroundColor: mainBlue,
       backgroundColor: Colors.grey[200],
       body: SafeArea(
@@ -28,13 +29,13 @@ class LoginPage extends StatelessWidget {
           child: Column(
             children: [
               // logo
-              SizedBox(height: 50,),
+              const SizedBox(height: 50,),
               Icon(
                 Icons.airplane_ticket_rounded, 
                 size: 100, 
                 color: mainBlue2,
                 ),
-              SizedBox(height: 50,),
+              const SizedBox(height: 50,),
 
               // welcome back
               Text(
@@ -42,7 +43,7 @@ class LoginPage extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 20, 
                   color: Colors.grey[600])),
-              SizedBox(height: 20,),
+              const SizedBox(height: 20,),
 
               // email
               LoginTextField(
@@ -51,7 +52,7 @@ class LoginPage extends StatelessWidget {
                 obscureText: false, 
                 iconInput: Icon(Icons.email)
                 ),
-              SizedBox(height: 10,),
+              const SizedBox(height: 10,),
 
               // password
               LoginTextField(
@@ -60,7 +61,7 @@ class LoginPage extends StatelessWidget {
                 obscureText: true, 
                 iconInput: Icon(Icons.lock) 
                 ),
-              SizedBox(height: 10,),
+              const SizedBox(height: 10,),
 
               // forgot password?
               Padding(
@@ -76,13 +77,40 @@ class LoginPage extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(height: 20,),
+              const SizedBox(height: 20,),
 
               // sign in button
               LoginButton(
                 onTap: signInUser,
               ),
+              const SizedBox(height: 20,),
               // or continue with
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 12),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Divider(
+                        thickness: 0.5,
+                        color: Colors.grey[600],
+                      )
+                    ),
+                    Text(
+                      'Or continue with',
+                      style: TextStyle(
+                        color: Colors.grey[600],
+                        fontSize: 12
+                      ),
+                    ),
+                    Expanded(
+                      child: Divider(
+                        thickness: 0.5,
+                        color: Colors.grey[600],
+                      )
+                    )
+                  ],
+                ),
+              ),
               // google sign in buttons
               // register button
             ],
