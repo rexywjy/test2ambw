@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:test2ambw/components/squaretile.dart';
 import '../components/loginbutton.dart';
 import '../components/loginTextField.dart';
 
@@ -111,8 +113,33 @@ class LoginPage extends StatelessWidget {
                   ],
                 ),
               ),
+              const SizedBox(height: 10,),
               // google sign in buttons
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SquareTile(imagePath: 'assets/images/googlelogo1.png'),
+                  SizedBox(width: 30,),
+                  SquareTile(imagePath: 'assets/images/applelogo1.png'),
+                ],
+              ),
+              const SizedBox(height: 20,),
+
               // register button
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Didn't have an account? "),
+                  SizedBox(width: 5,),
+                  Text(
+                    'Register Now',
+                    style: TextStyle(
+                      color: Colors.blue[700],
+                      fontWeight: FontWeight.bold
+                    ),
+                  )
+                ],
+              ),
             ],
           ),
         ),
