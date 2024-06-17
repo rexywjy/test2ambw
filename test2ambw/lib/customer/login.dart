@@ -33,6 +33,15 @@ class _LoginPageState extends State<LoginPage> {
 
   // sign in user button method
   void signInUser() async {
+    if(usernameController.text.isEmpty || passwordController.text.isEmpty){
+      showDialog(
+        context: context,
+        builder: (context) {
+          return ErrorDialog(errormsg: "Please fill in all fields");
+        },
+      );
+      return;
+    }
     // Show the loading circle
     showDialog(
       context: context,

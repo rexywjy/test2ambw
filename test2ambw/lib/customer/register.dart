@@ -33,6 +33,15 @@ class _RegisterPageState extends State<RegisterPage> {
 
   // sign in user button method
   void signUpUser() async {
+    if(usernameController.text.isEmpty || passwordController.text.isEmpty || confirmpasswordController.text.isEmpty){
+      showDialog(
+        context: context,
+        builder: (context) {
+          return ErrorDialog(errormsg: "Please fill in all fields");
+        },
+      );
+      return;
+    }
     // Show the loading circle
     showDialog(
       context: context,
@@ -53,7 +62,7 @@ class _RegisterPageState extends State<RegisterPage> {
         showDialog(
           context: context,
           builder: (context) {
-            return ErrorDialog(errormsg: "Passwords do not match");
+            return ErrorDialog(errormsg: "Passwords doesn't match");
           },
         );
         return;

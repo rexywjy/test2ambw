@@ -14,6 +14,7 @@ class ErrorDialog extends StatelessWidget {
     final Color mainBlue2 = Color.fromARGB(255, 71, 147, 175);
     final Color mainYellow = Color.fromARGB(255, 253, 222, 85);
     final Color mainPastelYellow = Color.fromARGB(255, 254, 239, 173);
+    final TextAlign? textAlign;
     
     return AlertDialog(
       title: const Icon(
@@ -24,6 +25,7 @@ class ErrorDialog extends StatelessWidget {
       content: Center(
         heightFactor: 1.5,
         child: Text(
+          textAlign: TextAlign.center,
           errormsg,
           style: TextStyle(
             color: Colors.black,
