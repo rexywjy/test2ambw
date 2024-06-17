@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:test2ambw/components/singlesection.dart';
 import 'package:test2ambw/customer/custhistory.dart';
 import '../components/customlisttile.dart';
+import 'package:hexcolor/hexcolor.dart';
 
 class CustProfile extends StatefulWidget {
   const CustProfile({super.key});
@@ -14,6 +15,7 @@ class CustProfile extends StatefulWidget {
 class _CustProfileState extends State<CustProfile> {
   bool _isDark = false;
 
+  final Color mainAmber = HexColor('#FFBF00');
   
   void signUserOut() async {
     await FirebaseAuth.instance.signOut();
@@ -114,7 +116,7 @@ class _CustProfileState extends State<CustProfile> {
               ),
             ),
             SingleSection(
-              title: "General",
+              title: "Buyer",
               children: [
                 // CustomListTile(
                 //     title: "Dark Mode",
@@ -142,7 +144,7 @@ class _CustProfileState extends State<CustProfile> {
               title: "Seller",
               children: [
                 CustomListTile(
-                    title: "Products", icon: Icons.shopping_bag_outlined),
+                    title: "My Products", icon: Icons.shopping_bag_outlined),
                 CustomListTile(
                     title: "Seller Profile", icon: Icons.person_outline_rounded),
                 // CustomListTile(
@@ -161,36 +163,38 @@ class _CustProfileState extends State<CustProfile> {
                   icon: Icons.help_outline_rounded),
                 const CustomListTile(
                   title: "About", icon: Icons.info_outline_rounded),
-                ClipRRect(
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    bottomLeft: Radius.circular(20),
-                    bottomRight: Radius.circular(20),
-                    topRight: Radius.circular(20),
-                  ),
-                  child: Container(
-                    color: Colors.red,
-                    child: ListTile(
-                      leading: Icon(Icons.exit_to_app_rounded, color: Colors.white, size: 30,),
-                      title: const Text(
-                        "Sign out",
-                        style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold,)
-                      ),
-                      onTap: signUserOut,
-                      selected: true,
-                    ),
-                  )
-                ),
-                // ListTile(
-                //   tileColor: Colors.red,
-                //   title: Text(
-                //     "Sign out",
-                //     style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold,)
+                // ClipRRect(
+                //   borderRadius: const BorderRadius.only(
+                //     topLeft: Radius.circular(20),
+                //     bottomLeft: Radius.circular(20),
+                //     bottomRight: Radius.circular(20),
+                //     topRight: Radius.circular(20),
                 //   ),
-                //   leading: Icon(Icons.exit_to_app_rounded, color: Colors.white, size: 30,),
-                //   // trailing: trailing,
-                //   onTap: signUserOut,
+                //   child: Container(
+                //     color: Colors.red,
+                //     child: ListTile(
+                //       leading: Icon(Icons.exit_to_app_rounded, color: Colors.white, size: 30,),
+                //       title: const Text(
+                //         "Sign out",
+                //         style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold,)
+                //       ),
+                //       onTap: signUserOut,
+                //       selected: true,
+                //     ),
+                //   )
                 // ),
+                const Divider(),
+                ListTile(
+                  // tileColor: Colors.red,
+                  title: Text(
+                    "Sign out",
+                    style: TextStyle(color: Colors.red, fontSize: 16, fontWeight: FontWeight.w900,)
+                  ),
+                  leading: Icon(Icons.exit_to_app_rounded, color: Colors.red, size: 25,),
+                  // trailing: Icon(Icons.exit_to_app_rounded, color: Colors.red, size: 25,),
+                  // trailing: trailing,
+                  onTap: signUserOut,
+                ),
                 // CustomListTile(
                 //   title: "Sign out", 
                 //   icon: Icons.exit_to_app_rounded,

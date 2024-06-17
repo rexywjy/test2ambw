@@ -6,6 +6,7 @@ import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'customer/index.dart';
 import 'admin/index.dart';
+import 'package:hexcolor/hexcolor.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,6 +19,8 @@ void main() async {
 class MainApp extends StatelessWidget {
   final Color mainBlue = Color.fromARGB(255, 3, 174, 210);
   final Color mainYellow = Color.fromARGB(255, 253, 222, 85);
+
+  final Color mainAmber = HexColor('#FFBF00');
 
   MainApp({super.key});
 

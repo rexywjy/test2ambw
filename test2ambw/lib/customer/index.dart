@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:test2ambw/customer/profile.dart';
 import 'login.dart';
+import 'package:hexcolor/hexcolor.dart';
 
 class HomeCustomer extends StatefulWidget {
   HomeCustomer({super.key});
@@ -12,6 +13,8 @@ class HomeCustomer extends StatefulWidget {
 
 class _HomeCustomerState extends State<HomeCustomer> {
   final user = FirebaseAuth.instance.currentUser;
+
+  final Color mainAmber = HexColor('#FFBF00');
 
   int currentPageIndex = 0;
 
@@ -44,7 +47,8 @@ class _HomeCustomerState extends State<HomeCustomer> {
               currentPageIndex = index;
             });
           },
-          indicatorColor: Colors.amber,
+          backgroundColor: mainAmber,
+          indicatorColor: Colors.white,
           selectedIndex: currentPageIndex,
           destinations: const <Widget>[
             NavigationDestination(
