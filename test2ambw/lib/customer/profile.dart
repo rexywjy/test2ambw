@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:test2ambw/components/singlesection.dart';
+import 'package:test2ambw/customer/custhistory.dart';
 import '../components/customlisttile.dart';
 
 class CustProfile extends StatefulWidget {
@@ -16,6 +17,16 @@ class _CustProfileState extends State<CustProfile> {
   
   void signUserOut() async {
     await FirebaseAuth.instance.signOut();
+  }
+
+  void goToHistory() {
+    // Navigator.pushNamed(context, '/transactions');
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          // builder: (context) => DetailScreen(note: note, isNew: isNew)),
+          builder: (context) => CustHistory()),
+    );
   }
   
   @override
@@ -100,7 +111,7 @@ class _CustProfileState extends State<CustProfile> {
               ),
             ),
           ),
-          const SingleSection(
+          SingleSection(
             title: "General",
             children: [
               // CustomListTile(
@@ -115,11 +126,14 @@ class _CustProfileState extends State<CustProfile> {
               //         })),
                 CustomListTile(
                   title: "Transactions History",
-                  icon: Icons.view_list_outlined),
-                CustomListTile(
+                  icon: Icons.view_list_outlined,
+                  // method: () => Navigator.pushNamed(context, '/transactions')
+                  method: goToHistory,
+                ),
+                const CustomListTile(
                   title: "Notifications",
                   icon: Icons.notifications_none_rounded),
-                CustomListTile(
+                const CustomListTile(
                   title: "Security Status",
                   icon: Icons.shield_outlined
                   ),
