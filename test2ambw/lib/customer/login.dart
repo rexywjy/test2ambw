@@ -53,21 +53,54 @@ class _LoginPageState extends State<LoginPage> {
       // Dismiss the loading circle
       Navigator.pop(context);
       // Optionally, show an error dialog or a message to the user
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text('Error'),
-            content: Text(e.message ?? 'An error occurred'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text('OK'),
+      print("Error code: " + e.code);
+      if((e.code != 'user-not-found' && e.code != 'wrong-password' && e.code != 'invalid-credential')){
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: const Icon(
+                Icons.error,
+                color: Colors.red,
+                
               ),
-            ],
-          );
-        },
-      );
+              content: Center(
+                heightFactor: 1.5,
+                child: Text(e.message ?? 'An error occurred')
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      }else{
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: const Icon(
+                Icons.error,
+                color: Colors.red,
+              ),
+              content: Center(
+                heightFactor: 1.5,
+                child: Text('Invalid email or password')
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      
+      }
     }
   }
 
