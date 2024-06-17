@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:test2ambw/components/errordialog.dart';
 import 'package:test2ambw/components/squaretile.dart';
 import '../components/loginbutton.dart';
 import '../components/loginTextField.dart';
@@ -19,8 +20,8 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   final usernameController = TextEditingController();
-
   final passwordController = TextEditingController();
+  final confirmpasswordController = TextEditingController();
 
   final Color mainBlue = Color.fromARGB(255, 3, 174, 210);
 
@@ -46,7 +47,19 @@ class _RegisterPageState extends State<RegisterPage> {
     );
 
     try {
-      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+      if(confirmpasswordController.text != passwordController.text){
+        // Dismiss the loading circle
+        Navigator.pop(context);
+        showDialog(
+          context: context,
+          builder: (context) {
+            return ErrorDialog(errormsg: "Passwords do not match");
+          },
+        );
+        return;
+      }
+
+      final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: usernameController.text,
         password: passwordController.text,
       );
@@ -63,72 +76,20 @@ class _RegisterPageState extends State<RegisterPage> {
         showDialog(
           context: context,
           builder: (context) {
-            return AlertDialog(
-              title: const Icon(
-                Icons.error,
-                color: Colors.red,
-              ),
-              content: Center(
-                heightFactor: 1.5,
-                child: Text(e.message ?? 'An error occurred')
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: Text('OK'),
-                ),
-              ],
-            );
+            return ErrorDialog(errormsg: e.message ?? 'An error occurred');
           },
         );
       }else{
         showDialog(
           context: context,
           builder: (context) {
-            return AlertDialog(
-              title: const Icon(
-                Icons.error,
-                color: Colors.red,
-              ),
-              content: Center(
-                heightFactor: 1.5,
-                child: Text('Invalid email or password')
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: Text('OK'),
-                ),
-              ],
-            );
+            return ErrorDialog(errormsg: "Invalid email or password");
           },
         );
       
       }
     }
   }
-
-  // void signUpUser() async {
-  //   // print('Username: ${usernameController.text}');
-  //   // print('Password: ${passwordController.text}');
-  //   // sign in loading circle
-  //   // showDialog(
-  //   //   context: context, 
-  //   //   builder: (context) {
-  //   //     return const Center(
-  //   //       child: CircularProgressIndicator(
-  //   //         // valueColor: AlwaysStoppedAnimation<Color>(mainBlue),
-  //   //       ),
-  //   //     );
-  //   //   },
-  //   // );
-
-  //   await FirebaseAuth.instance.signUpWithEmailAndPassword(
-  //     email: usernameController.text,
-  //     password: passwordController.text
-  //   );
-  //   // Navigator.pop(context);
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -150,15 +111,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   color: mainBlue2,
                   ),
                 const SizedBox(height: 50,),
-        
-                // welcome back
-                Text(
-                  'Welcome Back, Traveler!', 
-                  style: TextStyle(
-                    fontSize: 20, 
-                    color: Colors.grey[600])),
-                const SizedBox(height: 20,),
-        
+
                 // email
                 LoginTextField(
                   controller: usernameController, 
@@ -167,7 +120,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   iconInput: Icon(Icons.email)
                   ),
                 const SizedBox(height: 10,),
-        
+
                 // password
                 LoginTextField(
                   controller: passwordController, 
@@ -179,29 +132,13 @@ class _RegisterPageState extends State<RegisterPage> {
                 
                 // confirm password
                 LoginTextField(
-                  controller: passwordController, 
+                  controller: confirmpasswordController, 
                   hintText: 'Confirm Password', 
                   obscureText: true, 
                   iconInput: Icon(Icons.lock) 
                   ),
-                const SizedBox(height: 10,),
-        
-                // forgot password?
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        'Forgot Password?', 
-                        style: TextStyle(color: Colors.grey[600]),
-                        
-                        ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 20,),
-        
+                const SizedBox(height: 40,),
+
                 // sign in button
                 LoginButton(
                   onTap: signUpUser,

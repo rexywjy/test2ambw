@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:test2ambw/components/errordialog.dart';
 import 'package:test2ambw/components/squaretile.dart';
 import '../components/loginbutton.dart';
 import '../components/loginTextField.dart';
@@ -63,44 +64,14 @@ class _LoginPageState extends State<LoginPage> {
         showDialog(
           context: context,
           builder: (context) {
-            return AlertDialog(
-              title: const Icon(
-                Icons.error,
-                color: Colors.red,
-              ),
-              content: Center(
-                heightFactor: 1.5,
-                child: Text(e.message ?? 'An error occurred')
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: Text('OK'),
-                ),
-              ],
-            );
+            return ErrorDialog(errormsg: e.message ?? "An error occurred");
           },
         );
       }else{
         showDialog(
           context: context,
           builder: (context) {
-            return AlertDialog(
-              title: const Icon(
-                Icons.error,
-                color: Colors.red,
-              ),
-              content: Center(
-                heightFactor: 1.5,
-                child: Text('Invalid email or password')
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: Text('OK'),
-                ),
-              ],
-            );
+            return ErrorDialog(errormsg: "Invalid email or password");
           },
         );
       
@@ -196,7 +167,7 @@ class _LoginPageState extends State<LoginPage> {
                 // sign in button
                 LoginButton(
                   onTap: signInUser,
-                  buttontext: 'Login',
+                  buttontext: 'Sign In',
                 ),
                 const SizedBox(height: 20,),
                 // or continue with
