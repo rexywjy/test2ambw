@@ -32,7 +32,7 @@ class _CustProfileState extends State<CustProfile> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(12.0),
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Scaffold(
         body: ListView(
           children: [
@@ -135,29 +135,25 @@ class _CustProfileState extends State<CustProfile> {
                   const CustomListTile(
                     title: "Notifications",
                     icon: Icons.notifications_none_rounded),
-                  const CustomListTile(
-                    title: "Security Status",
-                    icon: Icons.shield_outlined
-                    ),
               ],
             ),
             const Divider(),
-            // const SingleSection(
-            //   title: "Organization",
-            //   children: [
-            //     CustomListTile(
-            //         title: "Profile", icon: Icons.person_outline_rounded),
-            //     CustomListTile(
-            //         title: "Messaging", icon: Icons.message_outlined),
-            //     CustomListTile(
-            //         title: "Calling", icon: Icons.phone_outlined),
-            //     CustomListTile(
-            //         title: "People", icon: Icons.contacts_outlined),
-            //     CustomListTile(
-            //         title: "Calendar", icon: Icons.calendar_today_rounded)
-            //   ],
-            // ),
-            // const Divider(),
+            const SingleSection(
+              title: "Seller",
+              children: [
+                CustomListTile(
+                    title: "Products", icon: Icons.shopping_bag_outlined),
+                CustomListTile(
+                    title: "Seller Profile", icon: Icons.person_outline_rounded),
+                // CustomListTile(
+                //     title: "Calling", icon: Icons.phone_outlined),
+                // CustomListTile(
+                //     title: "People", icon: Icons.contacts_outlined),
+                // CustomListTile(
+                //     title: "Calendar", icon: Icons.calendar_today_rounded)
+              ],
+            ),
+            const Divider(),
             SingleSection(
               children: [
                 const CustomListTile(
