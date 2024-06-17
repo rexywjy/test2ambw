@@ -20,44 +20,51 @@ class _HomeCustomerState extends State<HomeCustomer> {
   void signUserOut() async {
     await FirebaseAuth.instance.signOut();
   }
+  
+  void _onItemTapped(int index) {
+    setState(() {
+      currentPageIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: NavigationBar(
-        // labelBehavior: labelBehavior,
-        // selectedIndex: currentPageIndex,
-        // onDestinationSelected: (int index) {
-        //   setState(() {
-        //     currentPageIndex = index;
-        //   });
-        // },
-        onDestinationSelected: (int index) {
-          setState(() {
-            currentPageIndex = index;
-          });
-        },
-        indicatorColor: Colors.amber,
-        selectedIndex: currentPageIndex,
-        destinations: const <Widget>[
-          NavigationDestination(
-            selectedIcon: Icon(Icons.home),
-            icon: Icon(Icons.home_outlined),
-            label: 'Home',
-          ),
-          NavigationDestination(
-            selectedIcon: Icon(Icons.shopping_cart),
-            icon: Icon(Icons.shopping_cart_outlined),
-            label: 'Cart',
-          ),
-          NavigationDestination(
-            selectedIcon: Icon(Icons.person),
-            icon: Icon(Icons.person_outline),
-            label: 'Profile',
-          ),
-        ],
-        
-      ),
+      bottomNavigationBar: 
+        NavigationBar(
+          labelBehavior: labelBehavior,
+          // selectedIndex: currentPageIndex,
+          // onDestinationSelected: (int index) {
+          //   setState(() {
+          //     currentPageIndex = index;
+          //   });
+          // },
+          onDestinationSelected: (int index) {
+            setState(() {
+              currentPageIndex = index;
+            });
+          },
+          indicatorColor: Colors.amber,
+          selectedIndex: currentPageIndex,
+          destinations: const <Widget>[
+            NavigationDestination(
+              selectedIcon: Icon(Icons.home),
+              icon: Icon(Icons.home_outlined),
+              label: 'Home',
+            ),
+            NavigationDestination(
+              selectedIcon: Icon(Icons.shopping_cart),
+              icon: Icon(Icons.shopping_cart_outlined),
+              label: 'Cart',
+            ),
+            NavigationDestination(
+              selectedIcon: Icon(Icons.person),
+              icon: Icon(Icons.person_outline),
+              label: 'Profile',
+            ),
+          ],
+          
+        ),
       body: const <Widget>[
           Center(
             child: Text('Home'),
@@ -69,6 +76,25 @@ class _HomeCustomerState extends State<HomeCustomer> {
             child: CustProfile(),
           ),
         ][currentPageIndex],
+      // bottomNavigationBar: BottomNavigationBar(
+      //   items: const [
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.home_outlined),
+      //       label: 'Home',
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.shopping_cart_outlined),
+      //       label: 'Cart',
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.person_outline),
+      //       label: 'Profile',
+      //     ),
+      //   ],
+      //   currentIndex: currentPageIndex,
+      //   selectedItemColor: Colors.amber[800],
+      //   onTap: _onItemTapped,
+      // ),
     );
   }
 }

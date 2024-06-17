@@ -56,7 +56,7 @@ class _CustProfileState extends State<CustProfile> {
                               image: DecorationImage(
                                   fit: BoxFit.cover,
                                   image: NetworkImage(
-                                      'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80')),
+                                      'https://static1.cbrimages.com/wordpress/wp-content/uploads/2021/07/JK-Simmons-J-Jonah-Jameson-Header-1.jpg')),
                             ),
                           ),
                           // Positioned(
@@ -78,7 +78,7 @@ class _CustProfileState extends State<CustProfile> {
                   ),
                   const SizedBox(height: 16),
                   const Text(
-                    "Andrew Garfield",
+                    "Peter J. Jameson",
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
