@@ -62,7 +62,6 @@ class _LoginPageState extends State<LoginPage> {
               title: const Icon(
                 Icons.error,
                 color: Colors.red,
-
               ),
               content: Center(
                 heightFactor: 1.5,
