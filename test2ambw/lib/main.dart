@@ -1,4 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:test2ambw/customer/login.dart';
+import 'package:test2ambw/others/auth.dart';
 import 'firebase_options.dart';
 
 import 'package:flutter/material.dart';
@@ -24,7 +26,8 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: 'Lexend'),
-      home: HomeCustomer(),
+      // home: HomeCustomer(),
+      home: AuthPage(),
       // home: Scaffold(
       //   body: Center(
       //     child: Text('Hello World!'),

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:test2ambw/components/squaretile.dart';
@@ -15,9 +16,13 @@ class LoginPage extends StatelessWidget {
   final Color mainPastelYellow = Color.fromARGB(255, 254, 239, 173);
 
   // sign in user button method
-  void signInUser() {
-    print('Username: ${usernameController.text}');
-    print('Password: ${passwordController.text}');
+  void signInUser() async {
+    // print('Username: ${usernameController.text}');
+    // print('Password: ${passwordController.text}');
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: usernameController.text,
+      password: passwordController.text
+    );
   }
 
   @override

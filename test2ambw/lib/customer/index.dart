@@ -6,10 +6,13 @@ class HomeCustomer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(fontFamily: 'Lexend'),
-      home: LoginPage(),
+    return Scaffold(
+      body: Center(child: Text("LOGGED IN!"),),
     );
+    // return MaterialApp(
+    //   debugShowCheckedModeBanner: false,
+    //   theme: ThemeData(fontFamily: 'Lexend'),
+    //   home: LoginPage(),
+    // );
   }
 }
