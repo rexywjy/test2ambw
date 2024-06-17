@@ -105,7 +105,7 @@ class _RegisterPageState extends State<RegisterPage> {
     return Scaffold(
       resizeToAvoidBottomInset : false,
       // backgroundColor: mainBlue,
-      backgroundColor: Colors.grey[200],
+      // backgroundColor: Colors.grey[200],
       body: SingleChildScrollView (
         physics: const NeverScrollableScrollPhysics(),
         child: SafeArea(
