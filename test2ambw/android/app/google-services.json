@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "70025538383",
+    "project_id": "travelecommerce-7272f",
+    "storage_bucket": "travelecommerce-7272f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:70025538383:android:e50ffe44373693e7e8b33a",
+        "android_client_info": {
+          "package_name": "com.example.test2ambw"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCIDmSUz2J1PPkOVEX-_POWI_gADep7I14"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
