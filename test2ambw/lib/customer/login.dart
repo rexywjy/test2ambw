@@ -5,25 +5,93 @@ import 'package:test2ambw/components/squaretile.dart';
 import '../components/loginbutton.dart';
 import '../components/loginTextField.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   LoginPage({super.key});
 
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   final usernameController = TextEditingController();
+
   final passwordController = TextEditingController();
+
   final Color mainBlue = Color.fromARGB(255, 3, 174, 210);
+
   final Color mainBlue2 = Color.fromARGB(255, 71, 147, 175);
+
   final Color mainYellow = Color.fromARGB(255, 253, 222, 85);
+
   final Color mainPastelYellow = Color.fromARGB(255, 254, 239, 173);
 
   // sign in user button method
   void signInUser() async {
-    // print('Username: ${usernameController.text}');
-    // print('Password: ${passwordController.text}');
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: usernameController.text,
-      password: passwordController.text
+    // Show the loading circle
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return Center(
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(mainBlue),
+          ),
+        );
+      },
     );
+
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: usernameController.text,
+        password: passwordController.text,
+      );
+      // If successful, pop the loading circle
+      Navigator.pop(context);
+    } on FirebaseAuthException catch (e) {
+      // Handle the error, show a message, etc.
+      print('Error: $e');
+      // Dismiss the loading circle
+      Navigator.pop(context);
+      // Optionally, show an error dialog or a message to the user
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text(e.message ?? 'An error occurred'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
+
+  // void signInUser() async {
+  //   // print('Username: ${usernameController.text}');
+  //   // print('Password: ${passwordController.text}');
+  //   // sign in loading circle
+  //   // showDialog(
+  //   //   context: context, 
+  //   //   builder: (context) {
+  //   //     return const Center(
+  //   //       child: CircularProgressIndicator(
+  //   //         // valueColor: AlwaysStoppedAnimation<Color>(mainBlue),
+  //   //       ),
+  //   //     );
+  //   //   },
+  //   // );
+
+  //   await FirebaseAuth.instance.signInWithEmailAndPassword(
+  //     email: usernameController.text,
+  //     password: passwordController.text
+  //   );
+  //   // Navigator.pop(context);
+  // }
 
   @override
   Widget build(BuildContext context) {

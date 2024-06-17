@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'login.dart';
 
 class HomeCustomer extends StatelessWidget {
-  const HomeCustomer({super.key});
+  HomeCustomer({super.key});
+
+  final user = FirebaseAuth.instance.currentUser;
 
   void signUserOut() async {
     await FirebaseAuth.instance.signOut();
@@ -14,14 +16,14 @@ class HomeCustomer extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset : false,
       appBar: AppBar(
-        title: Text('Home Customer'),
+        title: Text('YOLO'),
         actions: [
           IconButton(
             icon: Icon(Icons.logout),
             onPressed: signUserOut,
           ),],
       ),
-      body: Center(child: Text("LOGGED IN!"),),
+      body: Center(child: Text("Welcome back, " + user!.email!),),
     );
     // return MaterialApp(
     //   debugShowCheckedModeBanner: false,
