@@ -27,7 +27,7 @@ class MainApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: 'Lexend'),
       // home: HomeCustomer(),
-      home: AuthPage(),
+      home: const AuthPage(),
       // home: Scaffold(
       //   body: Center(
       //     child: Text('Hello World!'),
