@@ -68,13 +68,11 @@ class _CustProfileState extends State<CustProfile> {
                   const SizedBox(height: 16),
                   const Text(
                     "Richie Lorie",
-                    // style: Theme.of(context)
-                    //     .textTheme
-                    //     // .headline6
-                    //     // ?
-                    //     .copyWith(fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  const SizedBox(height: 16),
                   // Row(
                   //   mainAxisAlignment: MainAxisAlignment.center,
                   //   children: [
@@ -96,7 +94,7 @@ class _CustProfileState extends State<CustProfile> {
                   //     ),
                   //   ],
                   // ),
-                  const SizedBox(height: 16),
+                  // const SizedBox(height: 16),
                   // const _ProfileInfoRow()
                 ],
               ),
