@@ -30,7 +30,30 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  var menuData;
+
+  Future<dynamic> fetchTourData(menuType) async {
+    var resp = await Supabase.instance.client.from(menuType).select();
+    print(resp);
+
+    setState(() {
+      menuData = resp;
+    });
+
+    return resp;
+  }
+
+  @override
+  void initState() {
+    fetchTourData("tours");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,35 +69,54 @@ class MyHomePage extends StatelessWidget {
           children: <Widget>[
             Padding(
                 padding: const EdgeInsets.only(right: 10),
-                child: Text(
-                  "Tours",
-                  style: GoogleFonts.montserrat(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black),
+                child: GestureDetector(
+                  onTap: () {
+                    fetchTourData('tours');
+                  },
+                  child: Text(
+                    "Tours",
+                    style: GoogleFonts.montserrat(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black),
+                  ),
                 )),
             Padding(
                 padding: const EdgeInsets.only(right: 10),
-                child: Text(
-                  "Destinations",
-                  style: GoogleFonts.montserrat(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.grey),
+                child: GestureDetector(
+                  onTap: () {
+                    fetchTourData('destinations');
+                  },
+                  child: Text(
+                    "Destinations",
+                    style: GoogleFonts.montserrat(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black),
+                  ),
                 )),
             Padding(
                 padding: const EdgeInsets.only(right: 10),
-                child: Text(
-                  "Hotels",
-                  style: GoogleFonts.montserrat(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.grey),
+                child: GestureDetector(
+                  onTap: () {
+                    fetchTourData('hotels');
+                  },
+                  child: Text(
+                    "Hotels",
+                    style: GoogleFonts.montserrat(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black),
+                  ),
                 )),
           ],
         ),
         //Placeholder for the carousel
-        ScrollImageCarousel(),
+        menuData == null
+            ? CircularProgressIndicator()
+            : ScrollImageCarousel(
+                menuData: menuData,
+              ),
         Padding(
           padding: const EdgeInsets.only(top: 30.0, bottom: 20.0),
           child: Text('Explore More',
