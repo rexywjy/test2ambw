@@ -53,6 +53,38 @@ class ScrollImageCarouselHotel extends StatelessWidget {
                     ),
                   ),
                   Positioned(
+                    top: 10,
+                    right: 10,
+                    child: Stack(children: <Widget>[
+                      Container(
+                        width: 60,
+                        height: 20,
+                        decoration: BoxDecoration(
+                            color: Color(0xFFFFA800),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20))),
+                      ),
+                      Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 5, right: 5),
+                            child: FaIcon(
+                              FontAwesomeIcons.solidStar,
+                              size: 12,
+                              color: Colors.white,
+                            ),
+                          ),
+                          Text(
+                            '${tour['RatingHotel'].toStringAsFixed(1)}',
+                            style: GoogleFonts.montserrat(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          )
+                        ],
+                      )
+                    ]),
+                  ),
+                  Positioned(
                     bottom: 10,
                     left: 15,
                     child: Column(
