@@ -5,10 +5,11 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:travel_app/main.dart';
 
-class ScrollImageCarousel extends StatelessWidget {
+class ScrollImageCarouselDestination extends StatelessWidget {
   var menuData;
 
-  ScrollImageCarousel({Key? key, required this.menuData}) : super(key: key);
+  ScrollImageCarouselDestination({Key? key, required this.menuData})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -57,33 +58,24 @@ class ScrollImageCarousel extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        RichText(
-                          text: TextSpan(
-                            children: <InlineSpan>[
-                              TextSpan(
-                                text: tour['departure_location'] + " ",
-                                style: GoogleFonts.montserrat(
-                                  color: Colors.white,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const WidgetSpan(
-                                child: FaIcon(
-                                  FontAwesomeIcons.plane,
-                                  size: 15,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              TextSpan(
-                                text: ' ' + tour['destination_location'],
-                                style: GoogleFonts.montserrat(
-                                  color: Colors.white,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
+                        SizedBox(
+                          width: 200,
+                          child: Text(
+                            tour['attraction_name'],
+                            style: GoogleFonts.montserrat(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            overflow: TextOverflow.clip,
+                          ),
+                        ),
+                        Text(
+                          tour['country'],
+                          style: GoogleFonts.montserrat(
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontStyle: FontStyle.italic,
                           ),
                         ),
                         Text(
@@ -91,7 +83,7 @@ class ScrollImageCarousel extends StatelessWidget {
                           style: GoogleFonts.montserrat(
                             color: Colors.white,
                             fontSize: 14,
-                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                         SizedBox(

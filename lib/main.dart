@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 // import 'utils/bottom_navbar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:travel_app/carousel.dart';
+import 'package:travel_app/carouselDestination.dart';
+import 'package:travel_app/carouselHotel.dart';
 import 'package:travel_app/utils/bottom_navbar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -12,9 +14,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Supabase.initialize(
-    url: 'https://jckbqnbwxuvspcdowcrm.supabase.co',
+    url: 'https://ydscvaytbbvwrofeojpj.supabase.co',
     anonKey:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impja2JxbmJ3eHV2c3BjZG93Y3JtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTg3MDU2MTEsImV4cCI6MjAzNDI4MTYxMX0.yrhPSjsoWmIxSWqk0tXccjqYn7L9DJ2FbEMBK2FeGPo',
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlkc2N2YXl0YmJ2d3JvZmVvanBqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTY1NTMyNTgsImV4cCI6MjAzMjEyOTI1OH0.R1YdW0VOhciEb6aO1ljiUT1iZrKilWoEoi4_K9xN_Y8',
   );
   runApp(MyApp());
 }
@@ -37,6 +39,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   var menuData;
+  var selectedButton = 'tours';
 
   Future<dynamic> fetchTourData(menuType) async {
     var resp = await Supabase.instance.client.from(menuType).select();
@@ -51,7 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
-    fetchTourData("tours");
+    fetchTourData("mtour2");
   }
 
   @override
@@ -71,52 +74,83 @@ class _MyHomePageState extends State<MyHomePage> {
                 padding: const EdgeInsets.only(right: 10),
                 child: GestureDetector(
                   onTap: () {
-                    fetchTourData('tours');
+                    fetchTourData('mtour2');
+                    selectedButton = 'tours';
                   },
                   child: Text(
                     "Tours",
                     style: GoogleFonts.montserrat(
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
-                        color: Colors.black),
+                        color: selectedButton == 'tours'
+                            ? Color(0xFFFFA800)
+                            : Colors.grey,
+                        decoration: selectedButton == 'tours'
+                            ? TextDecoration.underline
+                            : null,
+                        decorationColor: Color(0xFFFFA800)),
                   ),
                 )),
             Padding(
                 padding: const EdgeInsets.only(right: 10),
                 child: GestureDetector(
                   onTap: () {
-                    fetchTourData('destinations');
+                    fetchTourData('mdestinations');
+                    selectedButton = 'destinations';
                   },
                   child: Text(
                     "Destinations",
                     style: GoogleFonts.montserrat(
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
-                        color: Colors.black),
+                        color: selectedButton == 'destinations'
+                            ? Color(0xFFFFA800)
+                            : Colors.grey,
+                        decoration: selectedButton == 'destinations'
+                            ? TextDecoration.underline
+                            : null,
+                        decorationColor: Color(0xFFFFA800)),
                   ),
                 )),
             Padding(
                 padding: const EdgeInsets.only(right: 10),
                 child: GestureDetector(
                   onTap: () {
-                    fetchTourData('hotels');
+                    fetchTourData('mhotel');
+                    selectedButton = 'hotels';
                   },
                   child: Text(
                     "Hotels",
                     style: GoogleFonts.montserrat(
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
-                        color: Colors.black),
+                        color: selectedButton == 'hotels'
+                            ? Color(0xFFFFA800)
+                            : Colors.grey,
+                        decoration: selectedButton == 'hotels'
+                            ? TextDecoration.underline
+                            : null,
+                        decorationColor: Color(0xFFFFA800)),
                   ),
                 )),
           ],
         ),
+        Divider(
+          color: Colors.black,
+          thickness: 0.2,
+        ),
         //Placeholder for the carousel
         menuData == null
             ? CircularProgressIndicator()
-            : ScrollImageCarousel(
-                menuData: menuData,
-              ),
+            : selectedButton == 'tours'
+                ? ScrollImageCarousel(
+                    menuData: menuData,
+                  )
+                : selectedButton == 'destinations'
+                    ? ScrollImageCarouselDestination(menuData: menuData)
+                    : selectedButton == 'hotels'
+                        ? ScrollImageCarouselHotel(menuData: menuData)
+                        : CircularProgressIndicator(),
         Padding(
           padding: const EdgeInsets.only(top: 30.0, bottom: 20.0),
           child: Text('Explore More',
@@ -127,150 +161,353 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  width: 60,
-                  height: 60,
-                  decoration: BoxDecoration(
-                      color: Color(0xFFFFA800),
-                      borderRadius: BorderRadius.circular(10)),
-                ),
-                Text(
-                  "Hotels",
-                  style: GoogleFonts.montserrat(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black),
-                )
-              ],
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  width: 60,
-                  height: 60,
-                  decoration: BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.circular(10)),
-                ),
-                Text(
-                  "Airplanes",
-                  style: GoogleFonts.montserrat(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black),
-                )
-              ],
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  width: 60,
-                  height: 60,
-                  decoration: BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.circular(10)),
-                ),
-                Text(
-                  "Tours",
-                  style: GoogleFonts.montserrat(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black),
-                )
-              ],
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  width: 60,
-                  height: 60,
-                  decoration: BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.circular(10)),
-                ),
-                Text(
-                  "Destinations",
-                  style: GoogleFonts.montserrat(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black),
-                )
-              ],
-            ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(top: 20.0, right: 10),
+            SizedBox(
+              width: 85,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(right: 20),
-                    width: 60,
-                    height: 60,
-                    decoration: BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.circular(10)),
-                  ),
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Stack(children: <Widget>[
+                    Container(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        color: Color(0xFFFFA800),
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black26,
+                            offset: Offset(0, 2),
+                            blurRadius: 2,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Positioned.fill(
+                      child: Align(
+                        child: FaIcon(
+                          FontAwesomeIcons.hotel,
+                          size: 35,
+                          color: Colors.white,
+                        ),
+                      ),
+                    )
+                  ]),
                   Text(
                     "Hotels",
                     style: GoogleFonts.montserrat(
-                        fontSize: 16,
+                        fontSize: 12,
                         fontWeight: FontWeight.w500,
                         color: Colors.black),
                   )
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 20.0, right: 10),
-              child: Container(
-                margin: const EdgeInsets.only(right: 20),
-                width: 60,
-                height: 60,
-                decoration: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.circular(10)),
+            SizedBox(
+              width: 85,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Stack(children: <Widget>[
+                    Container(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        color: Color(0xFFFFA800),
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black26,
+                            offset: Offset(0, 2),
+                            blurRadius: 2,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Positioned.fill(
+                      child: Align(
+                        child: FaIcon(
+                          FontAwesomeIcons.locationDot,
+                          size: 35,
+                          color: Colors.white,
+                        ),
+                      ),
+                    )
+                  ]),
+                  Text(
+                    "Attractions",
+                    style: GoogleFonts.montserrat(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black),
+                  )
+                ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 20.0, right: 10),
-              child: Container(
-                margin: const EdgeInsets.only(right: 20),
-                width: 60,
-                height: 60,
-                decoration: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.circular(10)),
+            SizedBox(
+              width: 85,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Stack(children: <Widget>[
+                    Container(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        color: Color(0xFFFFA800),
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black26,
+                            offset: Offset(0, 2),
+                            blurRadius: 2,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Positioned.fill(
+                      child: Align(
+                        child: FaIcon(
+                          FontAwesomeIcons.boxOpen,
+                          size: 35,
+                          color: Colors.white,
+                        ),
+                      ),
+                    )
+                  ]),
+                  Text(
+                    "Tours",
+                    style: GoogleFonts.montserrat(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black),
+                  )
+                ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 20.0),
-              child: Container(
-                margin: const EdgeInsets.only(right: 20),
-                width: 60,
-                height: 60,
-                decoration: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.circular(10)),
+            SizedBox(
+              width: 85,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Stack(children: <Widget>[
+                    Container(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        color: Color(0xFFFFA800),
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black26,
+                            offset: Offset(0, 2),
+                            blurRadius: 2,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Positioned.fill(
+                      child: Align(
+                        child: FaIcon(
+                          FontAwesomeIcons.plane,
+                          size: 35,
+                          color: Colors.white,
+                        ),
+                      ),
+                    )
+                  ]),
+                  Text(
+                    "Airplane",
+                    style: GoogleFonts.montserrat(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black),
+                  )
+                ],
               ),
             ),
           ],
-        )
+        ),
+        SizedBox(
+          height: 20,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            SizedBox(
+              width: 85,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Stack(children: <Widget>[
+                    Container(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        color: Color(0xFFFFA800),
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black26,
+                            offset: Offset(0, 2),
+                            blurRadius: 2,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Positioned.fill(
+                      child: Align(
+                        child: FaIcon(
+                          FontAwesomeIcons.plane,
+                          size: 35,
+                          color: Colors.white,
+                        ),
+                      ),
+                    )
+                  ]),
+                  Text(
+                    "Airplane",
+                    style: GoogleFonts.montserrat(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black),
+                  )
+                ],
+              ),
+            ),
+            SizedBox(
+              width: 85,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Stack(children: <Widget>[
+                    Container(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        color: Color(0xFFFFA800),
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black26,
+                            offset: Offset(0, 2),
+                            blurRadius: 2,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Positioned.fill(
+                      child: Align(
+                        child: FaIcon(
+                          FontAwesomeIcons.plane,
+                          size: 35,
+                          color: Colors.white,
+                        ),
+                      ),
+                    )
+                  ]),
+                  Text(
+                    "Airplane",
+                    style: GoogleFonts.montserrat(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black),
+                  )
+                ],
+              ),
+            ),
+            SizedBox(
+              width: 85,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Stack(children: <Widget>[
+                    Container(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        color: Color(0xFFFFA800),
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black26,
+                            offset: Offset(0, 2),
+                            blurRadius: 2,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Positioned.fill(
+                      child: Align(
+                        child: FaIcon(
+                          FontAwesomeIcons.plane,
+                          size: 35,
+                          color: Colors.white,
+                        ),
+                      ),
+                    )
+                  ]),
+                  Text(
+                    "Airplane",
+                    style: GoogleFonts.montserrat(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black),
+                  )
+                ],
+              ),
+            ),
+            SizedBox(
+              width: 85,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Stack(children: <Widget>[
+                    Container(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        color: Color(0xFFFFA800),
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black26,
+                            offset: Offset(0, 2),
+                            blurRadius: 2,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Positioned.fill(
+                      child: Align(
+                        child: FaIcon(
+                          FontAwesomeIcons.plane,
+                          size: 35,
+                          color: Colors.white,
+                        ),
+                      ),
+                    )
+                  ]),
+                  Text(
+                    "Airplane",
+                    style: GoogleFonts.montserrat(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black),
+                  )
+                ],
+              ),
+            ),
+          ],
+        ),
       ]),
       bottomNavigationBar: BottomNavbar(),
     );

@@ -5,10 +5,11 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:travel_app/main.dart';
 
-class ScrollImageCarousel extends StatelessWidget {
+class ScrollImageCarouselHotel extends StatelessWidget {
   var menuData;
 
-  ScrollImageCarousel({Key? key, required this.menuData}) : super(key: key);
+  ScrollImageCarouselHotel({Key? key, required this.menuData})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -57,37 +58,16 @@ class ScrollImageCarousel extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        RichText(
-                          text: TextSpan(
-                            children: <InlineSpan>[
-                              TextSpan(
-                                text: tour['departure_location'] + " ",
-                                style: GoogleFonts.montserrat(
-                                  color: Colors.white,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const WidgetSpan(
-                                child: FaIcon(
-                                  FontAwesomeIcons.plane,
-                                  size: 15,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              TextSpan(
-                                text: ' ' + tour['destination_location'],
-                                style: GoogleFonts.montserrat(
-                                  color: Colors.white,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
+                        Text(
+                          tour['NamaHotel'],
+                          style: GoogleFonts.montserrat(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                         Text(
-                          convertToIdr(tour['price'], 0) + ' / pax',
+                          tour['LokasiHotel'],
                           style: GoogleFonts.montserrat(
                             color: Colors.white,
                             fontSize: 14,
