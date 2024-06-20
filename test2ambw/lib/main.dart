@@ -22,6 +22,7 @@ void main() async {
 }
 
 class MainApp extends StatelessWidget {
+
   final Color mainBlue = Color.fromARGB(255, 3, 174, 210);
   final Color mainYellow = Color.fromARGB(255, 253, 222, 85);
 

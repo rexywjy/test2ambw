@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:test2ambw/components/singlesection.dart';
 import 'package:test2ambw/customer/custhistory.dart';
+import 'package:test2ambw/customer/login.dart';
+import 'package:test2ambw/others/auth.dart';
 import '../components/customlisttile.dart';
 import 'package:hexcolor/hexcolor.dart';
 
@@ -11,14 +14,55 @@ class CustProfile extends StatefulWidget {
   @override
   State<CustProfile> createState() => _CustProfileState();
 }
-
+final supabase = Supabase.instance.client;
 class _CustProfileState extends State<CustProfile> {
   bool _isDark = false;
 
+  bool isFirstLoad = true;
+
+  var nameProfile = '';
+
   final Color mainAmber = HexColor('#FFBF00');
   
+  // @override
+  // void initState() {
+  //   // debugPrint("duar");
+  //   super.initState();
+  //   fetchName();
+  // }
+
+  
+
+  Future<void> fetchName() async {
+    // debugPrint("FETCHING NAME");
+    // debugPrint("USERR : "+FirebaseAuth.instance.currentUser!.email.toString());
+    final response = await supabase
+        .from('mcustomer')
+        .select('Name')
+        .eq('Email', FirebaseAuth.instance.currentUser!.email.toString())
+        // .execute()
+        ;
+    // debugPrint("RESPONSE : "+response[0]['Name'].toString());
+    // if (response.length == 0) {
+    //   // Handle error
+    //   return;
+    // }
+
+    // final List<dynamic> data = response as List<dynamic>;
+    // if (data.isNotEmpty) {
+        setState(() {
+          this.nameProfile = response[0]['Name'];
+        });
+    // }
+  }
+
   void signUserOut() async {
+    debugPrint('Signing out...');
     await FirebaseAuth.instance.signOut();
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AuthPage()));
+    // await supabase.auth.signOut();
+    // if(!mounted) return;
+    // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AuthPage()));
   }
 
   void goToHistory() {
@@ -33,6 +77,10 @@ class _CustProfileState extends State<CustProfile> {
   
   @override
   Widget build(BuildContext context) {
+    if(isFirstLoad) {
+      fetchName();
+      isFirstLoad = false;
+    }
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Scaffold(
@@ -81,8 +129,8 @@ class _CustProfileState extends State<CustProfile> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      "Peter J. Jameson",
+                    Text(
+                      nameProfile,
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
