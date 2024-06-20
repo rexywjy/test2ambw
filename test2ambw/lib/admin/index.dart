@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class HomeAdmin extends StatelessWidget {
-  const HomeAdmin({super.key});
+class AdminPortal extends StatelessWidget {
+  const AdminPortal({super.key});
 
   @override
   Widget build(BuildContext context) {

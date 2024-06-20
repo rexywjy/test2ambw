@@ -36,12 +36,17 @@ class MainApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: 'Lexend'),
       // home: HomeCustomer(),
-      home: const AuthPage(),
+      // home: const AuthPage(),
       // home: Scaffold(
       //   body: Center(
       //     child: Text('Hello World!'),
       //   ),
       // ),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => AuthPage(),
+        '/admin': (context) => AdminPortal(),
+      },
     );
   }
 }

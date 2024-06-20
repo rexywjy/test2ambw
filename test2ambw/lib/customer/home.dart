@@ -1,5 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
+// import 'dart:nativewrappers/_internal/vm/lib/core_patch.dart';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 // import 'utils/bottom_navbar.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -32,6 +35,9 @@ class _MyHomePageState extends State<MyHomePage> {
   var menuData;
   var selectedButton = 'tours';
 
+  bool isFirstLoad = true;
+  var nameProfile = "";
+
   CustProfile custProfile = CustProfile();
 
   Future<dynamic> fetchTourData(menuType) async {
@@ -47,6 +53,22 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     fetchTourData("mtour2");
+    fetchName();
+  }
+
+  Future<void> fetchName() async {
+    try{
+      final response = await supabase
+          .from('mcustomer')
+          .select('Name')
+          .eq('Email', FirebaseAuth.instance.currentUser!.email.toString())
+          ;
+          setState(() {
+            this.nameProfile = response[0]['Name'];
+          });
+    }catch(e){
+      debugPrint("ERROR : "+e.toString());
+    }
   }
 
   @override
@@ -112,7 +134,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                 Padding(
                                   padding:
                                       const EdgeInsets.only(left: 8, right: 5),
-                                  child: Text("Rio Jonathan",
+                                  child: Text(
+                                      nameProfile,
                                       style: GoogleFonts.montserrat(
                                           fontSize: 12,
                                           fontWeight: FontWeight.bold)),
