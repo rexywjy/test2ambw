@@ -39,24 +39,28 @@ class _CustProfileState extends State<CustProfile> {
   Future<void> fetchName() async {
     // debugPrint("FETCHING NAME");
     // debugPrint("USERR : "+FirebaseAuth.instance.currentUser!.email.toString());
-    final response = await supabase
-        .from('mcustomer')
-        .select('Name')
-        .eq('Email', FirebaseAuth.instance.currentUser!.email.toString())
-        // .execute()
-        ;
-    // debugPrint("RESPONSE : "+response[0]['Name'].toString());
-    // if (response.length == 0) {
-    //   // Handle error
-    //   return;
-    // }
+    try{
+      final response = await supabase
+          .from('mcustomer')
+          .select('Name')
+          .eq('Email', FirebaseAuth.instance.currentUser!.email.toString())
+          // .execute()
+          ;
+      // debugPrint("RESPONSE : "+response[0]['Name'].toString());
+      // if (response.length == 0) {
+      //   // Handle error
+      //   return;
+      // }
 
-    // final List<dynamic> data = response as List<dynamic>;
-    // if (data.isNotEmpty) {
-        setState(() {
-          this.nameProfile = response[0]['Name'];
-        });
-    // }
+      // final List<dynamic> data = response as List<dynamic>;
+      // if (data.isNotEmpty) {
+          setState(() {
+            this.nameProfile = response[0]['Name'];
+          });
+      // }
+    }catch(e){
+      debugPrint("ERROR : "+e.toString());
+    }
   }
 
   void signUserOut() async {

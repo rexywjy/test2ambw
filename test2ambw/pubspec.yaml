@@ -13,6 +13,11 @@ dependencies:
     sdk: flutter
   hexcolor: ^3.0.1
   supabase_flutter: ^2.0.0
+  awesome_bottom_bar: any
+  font_awesome_flutter: ^10.7.0
+  intl: ^0.17.0
+  cupertino_icons: ^1.0.6
+  google_fonts: ^6.2.1
 
 dev_dependencies:
   flutter_test:

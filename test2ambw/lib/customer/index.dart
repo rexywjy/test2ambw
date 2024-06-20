@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:test2ambw/customer/home.dart';
 import 'package:test2ambw/customer/profile.dart';
 import 'login.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -78,9 +79,9 @@ class _HomeCustomerState extends State<HomeCustomer> {
           ),
         ],
       ),
-      body: const <Widget>[
+      body: <Widget>[
         Center(
-          child: Text('Home'),
+          child: MyHomePage(),
         ),
         Center(
           child: Text('Cart'),
