@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:test2ambw/customer/index.dart';
 import 'package:test2ambw/customer/login.dart';
 import 'package:test2ambw/customer/loginorregister.dart';
+import 'package:test2ambw/seller/index.dart';
 
 class AuthPage extends StatelessWidget {
   const AuthPage({super.key});
@@ -15,7 +16,7 @@ class AuthPage extends StatelessWidget {
         builder: (context, snapshot) {
           // user is loggen in
           if(snapshot.hasData){
-            return HomeCustomer();
+            return HomeSeller();
           }else{
             // return LoginPage();
             return LoginOrRegisterPage();
