@@ -97,173 +97,161 @@ class _HomeSellerStateTourState extends State<HomeSellerStateTour> {
           ],
         ),
         body: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(
-                height: 50,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Wrap(
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.only(right: 10),
-                        child: Text("Filter",
-                            style:
-                                TextStyle(fontSize: 20, color: Colors.white)),
-                      ),
-                      DropdownMenu<String>(
-                        textStyle: const TextStyle(color: Colors.white),
-                        menuStyle: MenuStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                                const Color.fromARGB(255, 100, 100, 100))),
-                        initialSelection: list.first,
-                        onSelected: (String? value) {
-                          // This is called when the user selects an item.
-                          setState(() {
-                            filterActive = value!;
-                          });
-                          fetchTourData();
-                        },
-                        dropdownMenuEntries:
-                            list.map<DropdownMenuEntry<String>>((String value) {
-                          return DropdownMenuEntry<String>(
-                              style: ButtonStyle(
-                                  foregroundColor:
-                                      MaterialStateProperty.all<Color>(
-                                          Colors.amber),
-                                  backgroundColor:
-                                      MaterialStateProperty.all<Color>(
-                                          const Color.fromARGB(255, 50, 50, 50))),
-                              value: value,
-                              label: value);
-                        }).toList(),
-                      ),
-                    ],
+          child: 
+          Column(children: [
+            Column(
+              children: [
+                const SizedBox(height: 10,),
+                SizedBox(
+                  height: 50,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.only(right: 10),
+                          child: Text("Filter",
+                              style:
+                                  TextStyle(fontSize: 20, color: Colors.white)),
+                        ),
+                        DropdownMenu<String>(
+                          textStyle: const TextStyle(color: Colors.white),
+                          menuStyle: MenuStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  const Color.fromARGB(255, 100, 100, 100))),
+                          initialSelection: list.first,
+                          onSelected: (String? value) {
+                            // This is called when the user selects an item.
+                            setState(() {
+                              filterActive = value!;
+                            });
+                            fetchTourData();
+                          },
+                          dropdownMenuEntries:
+                              list.map<DropdownMenuEntry<String>>((String value) {
+                            return DropdownMenuEntry<String>(
+                                style: ButtonStyle(
+                                    foregroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                            Colors.amber),
+                                    backgroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                            const Color.fromARGB(255, 50, 50, 50))),
+                                value: value,
+                                label: value);
+                          }).toList(),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(
-                  // height: double.minPositive,
-                  child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: mtour.length,
-                      itemBuilder: (context, index) {
+                const SizedBox(height: 20,),
+                SizedBox(
+                    // height: double.minPositive,
+                    child: 
+                    Column(
+                      children: mtour.map((tour) {
                         return Padding(
-                            padding:
-                                const EdgeInsets.only(left: 10, right: 10, top: 10),
-                            child: Container(
-                              child: Card(
-                                color: const Color.fromARGB(255, 49, 52, 57),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: ListTile(
-                                      onTap: () {
-                                        pindahKeForm(context,
-                                            tourID: mtour[index]["TourID"],
-                                            isNew: 0);
-                                      },
-                                      title: Row(
-                                        children: [
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Wrap(
-                                                children: [
-                                                  Padding(
-                                                    padding: const EdgeInsets.only(
-                                                        top: 15, right: 5),
-                                                    child: Icon(Icons.circle,
-                                                        color: (mtour[index][
-                                                                    "Status"] ==
-                                                                1)
-                                                            ? Colors.green
-                                                            : Colors.red,
-                                                        size: 10),
-                                                  ),
-                                                  Text(mtour[index]["NamaTour"],
-                                                      style: const TextStyle(
-                                                          fontSize: 25,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color: Colors.white)),
-                                                ],
-                                              ),
-                                              Text(
-                                                  mtour[index][
-                                                          "DepartureLocation"] +
-                                                      "-" +
-                                                      mtour[index][
-                                                          "DestinationLocation"],
-                                                  style: const TextStyle(
-                                                      color: Color.fromARGB(
-                                                          255, 150, 150, 150))),
-                                              Row(
-                                                children: [
-                                                  const Icon(Icons.people,
-                                                      color: Colors.white,
-                                                      size: 15),
-                                                  Text(
-                                                      ' ' +
-                                                          (mtour[index][
-                                                                      "MaxQuota"] ??
-                                                                  0)
-                                                              .toString() +
-                                                          "pax",
-                                                      style: TextStyle(
-                                                          color: mainAmber)),
-                                                  const Padding(
-                                                      padding: EdgeInsets.only(
-                                                          right: 10)),
-                                                  const Icon(Icons.sunny,
-                                                      color: Colors.white,
-                                                      size: 15),
-                                                  Text(
-                                                      ' ' +
-                                                          (daysBetween(
-                                                                      DateTime.parse(
-                                                                          (mtour[index]
-                                                                              [
-                                                                              "StartDate"])),
-                                                                      DateTime.parse(
-                                                                          (mtour[index]
-                                                                              [
-                                                                              "EndDate"]))) +
-                                                                  1)
-                                                              .toString() +
-                                                          "day(s)",
-                                                      style: TextStyle(
-                                                          color: mainAmber)),
-                                                ],
-                                              )
-                                            ],
-                                          ),
-                                          Spacer(), // use Spacer
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
-                                            children: [
-                                              Text(
-                                                  'Rp ' +
-                                                      NumberFormat("#,###")
-                                                          .format((mtour[index]
-                                                              ['Price']))
-                                                          .replaceAll(",", "."),
-                                                  style: TextStyle(
-                                                      color: mainAmber,
-                                                      fontSize: 20)),
-                                            ],
-                                          ),
-                                        ],
-                                      )),
+                          padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
+                          child: Card(
+                            color: const Color.fromARGB(255, 49, 52, 57),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ListTile(
+                                onTap: () {
+                                  pindahKeForm(context,
+                                      tourID: tour["TourID"], isNew: 0);
+                                },
+                                title: Row(
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Wrap(
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 15, right: 5),
+                                              child: Icon(Icons.circle,
+                                                  color: (tour["Status"] == 1)
+                                                      ? Colors.green
+                                                      : Colors.red,
+                                                  size: 10),
+                                            ),
+                                            Text(tour["NamaTour"],
+                                                style: const TextStyle(
+                                                    fontSize: 25,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white)),
+                                          ],
+                                        ),
+                                        Text(
+                                            tour["DepartureLocation"] +
+                                                "-" +
+                                                tour["DestinationLocation"],
+                                            style: const TextStyle(
+                                                color: Color.fromARGB(
+                                                    255, 150, 150, 150))),
+                                        Row(
+                                          children: [
+                                            const Icon(Icons.people,
+                                                color: Colors.white, size: 15),
+                                            Text(
+                                                ' ' +
+                                                    (tour["MaxQuota"] ?? 0)
+                                                        .toString() +
+                                                    "pax",
+                                                style: TextStyle(color: mainAmber)),
+                                            const Padding(
+                                                padding: EdgeInsets.only(right: 10)),
+                                            const Icon(Icons.sunny,
+                                                color: Colors.white, size: 15),
+                                            Text(
+                                                ' ' +
+                                                    (daysBetween(
+                                                                DateTime.parse(
+                                                                    (tour[
+                                                                        "StartDate"])),
+                                                                DateTime.parse(
+                                                                    (tour[
+                                                                        "EndDate"]))) +
+                                                            1)
+                                                        .toString() +
+                                                    "day(s)",
+                                                style: TextStyle(color: mainAmber)),
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                    const Spacer(), // use Spacer
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                            'Rp ' +
+                                                NumberFormat("#,###")
+                                                    .format((tour['Price']))
+                                                    .replaceAll(",", "."),
+                                            style: TextStyle(
+                                                color: mainAmber, fontSize: 20)),
+                                      ],
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ));
-                      })),
-            ],
-          ),
-        ));
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+              ],
+            ),
+          ],)
+          ,
+        )
+      );
   }
 }
 

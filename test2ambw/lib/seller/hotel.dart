@@ -97,6 +97,7 @@ class _HomeSellerStateHotelState extends State<HomeSellerStateHotel> {
           child: SafeArea(
             child: Column(
               children: [
+                const SizedBox(height: 10,),
                 SizedBox(
                   height: 50,
                   child: Padding(
@@ -141,123 +142,109 @@ class _HomeSellerStateHotelState extends State<HomeSellerStateHotel> {
                     ),
                   ),
                 ),
+                const SizedBox(height: 20,),
                 SizedBox(
                     // height: double.minPositive,
-                    child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: mhotel.length,
-                        itemBuilder: (context, index) {
+                    child: 
+                      Column(
+                        children: mhotel.map((hotel) {
                           return Padding(
-                              padding:
-                                  EdgeInsets.only(left: 10, right: 10, top: 10),
-                              child: Container(
-                                child: Card(
-                                  color: Color.fromARGB(255, 49, 52, 57),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: ListTile(
-                                        onTap: () {
-                                          pindahKeForm(context,
-                                              hotelID: mhotel[index]["HotelID"],
-                                              isNew: 0);
-                                        },
-                                        title: Row(
+                            padding: EdgeInsets.only(left: 10, right: 10, top: 10),
+                            child: Container(
+                              child: Card(
+                                color: Color.fromARGB(255, 49, 52, 57),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: ListTile(
+                                    onTap: () {
+                                      pindahKeForm(context,
+                                          hotelID: hotel["HotelID"], isNew: 0);
+                                    },
+                                    title: Row(
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                            Wrap(
                                               children: [
-                                                Wrap(
-                                                  children: [
-                                                    Padding(
-                                                      padding: EdgeInsets.only(
-                                                          top: 15, right: 5),
-                                                      child: Icon(Icons.circle,
-                                                          color: (mhotel[index][
-                                                                      "Status"] ==
-                                                                  1)
-                                                              ? Colors.green
-                                                              : Colors.red,
-                                                          size: 10),
-                                                    ),
-                                                    Text(
-                                                        mhotel[index]
-                                                            ["NamaHotel"],
-                                                        style: TextStyle(
-                                                            fontSize: 25,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color: Colors.white)),
-                                                  ],
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                      top: 15, right: 5),
+                                                  child: Icon(Icons.circle,
+                                                      color: (hotel["Status"] == 1)
+                                                          ? Colors.green
+                                                          : Colors.red,
+                                                      size: 10),
                                                 ),
-                                                Text(mhotel[index]["LokasiHotel"],
+                                                Text(hotel["NamaHotel"],
                                                     style: TextStyle(
-                                                        color: Color.fromARGB(
-                                                            255, 150, 150, 150))),
-                                                Row(
-                                                  children: [
-                                                    Icon(Icons.star,
-                                                        color: Colors.white,
-                                                        size: 15),
-                                                    Text(
-                                                        ' ' +
-                                                            (mhotel[index][
-                                                                        "RatingHotel"] ??
-                                                                    0)
-                                                                .toString(),
-                                                        style: TextStyle(
-                                                            color: mainAmber)),
-                                                  ],
-                                                )
+                                                        fontSize: 25,
+                                                        fontWeight: FontWeight.bold,
+                                                        color: Colors.white)),
                                               ],
                                             ),
-                                            Spacer(), // use Spacer
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.end,
+                                            Text(hotel["LokasiHotel"],
+                                                style: TextStyle(
+                                                    color: Color.fromARGB(
+                                                        255, 150, 150, 150))),
+                                            Row(
                                               children: [
+                                                Icon(Icons.star,
+                                                    color: Colors.white, size: 15),
                                                 Text(
-                                                    'Rp ' +
-                                                        NumberFormat("#,###")
-                                                            .format((mhotel[index]['dhotel']
-                                                                        .length >
-                                                                    0)
-                                                                ? mhotel[index]['dhotel']
-                                                                        .map((m) => m[
-                                                                            'Harga'])
-                                                                        .reduce((a,
-                                                                                b) =>
-                                                                            a +
-                                                                            b) /
-                                                                    mhotel[index]['dhotel']
-                                                                        .length
-                                                                : 0)
-                                                            .replaceAll(",", "."),
-                                                    style: TextStyle(
-                                                        color: mainAmber,
-                                                        fontSize: 20)),
-                                                Text('/ night',
-                                                    style: TextStyle(
-                                                        color: Color.fromARGB(
-                                                            255, 150, 150, 150),
-                                                        fontSize: 15)),
-                                                Text(
-                                                    mhotel[index]['dhotel']
-                                                            .length
-                                                            .toString() +
-                                                        ' Room Type(s)',
-                                                    style: TextStyle(
-                                                        color: Color.fromARGB(
-                                                            255, 200, 200, 200),
-                                                        fontSize: 16))
+                                                    ' ' +
+                                                        (hotel["RatingHotel"] ?? 0)
+                                                            .toString(),
+                                                    style:
+                                                        TextStyle(color: mainAmber)),
                                               ],
-                                            ),
+                                            )
                                           ],
-                                        )),
+                                        ),
+                                        Spacer(), // use Spacer
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.end,
+                                          children: [
+                                            Text(
+                                                'Rp ' +
+                                                    NumberFormat("#,###")
+                                                        .format((hotel['dhotel']
+                                                                    .length >
+                                                                0)
+                                                            ? hotel['dhotel']
+                                                                    .map((m) => m[
+                                                                        'Harga'])
+                                                                    .reduce(
+                                                                        (a, b) => a + b) /
+                                                                hotel['dhotel'].length
+                                                            : 0)
+                                                        .replaceAll(",", "."),
+                                                style: TextStyle(
+                                                    color: mainAmber, fontSize: 20)),
+                                            Text('/ night',
+                                                style: TextStyle(
+                                                    color: Color.fromARGB(
+                                                        255, 150, 150, 150),
+                                                    fontSize: 15)),
+                                            Text(
+                                                hotel['dhotel'].length.toString() +
+                                                    ' Room Type(s)',
+                                                style: TextStyle(
+                                                    color: Color.fromARGB(
+                                                        255, 200, 200, 200),
+                                                    fontSize: 16))
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ));
-                        })),
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
               ],
             ),
           ),
