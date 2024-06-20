@@ -104,103 +104,120 @@ class _HomeSellerState extends State<HomeSeller> {
               ),
             ),
             body: Center(
+              // child: Flex(
               child: Flex(
-                direction: (MediaQuery.of(context).size.width > 1000) ? Axis.horizontal : Axis.vertical,
+                direction: Axis.vertical,
                 mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
+                // crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => HomeSellerStateTour()),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: mainBlueLight,
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18)),
-                      ),
-                      child: SizedBox(
-                          height: 270,
-                          width: 270,
-                          child: Stack(
-                            children: <Widget>[
-                              Container(
-                                decoration: BoxDecoration(),
-                                width: double.infinity,
-                                clipBehavior: Clip.antiAlias,
-                                child: Padding(
-                                  padding: EdgeInsets.only(left: 30),
-                                  child: Transform.rotate(
-                                    angle: 40 * 3.14 / 180,
-                                    child: Icon(
-                                      Icons.airplanemode_active,
-                                      size: 300,
-                                      color: mainBlue,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Text(
-                                'Tours',
-                                style: TextStyle(
-                                    fontSize: 60, fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          )),
-                    ),
+                  const SizedBox(
+                    height: 20,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => HomeSellerStateHotel()),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: mainBlueLight,
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18)),
-                      ),
-                      child: SizedBox(
-                          height: 270,
-                          width: 270,
-                          child: Stack(
-                            children: <Widget>[
-                              Container(
-                                decoration: BoxDecoration(),
-                                width: double.infinity,
-                                clipBehavior: Clip.antiAlias,
-                                child: Padding(
-                                  padding: EdgeInsets.only(left: 30, top: 45),
-                                  child: Transform.rotate(
-                                    angle: 0,
-                                    child: Icon(
-                                      Icons.local_hotel,
-                                      size: 240,
-                                      color: mainBlue,
+                  Wrap(
+                    spacing: 16.0, // gap between adjacent chips
+                    runSpacing: 16.0, // gap between lines
+                    alignment: WrapAlignment.center,
+                    // direction: (MediaQuery.of(context).size.width > 1000) ? Axis.horizontal : Axis.vertical,
+                    // direction: Axis.horizontal,
+                    // mainAxisAlignment: MainAxisAlignment.center,
+                    // crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => HomeSellerStateTour()),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: mainBlueLight,
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18)),
+                          ),
+                          child: SizedBox(
+                              height: 120,
+                              width: 120,
+                              child: Stack(
+                                children: <Widget>[
+                                  Container(
+                                    decoration: BoxDecoration(),
+                                    width: double.infinity,
+                                    clipBehavior: Clip.antiAlias,
+                                    child: Padding(
+                                      padding: EdgeInsets.only(left: 30, top: 10),
+                                      child: Transform.rotate(
+                                        angle: 40 * 3.14 / 180,
+                                        child: Icon(
+                                          Icons.airplanemode_active,
+                                          size: 100,
+                                          color: mainBlue,
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ),
-                              Text(
-                                'Hotels',
-                                style: TextStyle(
-                                    fontSize: 60, fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          )),
-                    ),
+                                  const Text(
+                                    'Tours',
+                                    style: TextStyle(
+                                        fontSize: 30, fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              )),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const HomeSellerStateHotel()),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: mainBlueLight,
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18)),
+                          ),
+                          child: SizedBox(
+                              height: 120,
+                              width: 120,
+                              child: Stack(
+                                children: <Widget>[
+                                  Container(
+                                    decoration: BoxDecoration(),
+                                    width: double.infinity,
+                                    clipBehavior: Clip.antiAlias,
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(left: 10, top: 20),
+                                      child: Transform.rotate(
+                                        angle: 0,
+                                        child: Icon(
+                                          Icons.local_hotel,
+                                          size: 100,
+                                          color: mainBlue,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const Text(
+                                    'Hotels',
+                                    style: TextStyle(
+                                        fontSize: 30, fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              )),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
-            )));
+            )
+          )
+        );
   }
 }
