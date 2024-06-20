@@ -9,6 +9,15 @@ class HomeSeller extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: 'Lexend'),
       home: Scaffold(
+        appBar: AppBar(
+          title: Text('Home Seller'),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context); // This will navigate back to the previous screen
+            },
+          ),
+        ),
         body: Center(
           child: Text('WOI SELLER!'),
         ),

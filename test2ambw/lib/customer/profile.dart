@@ -5,6 +5,9 @@ import 'package:test2ambw/components/singlesection.dart';
 import 'package:test2ambw/customer/custhistory.dart';
 import 'package:test2ambw/customer/login.dart';
 import 'package:test2ambw/others/auth.dart';
+import 'package:test2ambw/seller/index.dart';
+import 'package:test2ambw/seller/profileorproduct.dart';
+import 'package:test2ambw/seller/register.dart';
 import '../components/customlisttile.dart';
 import 'package:hexcolor/hexcolor.dart';
 
@@ -74,6 +77,54 @@ class _CustProfileState extends State<CustProfile> {
           builder: (context) => CustHistory()),
     );
   }
+
+  Future<void> checkIfSeller() async {
+    final email = FirebaseAuth.instance.currentUser!.email.toString();
+    final userr = await supabase
+        .from('mcustomer')
+        .select('ID')
+        .eq('Email', email)
+        // .execute()
+        ;
+    final userid = userr[0]['ID'];
+    final response = await supabase
+        .from('mseller')
+        .select()
+        .eq('CustID', userid)
+        .neq('Status', 0)
+        // .execute()
+        ;
+
+    if (response.isNotEmpty) {
+      // Email found, navigate to HomepageSeller
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => HomeSeller()),
+      );
+    } else {
+      
+      final response = await supabase
+        .from('mseller')
+        .select()
+        .eq('CustID', userid)
+        .eq('Status', 0)
+        // .execute()
+        ;
+      if(response.isNotEmpty){
+        // Email not found, navigate to SellerRegister
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => SellerRegister(storestatus: 0, userid: userid)),  
+        );
+      }else{
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => SellerRegister(storestatus: -1, userid: userid)),  
+        );
+      }
+    }
+  }
+
   
   @override
   Widget build(BuildContext context) {
@@ -188,13 +239,19 @@ class _CustProfileState extends State<CustProfile> {
               ],
             ),
             const Divider(),
-            const SingleSection(
+            SingleSection(
               title: "Seller",
               children: [
                 CustomListTile(
-                    title: "My Products", icon: Icons.shopping_bag_outlined),
+                    title: "My Products", 
+                    icon: Icons.shopping_bag_outlined,
+                    method: checkIfSeller,
+                  ),
                 CustomListTile(
-                    title: "Seller Profile", icon: Icons.person_outline_rounded),
+                    title: "Seller Profile", 
+                    icon: Icons.person_outline_rounded,
+                    method: checkIfSeller,
+                  ),
                 // CustomListTile(
                 //     title: "Calling", icon: Icons.phone_outlined),
                 // CustomListTile(

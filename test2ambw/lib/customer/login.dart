@@ -48,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
       final response = await Supabase.instance.client
           .from('mcustomer')
           .select()
-          .eq('user_id', userId)
+          .eq('ID', userId)
           .single();
       debugPrint('response: $response');
       return true;
@@ -56,7 +56,6 @@ class _LoginPageState extends State<LoginPage> {
       return false;
     }
   }
-
 
   // sign in user button method
   void signInUser() async {

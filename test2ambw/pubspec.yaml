@@ -1,10 +1,10 @@
 name: test2ambw
 description: "A new Flutter project."
-publish_to: 'none'
+publish_to: "none"
 version: 0.1.0
 
 environment:
-  sdk: '>=3.4.0 <4.0.0'
+  sdk: ">=3.4.0 <4.0.0"
 
 dependencies:
   firebase_auth: ^5.1.0
@@ -26,10 +26,11 @@ flutter:
     - assets/images/applelogo1.png
     - lib/googlelogo1.png
 
-fonts:
-  - family: Lexend
-    fonts:
-      - asset: assets/fonts/Lexend/Lexend-Regular.ttf
-        weight: 500
+  fonts:
+    - family: Lexend
+      fonts:
+        - asset: assets/fonts/Lexend/Lexend-Regular.ttf
+        - asset: assets/fonts/Lexend/Lexend-Bold.ttf
+          weight: 700
         # style: italic
         # weight: 700

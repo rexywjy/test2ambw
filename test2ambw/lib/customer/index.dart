@@ -5,7 +5,12 @@ import 'login.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 class HomeCustomer extends StatefulWidget {
-  HomeCustomer({super.key});
+  final int initialPageIndex;
+
+  HomeCustomer({
+    super.key,
+    this.initialPageIndex = 0,
+  });
 
   @override
   State<HomeCustomer> createState() => _HomeCustomerState();
@@ -17,13 +22,19 @@ class _HomeCustomerState extends State<HomeCustomer> {
   final Color mainAmber = HexColor('#FFBF00');
 
   int currentPageIndex = 0;
+  @override
+  void initState() {
+    super.initState();
+    currentPageIndex = widget.initialPageIndex;
+  }
 
-  NavigationDestinationLabelBehavior labelBehavior = NavigationDestinationLabelBehavior.onlyShowSelected;
+  NavigationDestinationLabelBehavior labelBehavior =
+      NavigationDestinationLabelBehavior.onlyShowSelected;
 
   void signUserOut() async {
     await FirebaseAuth.instance.signOut();
   }
-  
+
   void _onItemTapped(int index) {
     setState(() {
       currentPageIndex = index;
@@ -33,53 +44,51 @@ class _HomeCustomerState extends State<HomeCustomer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: 
-        NavigationBar(
-          labelBehavior: labelBehavior,
-          // selectedIndex: currentPageIndex,
-          // onDestinationSelected: (int index) {
-          //   setState(() {
-          //     currentPageIndex = index;
-          //   });
-          // },
-          onDestinationSelected: (int index) {
-            setState(() {
-              currentPageIndex = index;
-            });
-          },
-          backgroundColor: mainAmber,
-          indicatorColor: Colors.white,
-          selectedIndex: currentPageIndex,
-          destinations: const <Widget>[
-            NavigationDestination(
-              selectedIcon: Icon(Icons.home),
-              icon: Icon(Icons.home_outlined),
-              label: 'Home',
-            ),
-            NavigationDestination(
-              selectedIcon: Icon(Icons.shopping_cart),
-              icon: Icon(Icons.shopping_cart_outlined),
-              label: 'Cart',
-            ),
-            NavigationDestination(
-              selectedIcon: Icon(Icons.person),
-              icon: Icon(Icons.person_outline),
-              label: 'Profile',
-            ),
-          ],
-          
-        ),
+      bottomNavigationBar: NavigationBar(
+        labelBehavior: labelBehavior,
+        // selectedIndex: currentPageIndex,
+        // onDestinationSelected: (int index) {
+        //   setState(() {
+        //     currentPageIndex = index;
+        //   });
+        // },
+        onDestinationSelected: (int index) {
+          setState(() {
+            currentPageIndex = index;
+          });
+        },
+        backgroundColor: mainAmber,
+        indicatorColor: Colors.white,
+        selectedIndex: currentPageIndex,
+        destinations: const <Widget>[
+          NavigationDestination(
+            selectedIcon: Icon(Icons.home),
+            icon: Icon(Icons.home_outlined),
+            label: 'Home',
+          ),
+          NavigationDestination(
+            selectedIcon: Icon(Icons.shopping_cart),
+            icon: Icon(Icons.shopping_cart_outlined),
+            label: 'Cart',
+          ),
+          NavigationDestination(
+            selectedIcon: Icon(Icons.person),
+            icon: Icon(Icons.person_outline),
+            label: 'Profile',
+          ),
+        ],
+      ),
       body: const <Widget>[
-          Center(
-            child: Text('Home'),
-          ),
-          Center(
-            child: Text('Cart'),
-          ),
-          Center(
-            child: CustProfile(),
-          ),
-        ][currentPageIndex],
+        Center(
+          child: Text('Home'),
+        ),
+        Center(
+          child: Text('Cart'),
+        ),
+        Center(
+          child: CustProfile(),
+        ),
+      ][currentPageIndex],
       // bottomNavigationBar: BottomNavigationBar(
       //   items: const [
       //     BottomNavigationBarItem(
