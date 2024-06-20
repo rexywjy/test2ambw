@@ -26,12 +26,14 @@
 //   }
 // }
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:test2ambw/customer/profile.dart';
 import 'package:test2ambw/seller/hotel.dart';
 import 'package:test2ambw/seller/tour.dart';
 
@@ -51,6 +53,36 @@ class HomeSeller extends StatefulWidget {
 }
 
 class _HomeSellerState extends State<HomeSeller> {
+  var namaStore = '';
+
+  @override
+  void initState() {
+    super.initState();
+    fetchName();
+  }
+
+  Future<void> fetchName() async {
+    try{
+      var response = await supabase
+          .from('mcustomer')
+          .select()
+          .eq('Email', FirebaseAuth.instance.currentUser!.email.toString())
+          ;
+      var idcustomer = response[0]['ID'];
+      response = await supabase
+          .from('mseller')
+          .select()
+          .eq('CustID', idcustomer)
+          ;
+      // debugPrint("RESPONSE : "+response.toString());
+      setState(() {
+        this.namaStore = response[0]['Name'];
+      });
+    }catch(e){
+      debugPrint("ERROR : "+e.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -60,10 +92,16 @@ class _HomeSellerState extends State<HomeSeller> {
             scaffoldBackgroundColor: Color.fromARGB(255, 23, 26, 31)),
         home: Scaffold(
             appBar: AppBar(
-              title: Text(("Admin"),
+              title: Text((namaStore),
                   style: TextStyle(fontWeight: FontWeight.bold)),
               backgroundColor: mainAmber,
               actions: [],
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: () {
+                  Navigator.pop(context); // This will navigate back to the previous screen
+                },
+              ),
             ),
             body: Center(
               child: Flex(

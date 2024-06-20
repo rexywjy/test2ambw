@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -36,20 +35,19 @@ class _HomeSellerStateTourState extends State<HomeSellerStateTour> {
   var mhotel = [];
   var isInitial = 1;
   Future<dynamic> fetchTourData() async {
-    
     if (filterActive == "All") {
       mtour = await Supabase.instance.client
-        .from('mtour')
-        .select("*, dtour(*)")
-        .eq('IsDel', 0)
-        .order('TourID', ascending: true);
+          .from('mtour')
+          .select("*, dtour(*)")
+          .eq('IsDel', 0)
+          .order('TourID', ascending: true);
     } else {
       mtour = await Supabase.instance.client
-        .from('mtour')
-        .select("*, dtour(*)")
-        .eq('IsDel', 0)
-        .eq('Status', ((filterActive == "Active") ? 1 : 0))
-        .order('TourID', ascending: true);
+          .from('mtour')
+          .select("*, dtour(*)")
+          .eq('IsDel', 0)
+          .eq('Status', ((filterActive == "Active") ? 1 : 0))
+          .order('TourID', ascending: true);
     }
 
     setState(() {
@@ -75,14 +73,14 @@ class _HomeSellerStateTourState extends State<HomeSellerStateTour> {
     return Scaffold(
         backgroundColor: Color.fromARGB(255, 23, 26, 31),
         appBar: AppBar(
-          title: Text(("List Tour"),
+          title: const Text(("List Tour"),
               style: TextStyle(fontWeight: FontWeight.bold)),
           backgroundColor: mainAmber,
           actions: [
             Padding(
               padding: EdgeInsets.only(right: 20),
               child: IconButton(
-                icon: Wrap(
+                icon: const Wrap(
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
                     Icon(Icons.add, color: Color.fromARGB(255, 23, 26, 31)),
@@ -108,17 +106,17 @@ class _HomeSellerStateTourState extends State<HomeSellerStateTour> {
                   child: Wrap(
                     crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
-                      Padding(
+                      const Padding(
                         padding: EdgeInsets.only(right: 10),
                         child: Text("Filter",
                             style:
                                 TextStyle(fontSize: 20, color: Colors.white)),
                       ),
                       DropdownMenu<String>(
-                        textStyle: TextStyle(color: Colors.white),
+                        textStyle: const TextStyle(color: Colors.white),
                         menuStyle: MenuStyle(
                             backgroundColor: MaterialStateProperty.all<Color>(
-                                Color.fromARGB(255, 100, 100, 100))),
+                                const Color.fromARGB(255, 100, 100, 100))),
                         initialSelection: list.first,
                         onSelected: (String? value) {
                           // This is called when the user selects an item.
@@ -136,7 +134,7 @@ class _HomeSellerStateTourState extends State<HomeSellerStateTour> {
                                           Colors.amber),
                                   backgroundColor:
                                       MaterialStateProperty.all<Color>(
-                                          Color.fromARGB(255, 50, 50, 50))),
+                                          const Color.fromARGB(255, 50, 50, 50))),
                               value: value,
                               label: value);
                         }).toList(),
@@ -153,10 +151,10 @@ class _HomeSellerStateTourState extends State<HomeSellerStateTour> {
                       itemBuilder: (context, index) {
                         return Padding(
                             padding:
-                                EdgeInsets.only(left: 10, right: 10, top: 10),
+                                const EdgeInsets.only(left: 10, right: 10, top: 10),
                             child: Container(
                               child: Card(
-                                color: Color.fromARGB(255, 49, 52, 57),
+                                color: const Color.fromARGB(255, 49, 52, 57),
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: ListTile(
@@ -174,7 +172,7 @@ class _HomeSellerStateTourState extends State<HomeSellerStateTour> {
                                               Wrap(
                                                 children: [
                                                   Padding(
-                                                    padding: EdgeInsets.only(
+                                                    padding: const EdgeInsets.only(
                                                         top: 15, right: 5),
                                                     child: Icon(Icons.circle,
                                                         color: (mtour[index][
@@ -185,7 +183,7 @@ class _HomeSellerStateTourState extends State<HomeSellerStateTour> {
                                                         size: 10),
                                                   ),
                                                   Text(mtour[index]["NamaTour"],
-                                                      style: TextStyle(
+                                                      style: const TextStyle(
                                                           fontSize: 25,
                                                           fontWeight:
                                                               FontWeight.bold,
@@ -198,12 +196,12 @@ class _HomeSellerStateTourState extends State<HomeSellerStateTour> {
                                                       "-" +
                                                       mtour[index][
                                                           "DestinationLocation"],
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                       color: Color.fromARGB(
                                                           255, 150, 150, 150))),
                                               Row(
                                                 children: [
-                                                  Icon(Icons.people,
+                                                  const Icon(Icons.people,
                                                       color: Colors.white,
                                                       size: 15),
                                                   Text(
@@ -215,10 +213,10 @@ class _HomeSellerStateTourState extends State<HomeSellerStateTour> {
                                                           "pax",
                                                       style: TextStyle(
                                                           color: mainAmber)),
-                                                  Padding(
+                                                  const Padding(
                                                       padding: EdgeInsets.only(
                                                           right: 10)),
-                                                  Icon(Icons.sunny,
+                                                  const Icon(Icons.sunny,
                                                       color: Colors.white,
                                                       size: 15),
                                                   Text(
@@ -270,7 +268,7 @@ class _HomeSellerStateTourState extends State<HomeSellerStateTour> {
 }
 
 class DetailScreenTour extends StatefulWidget {
-  DetailScreenTour({super.key, this.isNew = 0, this.tourID = 0});
+  const DetailScreenTour({super.key, this.isNew = 0, this.tourID = 0});
 
   final int isNew;
   final int tourID;
@@ -280,9 +278,9 @@ class DetailScreenTour extends StatefulWidget {
 }
 
 class _DetailScreenTourState extends State<DetailScreenTour> {
-  final Color mainBlue = Color.fromARGB(255, 3, 174, 210);
+  final Color mainBlue = const Color.fromARGB(255, 3, 174, 210);
 
-  final Color mainYellow = Color.fromARGB(255, 253, 222, 85);
+  final Color mainYellow = const Color.fromARGB(255, 253, 222, 85);
 
   final Color mainAmber = HexColor('#FFBF00');
 
@@ -304,9 +302,8 @@ class _DetailScreenTourState extends State<DetailScreenTour> {
       debugPrint(endTmp);
       // String userId = Supabase.instance.client.auth.currentUser!.id;
       if (widget.isNew == 1) {
-        final List<Map<String, dynamic>> data = await Supabase.instance.client
-            .from('mtour')
-            .insert({
+        final List<Map<String, dynamic>> data =
+            await Supabase.instance.client.from('mtour').insert({
           'NamaTour': namaTmp,
           'DepartureLocation': departureTmp,
           'DestinationLocation': destinationTmp,
@@ -325,8 +322,7 @@ class _DetailScreenTourState extends State<DetailScreenTour> {
         //     }
         //   ]);
         // }woi
-      } 
-      else {
+      } else {
         await Supabase.instance.client.from('mtour').update({
           'NamaTour': namaTmp,
           'DepartureLocation': departureTmp,
@@ -385,7 +381,7 @@ class _DetailScreenTourState extends State<DetailScreenTour> {
       isActive = tourData[0]["Status"] == 1 ? true : false;
       startDateInput = DateTime.parse(tourData[0]["StartDate"]);
       endDateInput = DateTime.parse(tourData[0]["EndDate"]);
-      howManyDays = (daysBetween(startDateInput, endDateInput)+1);
+      howManyDays = (daysBetween(startDateInput, endDateInput) + 1);
     });
 
     nameField.text = tourData[0]["NamaTour"];
@@ -412,25 +408,25 @@ class _DetailScreenTourState extends State<DetailScreenTour> {
       fetchTourData();
     }
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 23, 26, 31),
+      backgroundColor: const Color.fromARGB(255, 23, 26, 31),
       appBar: AppBar(
         title: Wrap(children: [
           Text((((widget.isNew == 0) ? "Edit" : "Add") + " Tour  "),
-              style: TextStyle(fontWeight: FontWeight.bold)),
-          Icon(Icons.airplanemode_active)
+              style: const TextStyle(fontWeight: FontWeight.bold)),
+          const Icon(Icons.airplanemode_active)
         ]),
         backgroundColor: mainAmber,
         actions: [
           Padding(
-            padding: EdgeInsets.only(right: 20),
+            padding: const EdgeInsets.only(right: 20),
             child: IconButton(
               icon: Wrap(
                 crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
                   Icon((widget.isNew == 0) ? Icons.save : Icons.add,
-                      color: Color.fromARGB(255, 23, 26, 31)),
+                      color: const Color.fromARGB(255, 23, 26, 31)),
                   Text((widget.isNew == 0) ? "Save" : "Add",
-                      style: TextStyle(color: Color.fromARGB(255, 23, 26, 31))),
+                      style: const TextStyle(color: Color.fromARGB(255, 23, 26, 31))),
                 ],
               ),
               onPressed: () {
@@ -440,9 +436,9 @@ class _DetailScreenTourState extends State<DetailScreenTour> {
           ),
           if (widget.isNew == 0)
             Padding(
-              padding: EdgeInsets.only(right: 20),
+              padding: const EdgeInsets.only(right: 20),
               child: IconButton(
-                icon: Wrap(
+                icon: const Wrap(
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
                     Icon(Icons.delete, color: Colors.red),
@@ -466,21 +462,21 @@ class _DetailScreenTourState extends State<DetailScreenTour> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Tour Name",
+                        const Text("Tour Name",
                             style: TextStyle(
                                 color: Color.fromARGB(255, 200, 200, 200),
                                 fontSize: 15)),
                         TextField(
-                          style: TextStyle(color: Colors.white),
+                          style: const TextStyle(color: Colors.white),
                           controller: nameField,
                           decoration: InputDecoration(
-                              hintStyle: TextStyle(
+                              hintStyle: const TextStyle(
                                   color: Color.fromARGB(255, 150, 150, 150)),
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.white),
                                 borderRadius: BorderRadius.circular(25.7),
                               ),
-                              border: OutlineInputBorder(
+                              border: const OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.white),
                               ),
                               hintText: 'Trip to Singapore..'),
@@ -492,21 +488,21 @@ class _DetailScreenTourState extends State<DetailScreenTour> {
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Departure Location",
+                        const Text("Departure Location",
                             style: TextStyle(
                                 color: Color.fromARGB(255, 200, 200, 200),
                                 fontSize: 15)),
                         TextField(
-                          style: TextStyle(color: Colors.white),
+                          style: const TextStyle(color: Colors.white),
                           controller: departureField,
                           decoration: InputDecoration(
-                              hintStyle: TextStyle(
+                              hintStyle: const TextStyle(
                                   color: Color.fromARGB(255, 150, 150, 150)),
                               focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
+                                borderSide: const BorderSide(color: Colors.white),
                                 borderRadius: BorderRadius.circular(25.7),
                               ),
-                              border: OutlineInputBorder(
+                              border: const OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.white),
                               ),
                               hintText: 'Surabaya'),
@@ -518,21 +514,21 @@ class _DetailScreenTourState extends State<DetailScreenTour> {
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Destination Location",
+                        const Text("Destination Location",
                             style: TextStyle(
                                 color: Color.fromARGB(255, 200, 200, 200),
                                 fontSize: 15)),
                         TextField(
-                          style: TextStyle(color: Colors.white),
+                          style: const TextStyle(color: Colors.white),
                           controller: destinationField,
                           decoration: InputDecoration(
-                              hintStyle: TextStyle(
+                              hintStyle: const TextStyle(
                                   color: Color.fromARGB(255, 150, 150, 150)),
                               focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
+                                borderSide: const BorderSide(color: Colors.white),
                                 borderRadius: BorderRadius.circular(25.7),
                               ),
-                              border: OutlineInputBorder(
+                              border: const OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.white),
                               ),
                               hintText: 'Singapore'),
@@ -549,7 +545,7 @@ class _DetailScreenTourState extends State<DetailScreenTour> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text("Start Date",
+                            const Text("Start Date",
                                 style: TextStyle(
                                     color: Color.fromARGB(255, 200, 200, 200),
                                     fontSize: 15)),
@@ -559,9 +555,9 @@ class _DetailScreenTourState extends State<DetailScreenTour> {
                                   context: context,
                                   initialDate: startDateInput,
                                   firstDate: DateTime.now()
-                                      .subtract(Duration(days: 365)),
+                                      .subtract(const Duration(days: 365)),
                                   lastDate: DateTime.now()
-                                      .add(Duration(days: 365 * 10)),
+                                      .add(const Duration(days: 365 * 10)),
                                   initialEntryMode:
                                       DatePickerEntryMode.calendarOnly,
                                 );
@@ -573,7 +569,7 @@ class _DetailScreenTourState extends State<DetailScreenTour> {
                               },
                               child: Text(
                                 "${startDateInput.year.toString()}-${startDateInput.month.toString().padLeft(2, '0')}-${startDateInput.day.toString().padLeft(2, '0')}",
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontSize: 20, color: Colors.black87),
                               ),
                             ),
@@ -583,7 +579,7 @@ class _DetailScreenTourState extends State<DetailScreenTour> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text("End Date",
+                            const Text("End Date",
                                 style: TextStyle(
                                     color: Color.fromARGB(255, 200, 200, 200),
                                     fontSize: 15)),
@@ -593,9 +589,9 @@ class _DetailScreenTourState extends State<DetailScreenTour> {
                                   context: context,
                                   initialDate: endDateInput,
                                   firstDate: DateTime.now()
-                                      .subtract(Duration(days: 365)),
+                                      .subtract(const Duration(days: 365)),
                                   lastDate: DateTime.now()
-                                      .add(Duration(days: 365 * 10)),
+                                      .add(const Duration(days: 365 * 10)),
                                   initialEntryMode:
                                       DatePickerEntryMode.calendarOnly,
                                 );
@@ -607,7 +603,7 @@ class _DetailScreenTourState extends State<DetailScreenTour> {
                               },
                               child: Text(
                                 "${endDateInput.year.toString()}-${endDateInput.month.toString().padLeft(2, '0')}-${endDateInput.day.toString().padLeft(2, '0')}",
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontSize: 20, color: Colors.black87),
                               ),
                             ),
@@ -620,22 +616,22 @@ class _DetailScreenTourState extends State<DetailScreenTour> {
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Price",
+                        const Text("Price",
                             style: TextStyle(
                                 color: Color.fromARGB(255, 200, 200, 200),
                                 fontSize: 15)),
                         TextField(
                           keyboardType: TextInputType.number,
-                          style: TextStyle(color: Colors.white),
+                          style: const TextStyle(color: Colors.white),
                           controller: priceField,
                           decoration: InputDecoration(
-                              hintStyle: TextStyle(
+                              hintStyle: const TextStyle(
                                   color: Color.fromARGB(255, 150, 150, 150)),
                               focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
+                                borderSide: const BorderSide(color: Colors.white),
                                 borderRadius: BorderRadius.circular(25.7),
                               ),
-                              border: OutlineInputBorder(
+                              border: const OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.white),
                               ),
                               hintText: '12.000.000..'),
@@ -647,7 +643,7 @@ class _DetailScreenTourState extends State<DetailScreenTour> {
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text("Active",
+                        const Text("Active",
                             style: TextStyle(
                                 color: Color.fromARGB(255, 200, 200, 200),
                                 fontSize: 15)),
@@ -671,9 +667,9 @@ class _DetailScreenTourState extends State<DetailScreenTour> {
                         )
                       ]),
                 ),
-                Divider(color: Colors.grey),
+                const Divider(color: Colors.grey),
                 Padding(
-                    padding: EdgeInsets.only(top: 10),
+                    padding: const EdgeInsets.only(top: 10),
                     child: SizedBox(
                         width: double.infinity, // <-- Your width
                         height: 50, // <-- Your height
@@ -693,18 +689,18 @@ class _DetailScreenTourState extends State<DetailScreenTour> {
                                         children: [
                                           TextField(
                                             controller: namaRoomField,
-                                            decoration: InputDecoration(
+                                            decoration: const InputDecoration(
                                                 hintText: 'Room Type Name'),
                                           ),
                                           TextField(
                                             controller: hargaRoomField,
                                             keyboardType: TextInputType.number,
-                                            decoration: InputDecoration(
+                                            decoration: const InputDecoration(
                                               hintText: 'Price',
                                             ),
                                           ),
                                           Padding(
-                                            padding: EdgeInsets.only(top: 10),
+                                            padding: const EdgeInsets.only(top: 10),
                                             child: SizedBox(
                                               width: double.infinity,
                                               height: 50,
@@ -722,7 +718,6 @@ class _DetailScreenTourState extends State<DetailScreenTour> {
                                                   });
                                                   Navigator.pop(context);
                                                 },
-                                                child: Text("Add Room Type"),
                                                 style: ButtonStyle(
                                                   backgroundColor:
                                                       MaterialStateProperty.all<
@@ -731,6 +726,7 @@ class _DetailScreenTourState extends State<DetailScreenTour> {
                                                       MaterialStateProperty.all<
                                                           Color>(Colors.black),
                                                 ),
+                                                child: const Text("Add Room Type"),
                                               ),
                                             ),
                                           )
@@ -744,14 +740,14 @@ class _DetailScreenTourState extends State<DetailScreenTour> {
                             //   password = 0;
                             // });
                           },
-                          child: const Text('Add Room Type',
-                              style: TextStyle(fontSize: 20)),
                           style: ButtonStyle(
                             backgroundColor:
                                 MaterialStateProperty.all<Color>(mainBlue),
                             foregroundColor:
                                 MaterialStateProperty.all<Color>(Colors.white),
                           ),
+                          child: const Text('Add Room Type',
+                              style: TextStyle(fontSize: 20)),
                         ))),
                 ListView.builder(
                     shrinkWrap: true,
@@ -763,11 +759,11 @@ class _DetailScreenTourState extends State<DetailScreenTour> {
                             padding: EdgeInsets.only(top: 20),
                             child: Wrap(
                               children: [
-                                Text("Day ",
+                                const Text("Day ",
                                     style: TextStyle(
                                         fontSize: 20, color: Colors.white)),
                                 Text((index + 1).toString(),
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 20,
                                         color: Colors.white))
@@ -779,11 +775,11 @@ class _DetailScreenTourState extends State<DetailScreenTour> {
                               itemCount: 2,
                               itemBuilder: (context, index) {
                                 return Padding(
-                                    padding: EdgeInsets.only(
+                                    padding: const EdgeInsets.only(
                                         left: 10, right: 10, top: 10),
                                     child: Container(
                                       child: Card(
-                                        color: Color.fromARGB(255, 49, 52, 57),
+                                        color: const Color.fromARGB(255, 49, 52, 57),
                                         child: Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: ListTile(
@@ -793,15 +789,15 @@ class _DetailScreenTourState extends State<DetailScreenTour> {
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
                                                 children: [
-                                                  Text("namaRoom[index]",
-                                                      style: TextStyle(
+                                                  Text(namaRoom[index],
+                                                      style: const TextStyle(
                                                           fontSize: 25,
                                                           fontWeight:
                                                               FontWeight.bold,
                                                           color: Colors.white)),
                                                 ],
                                               ),
-                                              Spacer(), // use Spacer
+                                              const Spacer(), // use Spacer
                                               Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.end,
@@ -810,7 +806,7 @@ class _DetailScreenTourState extends State<DetailScreenTour> {
                                                       style: TextStyle(
                                                           color: mainAmber,
                                                           fontSize: 20)),
-                                                  Text('/ night',
+                                                  const Text('/ night',
                                                       style: TextStyle(
                                                           color: Color.fromARGB(
                                                               255,
