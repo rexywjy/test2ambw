@@ -12,6 +12,7 @@ import 'package:test2ambw/components/carouselHotel.dart';
 import 'package:test2ambw/components/exploreMore.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:test2ambw/customer/index.dart';
 import 'package:test2ambw/customer/login.dart';
 import 'package:test2ambw/customer/profile.dart';
 
@@ -108,41 +109,49 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   Row(
                     children: [
-                      Padding(
-                        padding:
-                            const EdgeInsets.only(top: 5, left: 8, right: 50),
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 40,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                  color: Colors.black,
-                                  borderRadius: BorderRadius.circular(20)),
-                            ),
-                            Column(
-                              children: [
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.only(left: 8, right: 5),
-                                  child: Text("Where to today?",
-                                      style: GoogleFonts.montserrat(
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.w300,
-                                          fontStyle: FontStyle.italic)),
-                                ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.only(left: 8, right: 5),
-                                  child: Text(
-                                      nameProfile,
-                                      style: GoogleFonts.montserrat(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold)),
-                                ),
-                              ],
-                            ),
-                          ],
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => HomeCustomer(initialPageIndex: 2)),
+                          );
+                        },
+                        child: Padding(
+                          padding:
+                              const EdgeInsets.only(top: 5, left: 8, right: 50),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 40,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                    color: Colors.black,
+                                    borderRadius: BorderRadius.circular(20)),
+                              ),
+                              Column(
+                                children: [
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.only(left: 8, right: 5),
+                                    child: Text("Where to today?",
+                                        style: GoogleFonts.montserrat(
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.w300,
+                                            fontStyle: FontStyle.italic)),
+                                  ),
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.only(left: 8, right: 5),
+                                    child: Text(
+                                        nameProfile,
+                                        style: GoogleFonts.montserrat(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold)),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                       Padding(
