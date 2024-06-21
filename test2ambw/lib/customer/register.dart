@@ -20,6 +20,7 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  final usernamecontroller = TextEditingController();
   final namacontroller = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -34,13 +35,14 @@ class _RegisterPageState extends State<RegisterPage> {
   final Color mainPastelYellow = Color.fromARGB(255, 254, 239, 173);
 
   // insert mcustomer
-  Future insertData(name,email) async {
+  Future insertData(username,name,email) async {
     try {
       final List<Map<String, dynamic>> data = await Supabase.instance.client
             .from('mcustomer')
             .insert({
           'Email': email,
           'Name': name,
+          'Username': username,
           'CreatedDate' : DateTime.now().toIso8601String(),
           'Status': 0,
           'IsDel' : 0
@@ -130,11 +132,11 @@ class _RegisterPageState extends State<RegisterPage> {
 
       // Insert data to mcustomer
       try{
-        insertData(namacontroller.text,emailController.text);
+        insertData(usernamecontroller.text,namacontroller.text,emailController.text);
         // If successful, pop the loading circle
-        if(mounted){
-          Navigator.pop(context);
-        }
+        Navigator.pop(context);
+        // if(mounted){
+        // }
       } catch (e) {
         Navigator.pop(context);
         showDialog(
@@ -196,21 +198,36 @@ class _RegisterPageState extends State<RegisterPage> {
                   height: 50,
                 ),
 
+                // username
+                LoginTextField(
+                  controller: usernamecontroller,
+                  hintText: 'Username',
+                  obscureText: false,
+                  iconInput: Icon(Icons.abc),
+                  type: 'username',
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
                 // nama
                 LoginTextField(
-                    controller: namacontroller,
-                    hintText: 'Name',
-                    obscureText: false,
-                    iconInput: Icon(Icons.person)),
+                  controller: namacontroller,
+                  hintText: 'Name',
+                  obscureText: false,
+                  iconInput: Icon(Icons.person),
+                  type: ''
+                ),
                 const SizedBox(
                   height: 10,
                 ),
                 // email
                 LoginTextField(
-                    controller: emailController,
-                    hintText: 'Email',
-                    obscureText: false,
-                    iconInput: Icon(Icons.email)),
+                  controller: emailController,
+                  hintText: 'Email',
+                  obscureText: false,
+                  iconInput: Icon(Icons.email),
+                  type: ''
+                ),
                 const SizedBox(
                   height: 10,
                 ),
@@ -220,7 +237,9 @@ class _RegisterPageState extends State<RegisterPage> {
                     controller: passwordController,
                     hintText: 'Password',
                     obscureText: true,
-                    iconInput: Icon(Icons.lock)),
+                    iconInput: Icon(Icons.lock),
+                    type: ''
+                  ),
                 const SizedBox(
                   height: 10,
                 ),
@@ -230,7 +249,9 @@ class _RegisterPageState extends State<RegisterPage> {
                     controller: confirmpasswordController,
                     hintText: 'Confirm Password',
                     obscureText: true,
-                    iconInput: Icon(Icons.lock)),
+                    iconInput: Icon(Icons.lock),
+                    type: ''
+                  ),
                 const SizedBox(
                   height: 40,
                 ),

@@ -23,8 +23,8 @@ void main() async {
 
 class MainApp extends StatelessWidget {
 
-  final Color mainBlue = Color.fromARGB(255, 3, 174, 210);
-  final Color mainYellow = Color.fromARGB(255, 253, 222, 85);
+  final Color mainBlue = const Color.fromARGB(255, 3, 174, 210);
+  final Color mainYellow = const Color.fromARGB(255, 253, 222, 85);
 
   final Color mainAmber = HexColor('#FFBF00');
 
@@ -44,8 +44,8 @@ class MainApp extends StatelessWidget {
       // ),
       initialRoute: '/',
       routes: {
-        '/': (context) => AuthPage(),
-        '/admin': (context) => AdminPortal(),
+        '/': (context) => const AuthPage(),
+        '/admin': (context) => const AdminPortal(),
       },
     );
   }

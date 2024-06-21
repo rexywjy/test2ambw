@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class LoginTextField extends StatelessWidget {
   final controller;
   final String hintText;
   final bool obscureText;
   final Icon iconInput;
+  final String type;
 
   static const Color mainBlue = Color.fromARGB(255, 3, 174, 210);
   static const Color mainBlue2 = Color.fromARGB(255, 71, 147, 175);
@@ -18,6 +20,7 @@ class LoginTextField extends StatelessWidget {
     required this.hintText,
     required this.obscureText,
     required this.iconInput,
+    required this.type
     });
 
   // constructor
@@ -25,6 +28,31 @@ class LoginTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if(type == "username"){
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 25.0),
+        child: TextField(
+          controller: controller,
+          obscureText: obscureText,
+          decoration: InputDecoration(
+            hintText: hintText,
+            prefixIcon: iconInput,
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: mainLightGrey),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: mainBlue2),
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+          inputFormatters: [
+              FilteringTextInputFormatter.deny(
+                  RegExp(r'\s')),
+          ],
+        ),
+      );
+    }
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25.0),
       child: TextField(

@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:test2ambw/components/errordialog.dart';
 import 'package:test2ambw/components/squaretile.dart';
@@ -8,12 +7,11 @@ import 'package:test2ambw/customer/index.dart';
 import 'package:test2ambw/seller/index.dart';
 import '../components/loginbutton.dart';
 import '../components/loginTextField.dart';
-import 'package:supabase/supabase.dart';
 
 class LoginPage extends StatefulWidget {
   final Function()? onTap;
 
-  LoginPage({
+  const LoginPage({
     super.key,
     required this.onTap,
   });
@@ -29,13 +27,13 @@ class _LoginPageState extends State<LoginPage> {
 
   final passwordController = TextEditingController();
 
-  final Color mainBlue = Color.fromARGB(255, 3, 174, 210);
+  final Color mainBlue = const Color.fromARGB(255, 3, 174, 210);
 
-  final Color mainBlue2 = Color.fromARGB(255, 71, 147, 175);
+  final Color mainBlue2 = const Color.fromARGB(255, 71, 147, 175);
 
-  final Color mainYellow = Color.fromARGB(255, 253, 222, 85);
+  final Color mainYellow = const Color.fromARGB(255, 253, 222, 85);
 
-  final Color mainPastelYellow = Color.fromARGB(255, 254, 239, 173);
+  final Color mainPastelYellow = const Color.fromARGB(255, 254, 239, 173);
 
   // supabase client
   final _supabaseClient = SupabaseClient(
@@ -64,7 +62,7 @@ class _LoginPageState extends State<LoginPage> {
       showDialog(
         context: context,
         builder: (context) {
-          return ErrorDialog(errormsg: "Please fill in all fields");
+          return const ErrorDialog(errormsg: "Please fill in all fields");
         },
       );
       return;
@@ -143,11 +141,11 @@ class _LoginPageState extends State<LoginPage> {
       }
     } on FirebaseAuthException catch (e) {
       // Handle the error, show a message, etc.
-      print('Error: $e');
+      // print('Error: $e');
       // Dismiss the loading circle
       Navigator.pop(context);
       // Optionally, show an error dialog or a message to the user
-      print("Error code: " + e.code);
+      // print("Error code: " + e.code);
       if((e.code != 'user-not-found' && e.code != 'wrong-password' && e.code != 'invalid-credential')){
         showDialog(
           context: context,
@@ -159,7 +157,7 @@ class _LoginPageState extends State<LoginPage> {
         showDialog(
           context: context,
           builder: (context) {
-            return ErrorDialog(errormsg: "Invalid email or password");
+            return const ErrorDialog(errormsg: "Invalid email or password");
           },
         );
 
@@ -227,7 +225,9 @@ class _LoginPageState extends State<LoginPage> {
                     controller: usernameController,
                     hintText: 'Email',
                     obscureText: false,
-                    iconInput: Icon(Icons.email)),
+                    iconInput: const Icon(Icons.email),
+                    type: ''
+                  ),
                 const SizedBox(
                   height: 10,
                 ),
@@ -237,7 +237,9 @@ class _LoginPageState extends State<LoginPage> {
                     controller: passwordController,
                     hintText: 'Password',
                     obscureText: true,
-                    iconInput: Icon(Icons.lock)),
+                    iconInput: const Icon(Icons.lock),
+                    type: ''
+                  ),
                 const SizedBox(
                   height: 10,
                 ),
@@ -312,8 +314,8 @@ class _LoginPageState extends State<LoginPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("Didn't have an account? "),
-                    SizedBox(
+                    const Text("Didn't have an account? "),
+                    const SizedBox(
                       width: 5,
                     ),
                     GestureDetector(

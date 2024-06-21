@@ -5,10 +5,10 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:intl/intl.dart';
 
-final Color mainBlue = Color.fromARGB(255, 3, 174, 210);
-final Color mainBlueLight = Color.fromARGB(255, 124, 202, 217);
+const Color mainBlue = Color.fromARGB(255, 3, 174, 210);
+const Color mainBlueLight = Color.fromARGB(255, 124, 202, 217);
 
-final Color mainYellow = Color.fromARGB(255, 253, 222, 85);
+const Color mainYellow = Color.fromARGB(255, 253, 222, 85);
 
 final Color mainAmber = HexColor('#FFBF00');
 
@@ -70,14 +70,14 @@ class _HomeSellerStateHotelState extends State<HomeSellerStateHotel> {
     return Scaffold(
         backgroundColor: Color.fromARGB(255, 23, 26, 31),
         appBar: AppBar(
-          title: Text(("List Hotel"),
+          title: const Text(("List Hotel"),
               style: TextStyle(fontWeight: FontWeight.bold)),
           backgroundColor: mainAmber,
           actions: [
             Padding(
               padding: EdgeInsets.only(right: 20),
               child: IconButton(
-                icon: Wrap(
+                icon: const Wrap(
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
                     Icon(Icons.add, color: Color.fromARGB(255, 23, 26, 31)),
@@ -97,7 +97,9 @@ class _HomeSellerStateHotelState extends State<HomeSellerStateHotel> {
           child: SafeArea(
             child: Column(
               children: [
-                const SizedBox(height: 10,),
+                const SizedBox(
+                  height: 10,
+                ),
                 SizedBox(
                   height: 50,
                   child: Padding(
@@ -105,17 +107,17 @@ class _HomeSellerStateHotelState extends State<HomeSellerStateHotel> {
                     child: Wrap(
                       crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
-                        Padding(
+                        const Padding(
                           padding: EdgeInsets.only(right: 10),
                           child: Text("Filter",
                               style:
                                   TextStyle(fontSize: 20, color: Colors.white)),
                         ),
                         DropdownMenu<String>(
-                          textStyle: TextStyle(color: Colors.white),
+                          textStyle: const TextStyle(color: Colors.white),
                           menuStyle: MenuStyle(
                               backgroundColor: MaterialStateProperty.all<Color>(
-                                  Color.fromARGB(255, 100, 100, 100))),
+                                  const Color.fromARGB(255, 100, 100, 100))),
                           initialSelection: list.first,
                           onSelected: (String? value) {
                             // This is called when the user selects an item.
@@ -124,16 +126,16 @@ class _HomeSellerStateHotelState extends State<HomeSellerStateHotel> {
                             });
                             fetchTourData();
                           },
-                          dropdownMenuEntries:
-                              list.map<DropdownMenuEntry<String>>((String value) {
+                          dropdownMenuEntries: list
+                              .map<DropdownMenuEntry<String>>((String value) {
                             return DropdownMenuEntry<String>(
                                 style: ButtonStyle(
                                     foregroundColor:
                                         MaterialStateProperty.all<Color>(
                                             Colors.amber),
-                                    backgroundColor:
-                                        MaterialStateProperty.all<Color>(
-                                            Color.fromARGB(255, 50, 50, 50))),
+                                    backgroundColor: MaterialStateProperty.all<
+                                            Color>(
+                                        const Color.fromARGB(255, 50, 50, 50))),
                                 value: value,
                                 label: value);
                           }).toList(),
@@ -142,109 +144,110 @@ class _HomeSellerStateHotelState extends State<HomeSellerStateHotel> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 20,),
+                const SizedBox(
+                  height: 20,
+                ),
                 SizedBox(
-                    // height: double.minPositive,
-                    child: 
-                      Column(
-                        children: mhotel.map((hotel) {
-                          return Padding(
-                            padding: EdgeInsets.only(left: 10, right: 10, top: 10),
-                            child: Container(
-                              child: Card(
-                                color: Color.fromARGB(255, 49, 52, 57),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: ListTile(
-                                    onTap: () {
-                                      pindahKeForm(context,
-                                          hotelID: hotel["HotelID"], isNew: 0);
-                                    },
-                                    title: Row(
-                                      children: [
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Wrap(
-                                              children: [
-                                                Padding(
-                                                  padding: EdgeInsets.only(
-                                                      top: 15, right: 5),
-                                                  child: Icon(Icons.circle,
-                                                      color: (hotel["Status"] == 1)
-                                                          ? Colors.green
-                                                          : Colors.red,
-                                                      size: 10),
-                                                ),
-                                                Text(hotel["NamaHotel"],
-                                                    style: TextStyle(
-                                                        fontSize: 25,
-                                                        fontWeight: FontWeight.bold,
-                                                        color: Colors.white)),
-                                              ],
-                                            ),
-                                            Text(hotel["LokasiHotel"],
-                                                style: TextStyle(
-                                                    color: Color.fromARGB(
-                                                        255, 150, 150, 150))),
-                                            Row(
-                                              children: [
-                                                Icon(Icons.star,
-                                                    color: Colors.white, size: 15),
-                                                Text(
-                                                    ' ' +
-                                                        (hotel["RatingHotel"] ?? 0)
-                                                            .toString(),
-                                                    style:
-                                                        TextStyle(color: mainAmber)),
-                                              ],
-                                            )
-                                          ],
-                                        ),
-                                        Spacer(), // use Spacer
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.end,
-                                          children: [
-                                            Text(
-                                                'Rp ' +
-                                                    NumberFormat("#,###")
-                                                        .format((hotel['dhotel']
-                                                                    .length >
-                                                                0)
-                                                            ? hotel['dhotel']
-                                                                    .map((m) => m[
-                                                                        'Harga'])
-                                                                    .reduce(
-                                                                        (a, b) => a + b) /
-                                                                hotel['dhotel'].length
-                                                            : 0)
-                                                        .replaceAll(",", "."),
-                                                style: TextStyle(
-                                                    color: mainAmber, fontSize: 20)),
-                                            Text('/ night',
-                                                style: TextStyle(
-                                                    color: Color.fromARGB(
-                                                        255, 150, 150, 150),
-                                                    fontSize: 15)),
-                                            Text(
-                                                hotel['dhotel'].length.toString() +
-                                                    ' Room Type(s)',
-                                                style: TextStyle(
-                                                    color: Color.fromARGB(
-                                                        255, 200, 200, 200),
-                                                    fontSize: 16))
-                                          ],
-                                        ),
-                                      ],
-                                    ),
+                  // height: double.minPositive,
+                  child: Column(
+                    children: mhotel.map((hotel) {
+                      return Padding(
+                        padding:
+                            const EdgeInsets.only(left: 10, right: 10, top: 10),
+                        child: Card(
+                          color: const Color.fromARGB(255, 49, 52, 57),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ListTile(
+                              onTap: () {
+                                pindahKeForm(context,
+                                    hotelID: hotel["HotelID"], isNew: 0);
+                              },
+                              title: Row(
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Wrap(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                top: 15, right: 5),
+                                            child: Icon(Icons.circle,
+                                                color: (hotel["Status"] == 1)
+                                                    ? Colors.green
+                                                    : Colors.red,
+                                                size: 10),
+                                          ),
+                                          Text(hotel["NamaHotel"],
+                                              style: const TextStyle(
+                                                  fontSize: 25,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white)),
+                                        ],
+                                      ),
+                                      Text(hotel["LokasiHotel"],
+                                          style: const TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 150, 150, 150))),
+                                      Row(
+                                        children: [
+                                          const Icon(Icons.star,
+                                              color: Colors.white, size: 15),
+                                          Text(
+                                              ' ' +
+                                                  (hotel["RatingHotel"] ?? 0)
+                                                      .toString(),
+                                              style:
+                                                  TextStyle(color: mainAmber)),
+                                        ],
+                                      )
+                                    ],
                                   ),
-                                ),
+                                  const Spacer(), // use Spacer
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                          'Rp ' +
+                                              NumberFormat("#,###")
+                                                  .format((hotel['dhotel']
+                                                              .length >
+                                                          0)
+                                                      ? hotel['dhotel']
+                                                              .map((m) =>
+                                                                  m['Harga'])
+                                                              .reduce((a, b) =>
+                                                                  a + b) /
+                                                          hotel['dhotel'].length
+                                                      : 0)
+                                                  .replaceAll(",", "."),
+                                          style: TextStyle(
+                                              color: mainAmber, fontSize: 20)),
+                                      const Text('/ night',
+                                          style: TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 150, 150, 150),
+                                              fontSize: 15)),
+                                      Text(
+                                          hotel['dhotel'].length.toString() +
+                                              ' Room Type(s)',
+                                          style: TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 200, 200, 200),
+                                              fontSize: 16))
+                                    ],
+                                  ),
+                                ],
                               ),
                             ),
-                          );
-                        }).toList(),
-                      ),
-                    ),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
               ],
             ),
           ),
@@ -253,7 +256,7 @@ class _HomeSellerStateHotelState extends State<HomeSellerStateHotel> {
 }
 
 class DetailScreenHotel extends StatefulWidget {
-  DetailScreenHotel({super.key, this.isNew = 0, this.hotelID = 0});
+  const DetailScreenHotel({super.key, this.isNew = 0, this.hotelID = 0});
 
   final int isNew;
   final int hotelID;
@@ -263,9 +266,9 @@ class DetailScreenHotel extends StatefulWidget {
 }
 
 class _DetailScreenHotelState extends State<DetailScreenHotel> {
-  final Color mainBlue = Color.fromARGB(255, 3, 174, 210);
+  final Color mainBlue = const Color.fromARGB(255, 3, 174, 210);
 
-  final Color mainYellow = Color.fromARGB(255, 253, 222, 85);
+  final Color mainYellow = const Color.fromARGB(255, 253, 222, 85);
 
   final Color mainAmber = HexColor('#FFBF00');
 
@@ -379,25 +382,25 @@ class _DetailScreenHotelState extends State<DetailScreenHotel> {
       fetchTourData();
     }
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 23, 26, 31),
+      backgroundColor: const Color.fromARGB(255, 23, 26, 31),
       appBar: AppBar(
         title: Wrap(children: [
           Text((((widget.isNew == 0) ? "Edit" : "Add") + " Hotel  "),
-              style: TextStyle(fontWeight: FontWeight.bold)),
-          Icon(Icons.hotel)
+              style: const TextStyle(fontWeight: FontWeight.bold)),
+          const Icon(Icons.hotel)
         ]),
         backgroundColor: mainAmber,
         actions: [
           Padding(
-            padding: EdgeInsets.only(right: 20),
+            padding: const EdgeInsets.only(right: 20),
             child: IconButton(
               icon: Wrap(
                 crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
                   Icon((widget.isNew == 0) ? Icons.save : Icons.add,
-                      color: Color.fromARGB(255, 23, 26, 31)),
+                      color: const Color.fromARGB(255, 23, 26, 31)),
                   Text((widget.isNew == 0) ? "Save" : "Add",
-                      style: TextStyle(color: Color.fromARGB(255, 23, 26, 31))),
+                      style: const TextStyle(color: Color.fromARGB(255, 23, 26, 31))),
                 ],
               ),
               onPressed: () {
@@ -407,9 +410,9 @@ class _DetailScreenHotelState extends State<DetailScreenHotel> {
           ),
           if (widget.isNew == 0)
             Padding(
-              padding: EdgeInsets.only(right: 20),
+              padding: const EdgeInsets.only(right: 20),
               child: IconButton(
-                icon: Wrap(
+                icon: const Wrap(
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
                     Icon(Icons.delete, color: Colors.red),
@@ -433,21 +436,21 @@ class _DetailScreenHotelState extends State<DetailScreenHotel> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Hotel Name",
+                        const Text("Hotel Name",
                             style: TextStyle(
                                 color: Color.fromARGB(255, 200, 200, 200),
                                 fontSize: 15)),
                         TextField(
-                          style: TextStyle(color: Colors.white),
+                          style: const TextStyle(color: Colors.white),
                           controller: nameField,
                           decoration: InputDecoration(
-                              hintStyle: TextStyle(
+                              hintStyle: const TextStyle(
                                   color: Color.fromARGB(255, 150, 150, 150)),
                               focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
+                                borderSide: const BorderSide(color: Colors.white),
                                 borderRadius: BorderRadius.circular(25.7),
                               ),
-                              border: OutlineInputBorder(
+                              border: const OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.white),
                               ),
                               hintText: 'JW Marriot..'),
@@ -459,21 +462,21 @@ class _DetailScreenHotelState extends State<DetailScreenHotel> {
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Location",
+                        const Text("Location",
                             style: TextStyle(
                                 color: Color.fromARGB(255, 200, 200, 200),
                                 fontSize: 15)),
                         TextField(
-                          style: TextStyle(color: Colors.white),
+                          style: const TextStyle(color: Colors.white),
                           controller: locationField,
                           decoration: InputDecoration(
-                              hintStyle: TextStyle(
+                              hintStyle: const TextStyle(
                                   color: Color.fromARGB(255, 150, 150, 150)),
                               focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
+                                borderSide: const BorderSide(color: Colors.white),
                                 borderRadius: BorderRadius.circular(25.7),
                               ),
-                              border: OutlineInputBorder(
+                              border: const OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.white),
                               ),
                               hintText: 'Singapore..'),
@@ -485,7 +488,7 @@ class _DetailScreenHotelState extends State<DetailScreenHotel> {
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text("Active",
+                        const Text("Active",
                             style: TextStyle(
                                 color: Color.fromARGB(255, 200, 200, 200),
                                 fontSize: 15)),
@@ -509,9 +512,9 @@ class _DetailScreenHotelState extends State<DetailScreenHotel> {
                         )
                       ]),
                 ),
-                Divider(color: Colors.grey),
+                const Divider(color: Colors.grey),
                 Padding(
-                    padding: EdgeInsets.only(top: 10),
+                    padding: const EdgeInsets.only(top: 10),
                     child: SizedBox(
                         width: double.infinity, // <-- Your width
                         height: 50, // <-- Your height
@@ -523,26 +526,26 @@ class _DetailScreenHotelState extends State<DetailScreenHotel> {
                                 context: context,
                                 //backgroundColor: Colors.transparent,
                                 useRootNavigator: true,
-                                builder: (context) => Container(
+                                builder: (context) => SizedBox(
                                     height: 500,
                                     child: Padding(
-                                      padding: EdgeInsets.all(20),
+                                      padding: const EdgeInsets.all(20),
                                       child: Column(
                                         children: [
                                           TextField(
                                             controller: namaRoomField,
-                                            decoration: InputDecoration(
+                                            decoration: const InputDecoration(
                                                 hintText: 'Room Type Name'),
                                           ),
                                           TextField(
                                             controller: hargaRoomField,
                                             keyboardType: TextInputType.number,
-                                            decoration: InputDecoration(
+                                            decoration: const InputDecoration(
                                               hintText: 'Price',
                                             ),
                                           ),
                                           Padding(
-                                            padding: EdgeInsets.only(top: 10),
+                                            padding: const EdgeInsets.only(top: 10),
                                             child: SizedBox(
                                               width: double.infinity,
                                               height: 50,
@@ -560,7 +563,6 @@ class _DetailScreenHotelState extends State<DetailScreenHotel> {
                                                   });
                                                   Navigator.pop(context);
                                                 },
-                                                child: Text("Add Room Type"),
                                                 style: ButtonStyle(
                                                   backgroundColor:
                                                       MaterialStateProperty.all<
@@ -569,6 +571,7 @@ class _DetailScreenHotelState extends State<DetailScreenHotel> {
                                                       MaterialStateProperty.all<
                                                           Color>(Colors.black),
                                                 ),
+                                                child: const Text("Add Room Type"),
                                               ),
                                             ),
                                           )
@@ -582,25 +585,25 @@ class _DetailScreenHotelState extends State<DetailScreenHotel> {
                             //   password = 0;
                             // });
                           },
-                          child: const Text('Add Room Type',
-                              style: TextStyle(fontSize: 20)),
                           style: ButtonStyle(
                             backgroundColor:
                                 MaterialStateProperty.all<Color>(mainBlue),
                             foregroundColor:
                                 MaterialStateProperty.all<Color>(Colors.white),
                           ),
+                          child: const Text('Add Room Type',
+                              style: TextStyle(fontSize: 20)),
                         ))),
                 Padding(
-                    padding: EdgeInsets.only(top: 10),
+                    padding: const EdgeInsets.only(top: 10),
                     child: Wrap(
                       children: [
                         Text(namaRoom.length.toString(),
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontSize: 20,
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold)),
-                        Text(" Room(s)",
+                        const Text(" Room(s)",
                             style: TextStyle(fontSize: 20, color: Colors.white))
                       ],
                     )),
@@ -610,10 +613,10 @@ class _DetailScreenHotelState extends State<DetailScreenHotel> {
                     itemBuilder: (context, index) {
                       return Padding(
                           padding:
-                              EdgeInsets.only(left: 10, right: 10, top: 10),
+                              const EdgeInsets.only(left: 10, right: 10, top: 10),
                           child: Container(
                             child: Card(
-                              color: Color.fromARGB(255, 49, 52, 57),
+                              color: const Color.fromARGB(255, 49, 52, 57),
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: ListTile(
@@ -622,15 +625,15 @@ class _DetailScreenHotelState extends State<DetailScreenHotel> {
                                           context: context,
                                           //backgroundColor: Colors.transparent,
                                           useRootNavigator: true,
-                                          builder: (context) => Container(
+                                          builder: (context) => SizedBox(
                                               height: 500,
                                               child: Padding(
-                                                padding: EdgeInsets.all(20),
+                                                padding: const EdgeInsets.all(20),
                                                 child: Column(
                                                   children: [
                                                     TextField(
                                                       controller: namaRoomField,
-                                                      decoration: InputDecoration(
+                                                      decoration: const InputDecoration(
                                                           hintText:
                                                               'Room Type Name'),
                                                     ),
@@ -640,12 +643,12 @@ class _DetailScreenHotelState extends State<DetailScreenHotel> {
                                                       keyboardType:
                                                           TextInputType.number,
                                                       decoration:
-                                                          InputDecoration(
+                                                          const InputDecoration(
                                                         hintText: 'Price',
                                                       ),
                                                     ),
                                                     Padding(
-                                                      padding: EdgeInsets.only(
+                                                      padding: const EdgeInsets.only(
                                                           top: 10),
                                                       child: SizedBox(
                                                         width: double.infinity,
@@ -653,26 +656,33 @@ class _DetailScreenHotelState extends State<DetailScreenHotel> {
                                                         child: ElevatedButton(
                                                           onPressed: () {
                                                             setState(() {
-                                                              namaRoom[index] = (
-                                                                  namaRoomField
+                                                              namaRoom[index] =
+                                                                  (namaRoomField
                                                                       .text);
-                                                              hargaRoom[index] = (int.parse(
-                                                                  hargaRoomField
-                                                                      .text));
+                                                              hargaRoom[index] =
+                                                                  (int.parse(
+                                                                      hargaRoomField
+                                                                          .text));
                                                               roomUpdated.add({
                                                                 "DHotelID": hotelData[0]
-                                                                        ["dhotel"]
-                                                                    [index]["DHotelID"],
-                                                                "Tipe": namaRoomField.text,
-                                                                "Harga": int.parse(hargaRoomField.text)
+                                                                            [
+                                                                            "dhotel"]
+                                                                        [index][
+                                                                    "DHotelID"],
+                                                                "Tipe":
+                                                                    namaRoomField
+                                                                        .text,
+                                                                "Harga": int.parse(
+                                                                    hargaRoomField
+                                                                        .text)
                                                               });
-                                                              debugPrint(roomUpdated[0].toString());
+                                                              debugPrint(
+                                                                  roomUpdated[0]
+                                                                      .toString());
                                                             });
                                                             Navigator.pop(
                                                                 context);
                                                           },
-                                                          child: Text(
-                                                              "Save Room Type"),
                                                           style: ButtonStyle(
                                                             backgroundColor:
                                                                 MaterialStateProperty
@@ -684,15 +694,17 @@ class _DetailScreenHotelState extends State<DetailScreenHotel> {
                                                                         Colors
                                                                             .black),
                                                           ),
+                                                          child: const Text(
+                                                              "Save Room Type"),
                                                         ),
                                                       ),
                                                     )
                                                   ],
                                                 ),
                                               ))); //woi disini
-                                              namaRoomField.text = namaRoom[index];
-                                              hargaRoomField.text =
-                                                  hargaRoom[index].toString();
+                                      namaRoomField.text = namaRoom[index];
+                                      hargaRoomField.text =
+                                          hargaRoom[index].toString();
                                     },
                                     title: Row(
                                       children: [
@@ -701,13 +713,13 @@ class _DetailScreenHotelState extends State<DetailScreenHotel> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(namaRoom[index],
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                     fontSize: 25,
                                                     fontWeight: FontWeight.bold,
                                                     color: Colors.white)),
                                           ],
                                         ),
-                                        Spacer(), // use Spacer
+                                        const Spacer(), // use Spacer
                                         Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.end,
@@ -717,7 +729,7 @@ class _DetailScreenHotelState extends State<DetailScreenHotel> {
                                                 style: TextStyle(
                                                     color: mainAmber,
                                                     fontSize: 20)),
-                                            Text('/ night',
+                                            const Text('/ night',
                                                 style: TextStyle(
                                                     color: Color.fromARGB(
                                                         255, 150, 150, 150),

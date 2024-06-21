@@ -461,7 +461,7 @@ class _DetailScreenTourState extends State<DetailScreenTour> {
                               hintStyle: const TextStyle(
                                   color: Color.fromARGB(255, 150, 150, 150)),
                               focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
+                                borderSide: const BorderSide(color: Colors.white),
                                 borderRadius: BorderRadius.circular(25.7),
                               ),
                               border: const OutlineInputBorder(
@@ -563,7 +563,7 @@ class _DetailScreenTourState extends State<DetailScreenTour> {
                             ),
                           ],
                         ),
-                        Padding(padding: EdgeInsets.symmetric(horizontal: 20)),
+                        const Padding(padding: EdgeInsets.symmetric(horizontal: 20)),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
@@ -672,7 +672,7 @@ class _DetailScreenTourState extends State<DetailScreenTour> {
                                 builder: (context) => Container(
                                     height: 500,
                                     child: Padding(
-                                      padding: EdgeInsets.all(20),
+                                      padding: const EdgeInsets.all(20),
                                       child: Column(
                                         children: [
                                           TextField(
@@ -777,7 +777,7 @@ class _DetailScreenTourState extends State<DetailScreenTour> {
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
                                                 children: [
-                                                  Text(namaRoom[index],
+                                                  Text('namaRoom[index]',
                                                       style: const TextStyle(
                                                           fontSize: 25,
                                                           fontWeight:
