@@ -808,7 +808,9 @@ class _DetailScreenTourState extends State<DetailScreenTour> {
                         )
                       ]),
                 ),
+                if (widget.isNew == 0)
                 const Divider(color: Colors.grey),
+                if (widget.isNew == 0)
                 ListView.builder(
                     shrinkWrap: true,
                     itemCount: howManyDays,

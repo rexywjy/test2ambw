@@ -66,7 +66,7 @@ class _HomeSellerStateHotelState extends State<HomeSellerStateHotel> {
       context,
       MaterialPageRoute(
           builder: (context) =>
-              DetailScreenHotel(hotelID: hotelID, isNew: isNew)),
+              DetailScreenHotel(hotelID: hotelID, isNew: isNew, isStore: widget.idStore)),
     );
     fetchTourData();
   }
@@ -89,7 +89,7 @@ class _HomeSellerStateHotelState extends State<HomeSellerStateHotel> {
                 icon: Wrap(
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
-                    Icon(Icons.add, color: Color.fromARGB(255, 23, 26, 31)),
+                    const Icon(Icons.add, color: Color.fromARGB(255, 23, 26, 31)),
                     if (MediaQuery.of(context).size.width > 750)
                       const Text("New Hotel",
                           style: TextStyle(
@@ -120,7 +120,7 @@ class _HomeSellerStateHotelState extends State<HomeSellerStateHotel> {
                                 TextStyle(fontSize: 20, color: Colors.white)),
                       ),
                       DropdownMenu<String>(
-                        textStyle: TextStyle(color: Colors.white),
+                        textStyle: const TextStyle(color: Colors.white),
                         menuStyle: MenuStyle(
                             backgroundColor: MaterialStateProperty.all<Color>(
                                 const Color.fromARGB(255, 100, 100, 100))),
@@ -298,7 +298,7 @@ class _HomeSellerStateHotelState extends State<HomeSellerStateHotel> {
                                                 ),
                                             ],
                                           ),
-                                          Spacer(), // use Spacer
+                                          const Spacer(), // use Spacer
                                           if (MediaQuery.of(context)
                                                   .size
                                                   .width >
@@ -359,10 +359,16 @@ class _HomeSellerStateHotelState extends State<HomeSellerStateHotel> {
 }
 
 class DetailScreenHotel extends StatefulWidget {
-  const DetailScreenHotel({super.key, this.isNew = 0, this.hotelID = 0});
+  const DetailScreenHotel({
+    super.key, 
+    this.isNew = 0, 
+    this.hotelID = 0,
+    required this.isStore
+    });
 
   final int isNew;
   final int hotelID;
+  final int isStore;
 
   @override
   State<DetailScreenHotel> createState() => _DetailScreenHotelState();
@@ -386,11 +392,13 @@ class _DetailScreenHotelState extends State<DetailScreenHotel> {
     try {
       // String userId = Supabase.instance.client.auth.currentUser!.id;
       if (widget.isNew == 1) {
+        var idtoko = widget.isStore;
         final List<Map<String, dynamic>> data = await Supabase.instance.client
             .from('mhotel')
             .insert({
           'NamaHotel': namaTmp,
           'LokasiHotel': lokasiTmp,
+          'SellerID': idtoko,
           'Status': ((isActive) ? 1 : 0)
         }).select();
 
