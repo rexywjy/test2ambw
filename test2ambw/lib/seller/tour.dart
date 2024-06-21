@@ -70,7 +70,7 @@ class _HomeSellerStateTourState extends State<HomeSellerStateTour> {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => DetailScreenTour(tourID: tourID, isNew: isNew)),
+          builder: (context) => DetailScreenTour(tourID: tourID, isNew: isNew, idStore: widget.idStore)),
     );
     fetchTourData();
   }
@@ -83,7 +83,7 @@ class _HomeSellerStateTourState extends State<HomeSellerStateTour> {
     return Scaffold(
         backgroundColor: Color.fromARGB(255, 23, 26, 31),
         appBar: AppBar(
-          title: const Text(("List Tour"),
+          title: Text(("List Tour"),
               style: TextStyle(fontWeight: FontWeight.bold)),
           backgroundColor: mainAmber,
           actions: [
@@ -319,10 +319,16 @@ class _HomeSellerStateTourState extends State<HomeSellerStateTour> {
 }
 
 class DetailScreenTour extends StatefulWidget {
-  const DetailScreenTour({super.key, this.isNew = 0, this.tourID = 0});
+  const DetailScreenTour({
+    super.key, 
+    this.isNew = 0, 
+    this.tourID = 0, 
+    required this.idStore
+  });
 
   final int isNew;
   final int tourID;
+  final int idStore;
 
   @override
   State<DetailScreenTour> createState() => _DetailScreenTourState();
@@ -353,6 +359,8 @@ class _DetailScreenTourState extends State<DetailScreenTour> {
       debugPrint(endTmp);
       // String userId = Supabase.instance.client.auth.currentUser!.id;
       if (widget.isNew == 1) {
+        debugPrint(widget.idStore.toString());
+        var idtoko = widget.idStore;
         final List<Map<String, dynamic>> data =
             await Supabase.instance.client.from('mtour').insert({
           'NamaTour': namaTmp,
@@ -361,6 +369,7 @@ class _DetailScreenTourState extends State<DetailScreenTour> {
           'StartDate': startTmp,
           'EndDate': endTmp,
           'Price': int.parse(hargaTmp),
+          'SellerID': idtoko,
           'Status': ((isActive) ? 1 : 0)
         }).select();
 
