@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:intl/intl.dart';
@@ -110,6 +108,7 @@ class _HomeSellerStateTourState extends State<HomeSellerStateTour> {
         body: SingleChildScrollView(
           child: Column(
             children: [
+              const SizedBox(height: 10,),
               SizedBox(
                 height: 50,
                 child: Padding(
@@ -154,164 +153,278 @@ class _HomeSellerStateTourState extends State<HomeSellerStateTour> {
                   ),
                 ),
               ),
+              const SizedBox(height: 20,),
               SizedBox(
-                  child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: mtour.length,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                            padding:
-                                EdgeInsets.only(left: 10, right: 10, top: 10),
-                            child: Container(
-                              child: Card(
-                                color: Color.fromARGB(255, 49, 52, 57),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: ListTile(
-                                      onTap: () {
-                                        pindahKeForm(context,
-                                            tourID: mtour[index]["TourID"],
-                                            isNew: 0);
-                                      },
-                                      title: Row(
+                child: Column(
+                  children: mtour.map((tour) {
+                    return Padding(
+                      padding: EdgeInsets.only(left: 10, right: 10, top: 10),
+                      child: Container(
+                        child: Card(
+                          color: Color.fromARGB(255, 49, 52, 57),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ListTile(
+                              onTap: () {
+                                pindahKeForm(context, tourID: tour["TourID"], isNew: 0);
+                              },
+                              title: Row(
+                                children: [
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Wrap(
                                         children: [
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Wrap(
-                                                children: [
-                                                  Padding(
-                                                    padding: EdgeInsets.only(
-                                                        top: (MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width <
-                                                                750)
-                                                            ? 6
-                                                            : 15,
-                                                        right: 5),
-                                                    child: Icon(Icons.circle,
-                                                        color: (mtour[index][
-                                                                    "Status"] ==
-                                                                1)
-                                                            ? Colors.green
-                                                            : Colors.red,
-                                                        size: 10),
-                                                  ),
-                                                  Text(mtour[index]["NamaTour"],
-                                                      style: TextStyle(
-                                                          fontSize: (MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width <
-                                                                  750)
-                                                              ? 20
-                                                              : 25,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color: Colors.white)),
-                                                ],
-                                              ),
-                                              Text(
-                                                  mtour[index][
-                                                          "DepartureLocation"] +
-                                                      "-" +
-                                                      mtour[index][
-                                                          "DestinationLocation"],
-                                                  style: TextStyle(
-                                                      fontSize: (MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .width <
-                                                              750)
-                                                          ? 14
-                                                          : 16,
-                                                      color: Color.fromARGB(
-                                                          255, 150, 150, 150))),
-                                              Row(
-                                                children: [
-                                                  Icon(Icons.people,
-                                                      color: Colors.white,
-                                                      size: 15),
-                                                  Text(
-                                                      ' ' +
-                                                          (mtour[index][
-                                                                      "MaxQuota"] ??
-                                                                  0)
-                                                              .toString() +
-                                                          "pax",
-                                                      style: TextStyle(
-                                                          color: mainAmber)),
-                                                  Padding(
-                                                      padding: EdgeInsets.only(
-                                                          right: 10)),
-                                                  Icon(Icons.sunny,
-                                                      color: Colors.white,
-                                                      size: 15),
-                                                  Text(
-                                                      ' ' +
-                                                          (daysBetween(
-                                                                      DateTime.parse(
-                                                                          (mtour[index]
-                                                                              [
-                                                                              "StartDate"])),
-                                                                      DateTime.parse(
-                                                                          (mtour[index]
-                                                                              [
-                                                                              "EndDate"]))) +
-                                                                  1)
-                                                              .toString() +
-                                                          "day(s)",
-                                                      style: TextStyle(
-                                                          color: mainAmber)),
-                                                ],
-                                              ),
-                                              if (MediaQuery.of(context)
-                                                      .size
-                                                      .width <=
-                                                  750)
-                                                Text(
-                                                    'Rp ' +
-                                                        NumberFormat("#,###")
-                                                            .format(
-                                                                (mtour[index]
-                                                                    ['Price']))
-                                                            .replaceAll(
-                                                                ",", "."),
-                                                    style: TextStyle(
-                                                        color: mainAmber,
-                                                        fontSize: 20)),
-                                            ],
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                top: (MediaQuery.of(context).size.width < 750)
+                                                    ? 6
+                                                    : 15,
+                                                right: 5),
+                                            child: Icon(Icons.circle,
+                                                color: (tour["Status"] == 1)
+                                                    ? Colors.green
+                                                    : Colors.red,
+                                                size: 10),
                                           ),
-                                          Spacer(),
-                                          if (MediaQuery.of(context)
-                                                  .size
-                                                  .width >
-                                              750) // use Spacer
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.end,
-                                              children: [
-                                                Text(
-                                                    'Rp ' +
-                                                        NumberFormat("#,###")
-                                                            .format(
-                                                                (mtour[index]
-                                                                    ['Price']))
-                                                            .replaceAll(
-                                                                ",", "."),
-                                                    style: TextStyle(
-                                                        color: mainAmber,
-                                                        fontSize: 20)),
-                                              ],
-                                            ),
+                                          Text(
+                                            tour["NamaTour"],
+                                            style: TextStyle(
+                                                fontSize: (MediaQuery.of(context).size.width <
+                                                        750)
+                                                    ? 20
+                                                    : 25,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white),
+                                          ),
                                         ],
-                                      )),
-                                ),
+                                      ),
+                                      Text(
+                                        tour["DepartureLocation"] +
+                                            "-" +
+                                            tour["DestinationLocation"],
+                                        style: TextStyle(
+                                            fontSize: (MediaQuery.of(context).size.width < 750)
+                                                ? 14
+                                                : 16,
+                                            color: Color.fromARGB(255, 150, 150, 150)),
+                                      ),
+                                      Row(
+                                        children: [
+                                          Icon(Icons.people, color: Colors.white, size: 15),
+                                          Text(
+                                            ' ' + (tour["MaxQuota"] ?? 0).toString() + "pax",
+                                            style: TextStyle(color: mainAmber),
+                                          ),
+                                          Padding(padding: EdgeInsets.only(right: 10)),
+                                          Icon(Icons.sunny, color: Colors.white, size: 15),
+                                          Text(
+                                            ' ' +
+                                                (daysBetween(
+                                                            DateTime.parse(tour["StartDate"]),
+                                                            DateTime.parse(tour["EndDate"])) +
+                                                        1)
+                                                    .toString() +
+                                                "day(s)",
+                                            style: TextStyle(color: mainAmber),
+                                          ),
+                                        ],
+                                      ),
+                                      if (MediaQuery.of(context).size.width <= 750)
+                                        Text(
+                                          'Rp ' +
+                                              NumberFormat("#,###")
+                                                  .format(tour['Price'])
+                                                  .replaceAll(",", "."),
+                                          style: TextStyle(color: mainAmber, fontSize: 20),
+                                        ),
+                                    ],
+                                  ),
+                                  Spacer(),
+                                  if (MediaQuery.of(context).size.width > 750)
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          'Rp ' +
+                                              NumberFormat("#,###")
+                                                  .format(tour['Price'])
+                                                  .replaceAll(",", "."),
+                                          style: TextStyle(color: mainAmber, fontSize: 20),
+                                        ),
+                                      ],
+                                    ),
+                                ],
                               ),
-                            ));
-                      })),
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              )
+
+              // SizedBox(
+              //     child: ListView.builder(
+              //         shrinkWrap: true,
+              //         itemCount: mtour.length,
+              //         itemBuilder: (context, index) {
+              //           return Padding(
+              //               padding:
+              //                   EdgeInsets.only(left: 10, right: 10, top: 10),
+              //               child: Container(
+              //                 child: Card(
+              //                   color: Color.fromARGB(255, 49, 52, 57),
+              //                   child: Padding(
+              //                     padding: const EdgeInsets.all(8.0),
+              //                     child: ListTile(
+              //                         onTap: () {
+              //                           pindahKeForm(context,
+              //                               tourID: mtour[index]["TourID"],
+              //                               isNew: 0);
+              //                         },
+              //                         title: Row(
+              //                           children: [
+              //                             Column(
+              //                               crossAxisAlignment:
+              //                                   CrossAxisAlignment.start,
+              //                               children: [
+              //                                 Wrap(
+              //                                   children: [
+              //                                     Padding(
+              //                                       padding: EdgeInsets.only(
+              //                                           top: (MediaQuery.of(
+              //                                                           context)
+              //                                                       .size
+              //                                                       .width <
+              //                                                   750)
+              //                                               ? 6
+              //                                               : 15,
+              //                                           right: 5),
+              //                                       child: Icon(Icons.circle,
+              //                                           color: (mtour[index][
+              //                                                       "Status"] ==
+              //                                                   1)
+              //                                               ? Colors.green
+              //                                               : Colors.red,
+              //                                           size: 10),
+              //                                     ),
+              //                                     Text(mtour[index]["NamaTour"],
+              //                                         style: TextStyle(
+              //                                             fontSize: (MediaQuery.of(
+              //                                                             context)
+              //                                                         .size
+              //                                                         .width <
+              //                                                     750)
+              //                                                 ? 20
+              //                                                 : 25,
+              //                                             fontWeight:
+              //                                                 FontWeight.bold,
+              //                                             color: Colors.white)),
+              //                                   ],
+              //                                 ),
+              //                                 Text(
+              //                                     mtour[index][
+              //                                             "DepartureLocation"] +
+              //                                         "-" +
+              //                                         mtour[index][
+              //                                             "DestinationLocation"],
+              //                                     style: TextStyle(
+              //                                         fontSize: (MediaQuery.of(
+              //                                                         context)
+              //                                                     .size
+              //                                                     .width <
+              //                                                 750)
+              //                                             ? 14
+              //                                             : 16,
+              //                                         color: Color.fromARGB(
+              //                                             255, 150, 150, 150))),
+              //                                 Row(
+              //                                   children: [
+              //                                     Icon(Icons.people,
+              //                                         color: Colors.white,
+              //                                         size: 15),
+              //                                     Text(
+              //                                         ' ' +
+              //                                             (mtour[index][
+              //                                                         "MaxQuota"] ??
+              //                                                     0)
+              //                                                 .toString() +
+              //                                             "pax",
+              //                                         style: TextStyle(
+              //                                             color: mainAmber)),
+              //                                     Padding(
+              //                                         padding: EdgeInsets.only(
+              //                                             right: 10)),
+              //                                     Icon(Icons.sunny,
+              //                                         color: Colors.white,
+              //                                         size: 15),
+              //                                     Text(
+              //                                         ' ' +
+              //                                             (daysBetween(
+              //                                                         DateTime.parse(
+              //                                                             (mtour[index]
+              //                                                                 [
+              //                                                                 "StartDate"])),
+              //                                                         DateTime.parse(
+              //                                                             (mtour[index]
+              //                                                                 [
+              //                                                                 "EndDate"]))) +
+              //                                                     1)
+              //                                                 .toString() +
+              //                                             "day(s)",
+              //                                         style: TextStyle(
+              //                                             color: mainAmber)),
+              //                                   ],
+              //                                 ),
+              //                                 if (MediaQuery.of(context)
+              //                                         .size
+              //                                         .width <=
+              //                                     750)
+              //                                   Text(
+              //                                       'Rp ' +
+              //                                           NumberFormat("#,###")
+              //                                               .format(
+              //                                                   (mtour[index]
+              //                                                       ['Price']))
+              //                                               .replaceAll(
+              //                                                   ",", "."),
+              //                                       style: TextStyle(
+              //                                           color: mainAmber,
+              //                                           fontSize: 20)),
+              //                               ],
+              //                             ),
+              //                             Spacer(),
+              //                             if (MediaQuery.of(context)
+              //                                     .size
+              //                                     .width >
+              //                                 750) // use Spacer
+              //                               Column(
+              //                                 crossAxisAlignment:
+              //                                     CrossAxisAlignment.end,
+              //                                 children: [
+              //                                   Text(
+              //                                       'Rp ' +
+              //                                           NumberFormat("#,###")
+              //                                               .format(
+              //                                                   (mtour[index]
+              //                                                       ['Price']))
+              //                                               .replaceAll(
+              //                                                   ",", "."),
+              //                                       style: TextStyle(
+              //                                           color: mainAmber,
+              //                                           fontSize: 20)),
+              //                                 ],
+              //                               ),
+              //                           ],
+              //                         )),
+              //                   ),
+              //                 ),
+              //               ));
+              //         }
+              //       )
+              //     ),
             ],
           ),
         ));
