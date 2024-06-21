@@ -461,7 +461,8 @@ class _DetailScreenHotelState extends State<DetailScreenHotel> {
         .from('mhotel')
         .select("*, dhotel(*)")
         .eq("HotelID", widget.hotelID)
-        .order("HotelID", ascending: true); // woi nda urut
+        .order("HotelID", ascending: true)
+        .order("DHotelID", referencedTable: "dhotel", ascending: true);
     var dHotelDataTmp = hotelData[0]["dhotel"];
     for (int i = 0; i < dHotelDataTmp.length; i++) {
       namaRoom.add(dHotelDataTmp[i]["Tipe"]);

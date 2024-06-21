@@ -147,7 +147,6 @@ class _HomeSellerStateTourState extends State<HomeSellerStateTour> {
                 ),
               ),
               SizedBox(
-                  // height: double.minPositive,
                   child: ListView.builder(
                       shrinkWrap: true,
                       itemCount: mtour.length,
@@ -356,16 +355,6 @@ class _DetailScreenTourState extends State<DetailScreenTour> {
           'Price': int.parse(hargaTmp),
           'Status': ((isActive) ? 1 : 0)
         }).select();
-
-        // for (int i = 0; i < namaRoomNew.length; i++) {
-        //   await Supabase.instance.client.from('dhotel').insert([
-        //     {
-        //       'HotelID': data[0]['HotelID'],
-        //       'Tipe': namaRoomNew[i],
-        //       'Harga': hargaRoomNew[i]
-        //     }
-        //   ]);
-        // }woi
       } else {
         await Supabase.instance.client.from('mtour').update({
           'NamaTour': namaTmp,
@@ -376,22 +365,69 @@ class _DetailScreenTourState extends State<DetailScreenTour> {
           'Price': int.parse(hargaTmp),
           'Status': ((isActive) ? 1 : 0)
         }).eq('TourID', widget.tourID);
-
-        // for (int i = 0; i < namaRoomNew.length; i++) {
-        //   await Supabase.instance.client.from('dhotel').insert([
-        //     {
-        //       'TourID': widget.tourID,
-        //       'Tipe': namaRoomNew[i],
-        //       'Harga': hargaRoomNew[i]
-        //     }
-        //   ]);
-        // }
       }
     } catch (e) {
       //print statment for identify insert error in if any , it will print the error in console
       print("Error while inserting Data: $e ");
     }
     Navigator.pop(context, 0);
+  }
+
+  Future insertDetailTool(day) async {
+    var noteDTourTmp = noteDTourField.text;
+    var startDTourTmp =
+        '${startDateDTourField.hour.toString().padLeft(2, '0')}:${startDateDTourField.minute.toString().padLeft(2, '0')}';
+    var endDTourTmp =
+        '${endDateDTourField.hour.toString().padLeft(2, '0')}:${endDateDTourField.minute.toString().padLeft(2, '0')}';
+    try {
+      final List<Map<String, dynamic>> data =
+          await Supabase.instance.client.from('dtour').insert({
+        'TourID': tourID,
+        'Day': day,
+        'StartTime': startDTourTmp,
+        'EndTime': endDTourTmp,
+        'Note': noteDTourTmp,
+      }).select();
+    } catch (e) {
+      //print statment for identify insert error in if any , it will print the error in console
+      print("Error while inserting Data: $e ");
+    }
+    setState(() {
+      fetchTourData();
+    });
+  }
+
+  Future updateDetailTool(id) async {
+    var noteDTourTmp = noteDTourField.text;
+    var startDTourTmp =
+        '${startDateDTourField.hour.toString().padLeft(2, '0')}:${startDateDTourField.minute.toString().padLeft(2, '0')}';
+    var endDTourTmp =
+        '${endDateDTourField.hour.toString().padLeft(2, '0')}:${endDateDTourField.minute.toString().padLeft(2, '0')}';
+    try {
+      await Supabase.instance.client.from('dtour').update({
+        'StartTime': startDTourTmp,
+        'EndTime': endDTourTmp,
+        'Note': noteDTourTmp,
+      }).eq('DTourID', id);
+    } catch (e) {
+      //print statment for identify insert error in if any , it will print the error in console
+      print("Error while inserting Data: $e ");
+    }
+    setState(() {
+      fetchTourData();
+    });
+  }
+
+  Future deleteDetailTool(id) async {
+    try {
+      await Supabase.instance.client.from('dtour').delete().eq('DTourID', id);
+    } catch (e) {
+      //print statment for identify insert error in if any , it will print the error in console
+      print("Error while inserting Data: $e ");
+    }
+    setState(() {
+      fetchTourData();
+    });
   }
 
   Future deleteData() async {
@@ -414,12 +450,8 @@ class _DetailScreenTourState extends State<DetailScreenTour> {
     tourData = await Supabase.instance.client
         .from('mtour')
         .select("*, dtour(*)")
-        .eq("TourID", widget.tourID);
-    // var dtourDataTmp = tourData[0]["dhotel"];
-    // for (int i = 0; i < dtourDataTmp.length; i++) {
-    //   namaRoom.add(dtourDataTmp[i]["Tipe"]);
-    //   hargaRoom.add(dtourDataTmp[i]["Harga"]);
-    // }
+        .eq("TourID", widget.tourID)
+        .order("StartTime", referencedTable: "dtour", ascending: true);
 
     setState(() {
       isInitial = 0;
@@ -446,12 +478,6 @@ class _DetailScreenTourState extends State<DetailScreenTour> {
     return (tourDataTmp);
   }
 
-  // var namaRoom = ["Standard", "Deluxe", "Suite"];
-  // var hargaRoom = [1000000, 1500000, 2000000];
-  var namaRoom = [];
-  var hargaRoom = [];
-  var namaRoomNew = [];
-  var hargaRoomNew = [];
   var noteDTourField = TextEditingController();
   TimeOfDay startDateDTourField = TimeOfDay(hour: 12, minute: 00);
   TimeOfDay endDateDTourField = TimeOfDay(hour: 12, minute: 00);
@@ -775,199 +801,200 @@ class _DetailScreenTourState extends State<DetailScreenTour> {
                                 ),
                                 IconButton(
                                     onPressed: () {
+                                      noteDTourField.clear();
+                                      startDateDTourField =
+                                          TimeOfDay(hour: 12, minute: 00);
+                                      endDateDTourField =
+                                          TimeOfDay(hour: 12, minute: 00);
                                       showModalBottomSheet(
                                           context: context,
                                           //backgroundColor: Colors.transparent,
                                           useRootNavigator: true,
-                                          builder: (context) => Container(
-                                              height: 500,
-                                              child: Padding(
-                                                padding: EdgeInsets.all(20),
-                                                child: Column(
-                                                  children: [
-                                                    TextField(
-                                                      controller:
-                                                          noteDTourField,
-                                                      decoration:
-                                                          InputDecoration(
-                                                              hintText:
-                                                                  'Activity'),
-                                                    ),
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              top: 8.0),
-                                                      child: Flex(
-                                                        direction: (MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width <
-                                                                750)
-                                                            ? Axis.vertical
-                                                            : Axis.horizontal,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .center,
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          Column(
+                                          builder: (context) {
+                                            return StatefulBuilder(builder:
+                                                (context,
+                                                    StateSetter setState) {
+                                              return Container(
+                                                  height: 500,
+                                                  child: Padding(
+                                                    padding: EdgeInsets.all(20),
+                                                    child: Column(
+                                                      children: [
+                                                        TextField(
+                                                          controller:
+                                                              noteDTourField,
+                                                          decoration:
+                                                              InputDecoration(
+                                                                  hintText:
+                                                                      'Activity'),
+                                                        ),
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .only(
+                                                                  top: 8.0),
+                                                          child: Flex(
+                                                            direction: (MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width <
+                                                                    750)
+                                                                ? Axis.vertical
+                                                                : Axis
+                                                                    .horizontal,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .center,
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
                                                             children: [
-                                                              Text("Start Time",
-                                                                  style: TextStyle(
-                                                                      color: Color.fromARGB(
-                                                                          255,
-                                                                          200,
-                                                                          200,
-                                                                          200),
-                                                                      fontSize:
-                                                                          15)),
-                                                              ElevatedButton(
-                                                                onPressed:
-                                                                    () async {
-                                                                  final selectedTime =
-                                                                      await showTimePicker(
-                                                                    context:
-                                                                        context,
-                                                                    initialTime: TimeOfDay(
-                                                                        hour:
-                                                                            12,
-                                                                        minute:
-                                                                            00),
-                                                                  );
-                                                                  if (selectedTime !=
-                                                                      null) {
-                                                                    setState(
-                                                                        () {
-                                                                      startDateDTourField =
-                                                                          selectedTime;
-                                                                    });
-                                                                  }
-                                                                },
-                                                                child: Text(
-                                                                  '${startDateDTourField.hour.toString().padLeft(2, '0')}:${startDateDTourField.minute.toString().padLeft(2, '0')}',
-                                                                  style: TextStyle(
-                                                                      fontSize:
-                                                                          20,
-                                                                      color: Colors
-                                                                          .black54),
-                                                                ),
+                                                              Column(
+                                                                children: [
+                                                                  Text(
+                                                                      "Start Time",
+                                                                      style: TextStyle(
+                                                                          color: Color.fromARGB(
+                                                                              255,
+                                                                              200,
+                                                                              200,
+                                                                              200),
+                                                                          fontSize:
+                                                                              15)),
+                                                                  ElevatedButton(
+                                                                    onPressed:
+                                                                        () async {
+                                                                      final selectedTime =
+                                                                          await showTimePicker(
+                                                                        context:
+                                                                            context,
+                                                                        initialTime: TimeOfDay(
+                                                                            hour:
+                                                                                12,
+                                                                            minute:
+                                                                                00),
+                                                                      );
+                                                                      if (selectedTime !=
+                                                                          null) {
+                                                                        setState(
+                                                                            () {
+                                                                          startDateDTourField =
+                                                                              selectedTime;
+                                                                        });
+                                                                      }
+                                                                    },
+                                                                    child: Text(
+                                                                      '${startDateDTourField.hour.toString().padLeft(2, '0')}:${startDateDTourField.minute.toString().padLeft(2, '0')}',
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              20,
+                                                                          color:
+                                                                              Colors.black54),
+                                                                    ),
+                                                                  ),
+                                                                ],
                                                               ),
-                                                            ],
-                                                          ),
-                                                          Padding(
-                                                              padding: EdgeInsets
-                                                                  .symmetric(
+                                                              Padding(
+                                                                  padding: EdgeInsets.symmetric(
                                                                       horizontal:
                                                                           20,
                                                                       vertical:
                                                                           5)),
-                                                          Column(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .center,
-                                                            children: [
-                                                              Text("End Time",
-                                                                  style: TextStyle(
-                                                                      color: Color.fromARGB(
-                                                                          255,
-                                                                          200,
-                                                                          200,
-                                                                          200),
-                                                                      fontSize:
-                                                                          15)),
-                                                              ElevatedButton(
-                                                                onPressed:
-                                                                    () async {
-                                                                  final selectedTime =
-                                                                      await showTimePicker(
-                                                                    context:
-                                                                        context,
-                                                                    initialTime: TimeOfDay(
-                                                                        hour:
-                                                                            12,
-                                                                        minute:
-                                                                            00),
-                                                                  );
-                                                                  if (selectedTime !=
-                                                                      null) {
-                                                                    setState(
-                                                                        () {
-                                                                      endDateDTourField =
-                                                                          selectedTime;
-                                                                      debugPrint(
-                                                                          '${endDateDTourField.hour.toString().padLeft(2, '0')}:${endDateDTourField.minute.toString().padLeft(2, '0')}');
-                                                                    });
-                                                                  }
-                                                                },
-                                                                child: Text(
-                                                                  '${endDateDTourField.hour.toString().padLeft(2, '0')}:${endDateDTourField.minute.toString().padLeft(2, '0')}',
-                                                                  style: TextStyle(
-                                                                      fontSize:
-                                                                          20,
-                                                                      color: Colors
-                                                                          .black54),
-                                                                ),
+                                                              Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  Text(
+                                                                      "End Time",
+                                                                      style: TextStyle(
+                                                                          color: Color.fromARGB(
+                                                                              255,
+                                                                              200,
+                                                                              200,
+                                                                              200),
+                                                                          fontSize:
+                                                                              15)),
+                                                                  ElevatedButton(
+                                                                    onPressed:
+                                                                        () async {
+                                                                      final selectedTime =
+                                                                          await showTimePicker(
+                                                                        context:
+                                                                            context,
+                                                                        initialTime: TimeOfDay(
+                                                                            hour:
+                                                                                12,
+                                                                            minute:
+                                                                                00),
+                                                                      );
+                                                                      if (selectedTime !=
+                                                                          null) {
+                                                                        setState(
+                                                                            () {
+                                                                          endDateDTourField =
+                                                                              selectedTime;
+                                                                          debugPrint(
+                                                                              '${endDateDTourField.hour.toString().padLeft(2, '0')}:${endDateDTourField.minute.toString().padLeft(2, '0')}');
+                                                                        });
+                                                                      }
+                                                                    },
+                                                                    child: Text(
+                                                                      '${endDateDTourField.hour.toString().padLeft(2, '0')}:${endDateDTourField.minute.toString().padLeft(2, '0')}',
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              20,
+                                                                          color:
+                                                                              Colors.black54),
+                                                                    ),
+                                                                  ),
+                                                                ],
                                                               ),
                                                             ],
                                                           ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    // TextField(
-                                                    //   controller:
-                                                    //       startDateDTourField,
-                                                    //   keyboardType:
-                                                    //       TextInputType.number,
-                                                    //   decoration:
-                                                    //       InputDecoration(
-                                                    //     hintText: 'Price',
-                                                    //   ),
-                                                    // ),
-                                                    // TextField(
-                                                    //   controller:
-                                                    //       endDateDTourField,
-                                                    //   keyboardType:
-                                                    //       TextInputType.number,
-                                                    //   decoration:
-                                                    //       InputDecoration(
-                                                    //     hintText: 'Price',
-                                                    //   ),
-                                                    // ),
-                                                    Padding(
-                                                      padding: EdgeInsets.only(
-                                                          top: 10),
-                                                      child: SizedBox(
-                                                        width: double.infinity,
-                                                        height: 50,
-                                                        child: ElevatedButton(
-                                                          onPressed: () {
-                                                            setState(() {});
-                                                            Navigator.pop(
-                                                                context);
-                                                          },
-                                                          child: Text(
-                                                              "Add to day " +
-                                                                  (index + 1)
-                                                                      .toString()),
-                                                          style: ButtonStyle(
-                                                            backgroundColor:
-                                                                MaterialStateProperty
-                                                                    .all<Color>(
+                                                        ),
+                                                        Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  top: 10),
+                                                          child: SizedBox(
+                                                            width:
+                                                                double.infinity,
+                                                            height: 50,
+                                                            child:
+                                                                ElevatedButton(
+                                                              onPressed: () {
+                                                                insertDetailTool(
+                                                                    index + 1);
+                                                                setState(() {});
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                              child: Text(
+                                                                  "Add to day " +
+                                                                      (index +
+                                                                              1)
+                                                                          .toString()),
+                                                              style:
+                                                                  ButtonStyle(
+                                                                backgroundColor:
+                                                                    MaterialStateProperty.all<
+                                                                            Color>(
                                                                         mainAmber),
-                                                            foregroundColor:
-                                                                MaterialStateProperty
-                                                                    .all<Color>(
+                                                                foregroundColor:
+                                                                    MaterialStateProperty.all<
+                                                                            Color>(
                                                                         Colors
                                                                             .black),
+                                                              ),
+                                                            ),
                                                           ),
-                                                        ),
-                                                      ),
-                                                    )
-                                                  ],
-                                                ),
-                                              )));
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ));
+                                            });
+                                          });
                                     },
                                     icon: Icon(Icons.add, color: Colors.white))
                               ],
@@ -988,29 +1015,252 @@ class _DetailScreenTourState extends State<DetailScreenTour> {
                                         child: Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: ListTile(
+                                              onTap: () {
+                                                noteDTourField.text =
+                                                    howManyInDays(index + 1)[
+                                                        index2]["Note"];
+                                                startDateDTourField = TimeOfDay(
+                                                    hour: int.parse(howManyInDays(
+                                                            index + 1)[index2]
+                                                        ["StartTime"]
+                                                        .split(":")[0]),
+                                                    minute: int.parse(howManyInDays(
+                                                            index + 1)[index2]
+                                                        ["StartTime"]
+                                                        .split(":")[1]));
+                                                endDateDTourField = TimeOfDay(
+                                                    hour: int.parse(howManyInDays(
+                                                            index + 1)[index2]
+                                                        ["EndTime"]
+                                                        .split(":")[0]),
+                                                    minute: int.parse(howManyInDays(
+                                                            index + 1)[index2]
+                                                        ["EndTime"]
+                                                        .split(":")[1]));
+                                                showModalBottomSheet(
+                                                    context: context,
+                                                    //backgroundColor: Colors.transparent,
+                                                    useRootNavigator: true,
+                                                    builder: (context) {
+                                                      return StatefulBuilder(
+                                                          builder: (context,
+                                                              StateSetter
+                                                                  setState) {
+                                                        return Container(
+                                                            height: 500,
+                                                            child: Padding(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(20),
+                                                              child: Column(
+                                                                children: [
+                                                                  TextField(
+                                                                    controller:
+                                                                        noteDTourField,
+                                                                    decoration: InputDecoration(
+                                                                        hintText:
+                                                                            'Activity'),
+                                                                  ),
+                                                                  Padding(
+                                                                    padding: const EdgeInsets
+                                                                        .only(
+                                                                        top:
+                                                                            8.0),
+                                                                    child: Flex(
+                                                                      direction: (MediaQuery.of(context).size.width <
+                                                                              750)
+                                                                          ? Axis
+                                                                              .vertical
+                                                                          : Axis
+                                                                              .horizontal,
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .center,
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .center,
+                                                                      children: [
+                                                                        Column(
+                                                                          children: [
+                                                                            Text("Start Time",
+                                                                                style: TextStyle(color: Color.fromARGB(255, 200, 200, 200), fontSize: 15)),
+                                                                            ElevatedButton(
+                                                                              onPressed: () async {
+                                                                                final selectedTime = await showTimePicker(
+                                                                                  context: context,
+                                                                                  initialTime: TimeOfDay(hour: 12, minute: 00),
+                                                                                );
+                                                                                if (selectedTime != null) {
+                                                                                  setState(() {
+                                                                                    startDateDTourField = selectedTime;
+                                                                                  });
+                                                                                }
+                                                                              },
+                                                                              child: Text(
+                                                                                '${startDateDTourField.hour.toString().padLeft(2, '0')}:${startDateDTourField.minute.toString().padLeft(2, '0')}',
+                                                                                style: TextStyle(fontSize: 20, color: Colors.black54),
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                        Padding(
+                                                                            padding:
+                                                                                EdgeInsets.symmetric(horizontal: 20, vertical: 5)),
+                                                                        Column(
+                                                                          crossAxisAlignment:
+                                                                              CrossAxisAlignment.center,
+                                                                          children: [
+                                                                            Text("End Time",
+                                                                                style: TextStyle(color: Color.fromARGB(255, 200, 200, 200), fontSize: 15)),
+                                                                            ElevatedButton(
+                                                                              onPressed: () async {
+                                                                                final selectedTime = await showTimePicker(
+                                                                                  context: context,
+                                                                                  initialTime: TimeOfDay(hour: 12, minute: 00),
+                                                                                );
+                                                                                if (selectedTime != null) {
+                                                                                  setState(() {
+                                                                                    endDateDTourField = selectedTime;
+                                                                                    debugPrint('${endDateDTourField.hour.toString().padLeft(2, '0')}:${endDateDTourField.minute.toString().padLeft(2, '0')}');
+                                                                                  });
+                                                                                }
+                                                                              },
+                                                                              child: Text(
+                                                                                '${endDateDTourField.hour.toString().padLeft(2, '0')}:${endDateDTourField.minute.toString().padLeft(2, '0')}',
+                                                                                style: TextStyle(fontSize: 20, color: Colors.black54),
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                  Padding(
+                                                                    padding: EdgeInsets
+                                                                        .only(
+                                                                            top:
+                                                                                10),
+                                                                    child:
+                                                                        SizedBox(
+                                                                      width: double
+                                                                          .infinity,
+                                                                      height:
+                                                                          50,
+                                                                      child:
+                                                                          ElevatedButton(
+                                                                        onPressed:
+                                                                            () {
+                                                                          updateDetailTool(
+                                                                              howManyInDays(index + 1)[index2]["DTourID"]);
+                                                                          setState(
+                                                                              () {});
+                                                                          Navigator.pop(
+                                                                              context);
+                                                                        },
+                                                                        child: Text("Add to day " +
+                                                                            (index + 1).toString()),
+                                                                        style:
+                                                                            ButtonStyle(
+                                                                          backgroundColor:
+                                                                              MaterialStateProperty.all<Color>(mainAmber),
+                                                                          foregroundColor:
+                                                                              MaterialStateProperty.all<Color>(Colors.black),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  )
+                                                                ],
+                                                              ),
+                                                            ));
+                                                      });
+                                                    });
+                                              },
                                               title: Row(
-                                            children: [
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
                                                 children: [
-                                                  Text(
-                                                      howManyInDays(index + 1)[
-                                                          index2]["Note"],
-                                                      style: TextStyle(
-                                                          fontSize: (MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width <
-                                                                  750)
-                                                              ? 16
-                                                              : 25,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color: Colors.white)),
+                                                  Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                          howManyInDays(
+                                                                  index + 1)[
+                                                              index2]["Note"],
+                                                          style: TextStyle(
+                                                              fontSize: (MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .width <
+                                                                      750)
+                                                                  ? 16
+                                                                  : 25,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color: Colors
+                                                                  .white)),
+                                                      if (MediaQuery.of(context)
+                                                              .size
+                                                              .width <=
+                                                          750)
+                                                        Wrap(
+                                                          children: [
+                                                            if (howManyInDays(index +
+                                                                            1)[
+                                                                        index2][
+                                                                    "StartTime"] !=
+                                                                null)
+                                                              Text(
+                                                                  howManyInDays(index +
+                                                                              1)[
+                                                                          index2]
+                                                                      [
+                                                                      "StartTime"],
+                                                                  style: TextStyle(
+                                                                      color:
+                                                                          mainAmber,
+                                                                      fontSize:
+                                                                          15)),
+                                                            if (howManyInDays(index +
+                                                                            1)[index2]
+                                                                        [
+                                                                        "StartTime"] !=
+                                                                    null &&
+                                                                howManyInDays(index + 1)[
+                                                                            index2]
+                                                                        [
+                                                                        "EndTime"] !=
+                                                                    null)
+                                                              Text("-",
+                                                                  style: TextStyle(
+                                                                      color:
+                                                                          mainAmber,
+                                                                      fontSize:
+                                                                          15)),
+                                                            if (howManyInDays(index +
+                                                                            1)[
+                                                                        index2][
+                                                                    "EndTime"] !=
+                                                                null)
+                                                              Text(
+                                                                  howManyInDays(index +
+                                                                              1)[
+                                                                          index2]
+                                                                      [
+                                                                      "EndTime"],
+                                                                  style: TextStyle(
+                                                                      color:
+                                                                          mainAmber,
+                                                                      fontSize:
+                                                                          15)),
+                                                          ],
+                                                        ),
+                                                    ],
+                                                  ),
+                                                  Spacer(), // use Spacer
                                                   if (MediaQuery.of(context)
                                                           .size
-                                                          .width <=
+                                                          .width >
                                                       750)
                                                     Wrap(
                                                       children: [
@@ -1030,7 +1280,7 @@ class _DetailScreenTourState extends State<DetailScreenTour> {
                                                                   color:
                                                                       mainAmber,
                                                                   fontSize:
-                                                                      15)),
+                                                                      18)),
                                                         if (howManyInDays(index +
                                                                             1)[
                                                                         index2][
@@ -1063,56 +1313,22 @@ class _DetailScreenTourState extends State<DetailScreenTour> {
                                                                   color:
                                                                       mainAmber,
                                                                   fontSize:
-                                                                      15)),
+                                                                      18)),
                                                       ],
                                                     ),
+                                                  IconButton(
+                                                      onPressed: () async {
+                                                        deleteDetailTool(
+                                                            howManyInDays(
+                                                                        index +
+                                                                            1)[
+                                                                    index2]
+                                                                ["DTourID"]);
+                                                      },
+                                                      icon: Icon(Icons.delete,
+                                                          color: Colors.red))
                                                 ],
-                                              ),
-                                              Spacer(), // use Spacer
-                                              if (MediaQuery.of(context)
-                                                      .size
-                                                      .width >
-                                                  750)
-                                                Wrap(
-                                                  children: [
-                                                    if (howManyInDays(index +
-                                                                1)[index2]
-                                                            ["StartTime"] !=
-                                                        null)
-                                                      Text(
-                                                          howManyInDays(index +
-                                                                  1)[index2]
-                                                              ["StartTime"],
-                                                          style: TextStyle(
-                                                              color: mainAmber,
-                                                              fontSize: 18)),
-                                                    if (howManyInDays(index +
-                                                                    1)[index2]
-                                                                ["StartTime"] !=
-                                                            null &&
-                                                        howManyInDays(index +
-                                                                    1)[index2]
-                                                                ["EndTime"] !=
-                                                            null)
-                                                      Text("-",
-                                                          style: TextStyle(
-                                                              color: mainAmber,
-                                                              fontSize: 15)),
-                                                    if (howManyInDays(index +
-                                                                1)[index2]
-                                                            ["EndTime"] !=
-                                                        null)
-                                                      Text(
-                                                          howManyInDays(index +
-                                                                  1)[index2]
-                                                              ["EndTime"],
-                                                          style: TextStyle(
-                                                              color: mainAmber,
-                                                              fontSize: 18)),
-                                                  ],
-                                                ),
-                                            ],
-                                          )),
+                                              )),
                                         ),
                                       ),
                                     ));
