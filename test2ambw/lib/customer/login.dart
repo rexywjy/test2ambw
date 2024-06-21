@@ -59,7 +59,7 @@ class _LoginPageState extends State<LoginPage> {
   // sign in user button method
   void signInUser() async {
     if (usernameController.text.isEmpty || passwordController.text.isEmpty) {
-      Navigator.pop(context);
+      // Navigator.pop(context);
       showDialog(
         context: context,
         builder: (context) {
