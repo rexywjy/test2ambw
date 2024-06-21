@@ -134,6 +134,17 @@ class _LoginPageState extends State<LoginPage> {
     try {
 
       final sup = await supabase.from('mcustomer').select().eq('Username', usernameController.text);
+      if(sup.length == 0){
+        // Dismiss the loading circle
+        Navigator.pop(context);
+        showDialog(
+          context: context,
+          builder: (context) {
+            return const ErrorDialog(errormsg: "Invalid email or password");
+          },
+        );
+        return;
+      }
       final theemail = sup[0]['Email'];
 
       final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
