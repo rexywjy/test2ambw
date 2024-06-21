@@ -18,10 +18,16 @@ int daysBetween(DateTime from, DateTime to) {
 }
 
 class HomeSellerStateTour extends StatefulWidget {
-  const HomeSellerStateTour({super.key, this.isNew = 0, this.hotelID = 0});
+  const HomeSellerStateTour({
+    super.key, 
+    this.isNew = 0, 
+    this.hotelID = 0,
+    required this.idStore
+  });
 
   final int isNew;
   final int hotelID;
+  final int idStore;
 
   @override
   State<HomeSellerStateTour> createState() => _HomeSellerStateTourState();
@@ -40,6 +46,7 @@ class _HomeSellerStateTourState extends State<HomeSellerStateTour> {
           .from('mtour')
           .select("*, dtour(*)")
           .eq('IsDel', 0)
+          .eq('SellerID', widget.idStore)
           .order('TourID', ascending: true);
     } else {
       mtour = await Supabase.instance.client
@@ -47,6 +54,7 @@ class _HomeSellerStateTourState extends State<HomeSellerStateTour> {
           .select("*, dtour(*)")
           .eq('IsDel', 0)
           .eq('Status', ((filterActive == "Active") ? 1 : 0))
+          .eq('SellerID', widget.idStore)
           .order('TourID', ascending: true);
     }
 

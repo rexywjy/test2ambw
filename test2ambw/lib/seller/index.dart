@@ -54,6 +54,7 @@ class HomeSeller extends StatefulWidget {
 
 class _HomeSellerState extends State<HomeSeller> {
   var namaStore = '';
+  var idStore = -1;
 
   @override
   void initState() {
@@ -77,6 +78,7 @@ class _HomeSellerState extends State<HomeSeller> {
       // debugPrint("RESPONSE : "+response.toString());
       setState(() {
         this.namaStore = response[0]['Name'];
+        this.idStore = response[0]['ID'];
       });
     }catch(e){
       debugPrint("ERROR : "+e.toString());
@@ -128,7 +130,7 @@ class _HomeSellerState extends State<HomeSeller> {
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => HomeSellerStateTour()),
+                              MaterialPageRoute(builder: (context) => HomeSellerStateTour(idStore: idStore)),
                             );
                           },
                           style: ElevatedButton.styleFrom(
@@ -173,7 +175,7 @@ class _HomeSellerState extends State<HomeSeller> {
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => const HomeSellerStateHotel()),
+                              MaterialPageRoute(builder: (context) => HomeSellerStateHotel(idStore: idStore)),
                             );
                           },
                           style: ElevatedButton.styleFrom(

@@ -13,10 +13,16 @@ const Color mainYellow = Color.fromARGB(255, 253, 222, 85);
 final Color mainAmber = HexColor('#FFBF00');
 
 class HomeSellerStateHotel extends StatefulWidget {
-  const HomeSellerStateHotel({super.key, this.isNew = 0, this.hotelID = 0});
+  const HomeSellerStateHotel({
+    super.key, 
+    this.isNew = 0, 
+    this.hotelID = 0,
+    required this.idStore
+  });
 
   final int isNew;
   final int hotelID;
+  final int idStore;
 
   @override
   State<HomeSellerStateHotel> createState() => _HomeSellerStateHotelState();
@@ -34,12 +40,14 @@ class _HomeSellerStateHotelState extends State<HomeSellerStateHotel> {
           .from('mhotel')
           .select("*, dhotel(*)")
           .eq('IsDel', 0)
+          .eq('SellerID', widget.idStore)
           .order('HotelID', ascending: true);
     } else {
       mhotel = await Supabase.instance.client
           .from('mhotel')
           .select("*, dhotel(*)")
           .eq('IsDel', 0)
+          .eq('SellerID', widget.idStore)
           .eq('Status', ((filterActive == "Active") ? 1 : 0))
           .order('HotelID', ascending: true);
     }

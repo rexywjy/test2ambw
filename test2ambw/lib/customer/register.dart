@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:test2ambw/components/errordialog.dart';
 import 'package:test2ambw/components/squaretile.dart';
+import 'package:test2ambw/customer/index.dart';
 import 'login.dart';
 import '../components/loginbutton.dart';
 import '../components/loginTextField.dart';
@@ -135,6 +136,8 @@ class _RegisterPageState extends State<RegisterPage> {
         insertData(usernamecontroller.text,namacontroller.text,emailController.text);
         // If successful, pop the loading circle
         Navigator.pop(context);
+        // Go to the home page
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeCustomer(initialPageIndex: 0, name: namacontroller.text, username: usernamecontroller.text,)));
         // if(mounted){
         // }
       } catch (e) {
