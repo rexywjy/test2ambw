@@ -87,7 +87,7 @@ class _HomeCustomerState extends State<HomeCustomer> {
         Center(
           child: MyHomePage(name: widget.name, username: widget.username),
         ),
-        Center(
+        const Center(
           child: Text('Cart'),
         ),
         Center(
