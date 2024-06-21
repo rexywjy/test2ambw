@@ -31,7 +31,8 @@ class _LoginPageState extends State<LoginPage> {
 
   final Color mainBlue2 = const Color.fromARGB(255, 71, 147, 175);
 
-  final Color mainYellow = const Color.fromARGB(255, 253, 222, 85);
+  final Color mainYellow = Colors.amber;
+  final Color mainYellow2 = const Color.fromARGB(255, 252, 171, 10);
 
   final Color mainPastelYellow = const Color.fromARGB(255, 254, 239, 173);
 
@@ -72,9 +73,9 @@ class _LoginPageState extends State<LoginPage> {
       context: context,
       barrierDismissible: false,
       builder: (context) {
-        return Center(
+        return const Center(
           child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(mainBlue),
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.amber),
           ),
         );
       },
@@ -208,10 +209,10 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(
                   height: 50,
                 ),
-                Icon(
+                const Icon(
                   Icons.airplane_ticket_rounded,
                   size: 100,
-                  color: mainBlue2,
+                  color: Colors.amber,
                 ),
                 const SizedBox(
                   height: 50,
@@ -230,7 +231,8 @@ class _LoginPageState extends State<LoginPage> {
                     hintText: 'Username',
                     obscureText: false,
                     iconInput: const Icon(Icons.person),
-                    type: 'nospace'
+                    type: 'nospace',
+                    themeAccent: mainYellow,
                   ),
                 const SizedBox(
                   height: 10,
@@ -253,7 +255,8 @@ class _LoginPageState extends State<LoginPage> {
                     hintText: 'Password',
                     obscureText: true,
                     iconInput: const Icon(Icons.lock),
-                    type: ''
+                    type: '',
+                    themeAccent: mainYellow,
                   ),
                 const SizedBox(
                   height: 10,
@@ -326,24 +329,28 @@ class _LoginPageState extends State<LoginPage> {
                 ),
 
                 // register button
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text("Didn't have an account? "),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    GestureDetector(
-                      onTap: widget.onTap,
-                      child: Text(
-                        'Register Now',
-                        style: TextStyle(
-                            color: Colors.blue[700],
-                            fontWeight: FontWeight.bold),
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0,bottom: 80.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text("Didn't have an account? "),
+                      const SizedBox(
+                        width: 5,
                       ),
-                    )
-                  ],
-
+                      GestureDetector(
+                        onTap: widget.onTap,
+                        child: Text(
+                          'Register Now',
+                          style: TextStyle(
+                              // backgroundColor: mainYellow,
+                              color: mainYellow2,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      )
+                    ],
+                  
+                  ),
                 ),
                 // const SizedBox(height: 10,),
                 // // seller login

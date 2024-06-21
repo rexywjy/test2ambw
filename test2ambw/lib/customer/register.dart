@@ -31,7 +31,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
   final Color mainBlue2 = Color.fromARGB(255, 71, 147, 175);
 
-  final Color mainYellow = Color.fromARGB(255, 253, 222, 85);
+  final Color mainYellow = Colors.amber;
+  final Color mainYellow2 = const Color.fromARGB(255, 252, 171, 10);
 
   final Color mainPastelYellow = Color.fromARGB(255, 254, 239, 173);
 
@@ -195,10 +196,22 @@ class _RegisterPageState extends State<RegisterPage> {
                 Icon(
                   Icons.airplane_ticket_rounded,
                   size: 100,
-                  color: mainBlue2,
+                  color: mainYellow,
                 ),
                 const SizedBox(
-                  height: 50,
+                  height: 20,
+                ),
+                const Text(
+                  'Come Join Us!',
+                  style: TextStyle(
+                    // color: mainYellow,
+                    color: Colors.grey,
+                    fontSize: 20,
+                    // fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(
+                  height: 12,
                 ),
 
                 // username
@@ -208,6 +221,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   obscureText: false,
                   iconInput: Icon(Icons.person),
                   type: 'nospace',
+                  themeAccent: mainYellow,
                 ),
                 const SizedBox(
                   height: 10,
@@ -218,7 +232,8 @@ class _RegisterPageState extends State<RegisterPage> {
                   hintText: 'Name',
                   obscureText: false,
                   iconInput: Icon(Icons.portrait),
-                  type: ''
+                  type: '',
+                  themeAccent: mainYellow,
                 ),
                 const SizedBox(
                   height: 10,
@@ -229,7 +244,8 @@ class _RegisterPageState extends State<RegisterPage> {
                   hintText: 'Email',
                   obscureText: false,
                   iconInput: Icon(Icons.email),
-                  type: 'nospace'
+                  type: 'nospace',
+                  themeAccent: mainYellow,
                 ),
                 const SizedBox(
                   height: 10,
@@ -241,7 +257,8 @@ class _RegisterPageState extends State<RegisterPage> {
                     hintText: 'Password',
                     obscureText: true,
                     iconInput: Icon(Icons.lock),
-                    type: ''
+                    type: '',
+                    themeAccent: mainYellow,
                   ),
                 const SizedBox(
                   height: 10,
@@ -253,7 +270,8 @@ class _RegisterPageState extends State<RegisterPage> {
                     hintText: 'Confirm Password',
                     obscureText: true,
                     iconInput: Icon(Icons.lock),
-                    type: ''
+                    type: '',
+                    themeAccent: mainYellow,
                   ),
                 const SizedBox(
                   height: 40,
@@ -309,23 +327,26 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
 
                 // register button
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("Have an account? "),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    GestureDetector(
-                      onTap: widget.onTap,
-                      child: Text(
-                        'Sign In',
-                        style: TextStyle(
-                            color: Colors.blue[700],
-                            fontWeight: FontWeight.bold),
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0,bottom: 80.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text("Have an account? "),
+                      const SizedBox(
+                        width: 5,
                       ),
-                    )
-                  ],
+                      GestureDetector(
+                        onTap: widget.onTap,
+                        child: Text(
+                          'Sign In',
+                          style: TextStyle(
+                              color: mainYellow2,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ],
             ),

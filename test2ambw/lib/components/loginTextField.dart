@@ -7,6 +7,7 @@ class LoginTextField extends StatelessWidget {
   final bool obscureText;
   final Icon iconInput;
   final String type;
+  final Color themeAccent;
 
   static const Color mainBlue = Color.fromARGB(255, 3, 174, 210);
   static const Color mainBlue2 = Color.fromARGB(255, 71, 147, 175);
@@ -20,7 +21,8 @@ class LoginTextField extends StatelessWidget {
     required this.hintText,
     required this.obscureText,
     required this.iconInput,
-    required this.type
+    required this.type,
+    required this.themeAccent,
     });
 
   // constructor
@@ -38,11 +40,11 @@ class LoginTextField extends StatelessWidget {
             hintText: hintText,
             prefixIcon: iconInput,
             enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: mainLightGrey),
+              borderSide: const BorderSide(color: mainLightGrey),
               borderRadius: BorderRadius.circular(10),
             ),
             focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: mainBlue2),
+              borderSide: BorderSide(color: themeAccent),
               borderRadius: BorderRadius.circular(10),
             ),
           ),
@@ -62,11 +64,11 @@ class LoginTextField extends StatelessWidget {
           hintText: hintText,
           prefixIcon: iconInput,
           enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: mainLightGrey),
+            borderSide: const BorderSide(color: mainLightGrey),
             borderRadius: BorderRadius.circular(10),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: mainBlue2),
+            borderSide: BorderSide(color: themeAccent),
             borderRadius: BorderRadius.circular(10),
           ),
         ),

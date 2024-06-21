@@ -24,14 +24,15 @@ class LoginButton extends StatelessWidget {
         margin: EdgeInsets.symmetric(horizontal: 25.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: mainBlue2,
+          color: Colors.amber,
+          // color: mainBlue2,
         ),
         // width: 200,
         // height: 50,
         child: Center(
           child: Text(
             buttontext,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 17,
               fontFamily: 'Lexend',
