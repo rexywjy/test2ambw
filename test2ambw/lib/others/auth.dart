@@ -55,6 +55,7 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:test2ambw/customer/index.dart';
 import 'package:test2ambw/customer/loginorregister.dart';
+import 'package:test2ambw/seller/index.dart';
 
 class AuthPage extends StatelessWidget {
   const AuthPage({super.key});

@@ -85,6 +85,19 @@ class _HomeSellerState extends State<HomeSeller> {
     }
   }
 
+// final Color mainYellow = Color.fromARGB(255, 253, 222, 85);
+
+// final Color mainAmber = HexColor('#FFBF00');
+
+// class HomeSeller extends StatefulWidget {
+//   HomeSeller({super.key});
+
+//   var pageNow = 0;
+//   @override
+//   State<HomeSeller> createState() => _HomeSellerState();
+// }
+
+// class _HomeSellerState extends State<HomeSeller> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

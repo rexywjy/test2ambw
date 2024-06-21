@@ -4,11 +4,12 @@ import 'package:flutter/widgets.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:panara_dialogs/panara_dialogs.dart';
 
-const Color mainBlue = Color.fromARGB(255, 3, 174, 210);
-const Color mainBlueLight = Color.fromARGB(255, 124, 202, 217);
+final Color mainBlue = Color.fromARGB(255, 3, 174, 210);
+final Color mainBlueLight = Color.fromARGB(255, 124, 202, 217);
 
-const Color mainYellow = Color.fromARGB(255, 253, 222, 85);
+final Color mainYellow = Color.fromARGB(255, 253, 222, 85);
 
 final Color mainAmber = HexColor('#FFBF00');
 
@@ -85,13 +86,14 @@ class _HomeSellerStateHotelState extends State<HomeSellerStateHotel> {
             Padding(
               padding: EdgeInsets.only(right: 20),
               child: IconButton(
-                icon: const Wrap(
+                icon: Wrap(
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
                     Icon(Icons.add, color: Color.fromARGB(255, 23, 26, 31)),
-                    Text("New Hotel",
-                        style:
-                            TextStyle(color: Color.fromARGB(255, 23, 26, 31))),
+                    if (MediaQuery.of(context).size.width > 750)
+                      const Text("New Hotel",
+                          style: TextStyle(
+                              color: Color.fromARGB(255, 23, 26, 31))),
                   ],
                 ),
                 onPressed: () {
@@ -102,162 +104,255 @@ class _HomeSellerStateHotelState extends State<HomeSellerStateHotel> {
           ],
         ),
         body: SingleChildScrollView(
-          child: SafeArea(
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 10,
-                ),
-                SizedBox(
-                  height: 50,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: Wrap(
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.only(right: 10),
-                          child: Text("Filter",
-                              style:
-                                  TextStyle(fontSize: 20, color: Colors.white)),
-                        ),
-                        DropdownMenu<String>(
-                          textStyle: const TextStyle(color: Colors.white),
-                          menuStyle: MenuStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  const Color.fromARGB(255, 100, 100, 100))),
-                          initialSelection: list.first,
-                          onSelected: (String? value) {
-                            // This is called when the user selects an item.
-                            setState(() {
-                              filterActive = value!;
-                            });
-                            fetchTourData();
-                          },
-                          dropdownMenuEntries: list
-                              .map<DropdownMenuEntry<String>>((String value) {
-                            return DropdownMenuEntry<String>(
-                                style: ButtonStyle(
-                                    foregroundColor:
-                                        MaterialStateProperty.all<Color>(
-                                            Colors.amber),
-                                    backgroundColor: MaterialStateProperty.all<
-                                            Color>(
-                                        const Color.fromARGB(255, 50, 50, 50))),
-                                value: value,
-                                label: value);
-                          }).toList(),
-                        ),
-                      ],
-                    ),
+          child: Column(
+            children: [
+              SizedBox(
+                height: 50,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Wrap(
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.only(right: 10),
+                        child: Text("Filter",
+                            style:
+                                TextStyle(fontSize: 20, color: Colors.white)),
+                      ),
+                      DropdownMenu<String>(
+                        textStyle: TextStyle(color: Colors.white),
+                        menuStyle: MenuStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                const Color.fromARGB(255, 100, 100, 100))),
+                        initialSelection: list.first,
+                        onSelected: (String? value) {
+                          // This is called when the user selects an item.
+                          setState(() {
+                            filterActive = value!;
+                          });
+                          fetchTourData();
+                        },
+                        dropdownMenuEntries:
+                            list.map<DropdownMenuEntry<String>>((String value) {
+                          return DropdownMenuEntry<String>(
+                              style: ButtonStyle(
+                                  foregroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                          Colors.amber),
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                          const Color.fromARGB(255, 50, 50, 50))),
+                              value: value,
+                              label: value);
+                        }).toList(),
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
-                SizedBox(
+              ),
+              SizedBox(
                   // height: double.minPositive,
-                  child: Column(
-                    children: mhotel.map((hotel) {
-                      return Padding(
-                        padding:
-                            const EdgeInsets.only(left: 10, right: 10, top: 10),
-                        child: Card(
-                          color: const Color.fromARGB(255, 49, 52, 57),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ListTile(
-                              onTap: () {
-                                pindahKeForm(context,
-                                    hotelID: hotel["HotelID"], isNew: 0);
-                              },
-                              title: Row(
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Wrap(
+                  child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: mhotel.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                            padding:
+                                const EdgeInsets.only(left: 10, right: 10, top: 10),
+                            child: Container(
+                              child: Card(
+                                color: const Color.fromARGB(255, 49, 52, 57),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: ListTile(
+                                      onTap: () {
+                                        pindahKeForm(context,
+                                            hotelID: mhotel[index]["HotelID"],
+                                            isNew: 0);
+                                      },
+                                      title: Row(
                                         children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 15, right: 5),
-                                            child: Icon(Icons.circle,
-                                                color: (hotel["Status"] == 1)
-                                                    ? Colors.green
-                                                    : Colors.red,
-                                                size: 10),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Wrap(
+                                                children: [
+                                                  Padding(
+                                                    padding: EdgeInsets.only(
+                                                        top: (MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width <
+                                                                750)
+                                                            ? 6
+                                                            : 15,
+                                                        right: 5),
+                                                    child: Icon(Icons.circle,
+                                                        color: (mhotel[index][
+                                                                    "Status"] ==
+                                                                1)
+                                                            ? Colors.green
+                                                            : Colors.red,
+                                                        size: 10),
+                                                  ),
+                                                  Text(
+                                                      mhotel[index]
+                                                          ["NamaHotel"],
+                                                      style: TextStyle(
+                                                          fontSize: (MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width <
+                                                                  750)
+                                                              ? 20
+                                                              : 25,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.white)),
+                                                ],
+                                              ),
+                                              Text(mhotel[index]["LokasiHotel"],
+                                                  style: TextStyle(
+                                                      fontSize: (MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width <
+                                                              750)
+                                                          ? 14
+                                                          : 16,
+                                                      color: const Color.fromARGB(
+                                                          255, 150, 150, 150))),
+                                              Row(
+                                                children: [
+                                                  const Icon(Icons.star,
+                                                      color: Colors.white,
+                                                      size: 15),
+                                                  Text(
+                                                      ' ' +
+                                                          (mhotel[index][
+                                                                      "RatingHotel"] ??
+                                                                  0)
+                                                              .toString(),
+                                                      style: TextStyle(
+                                                          color: mainAmber)),
+                                                ],
+                                              ),
+                                              if (MediaQuery.of(context)
+                                                      .size
+                                                      .width <=
+                                                  750)
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Wrap(
+                                                      children: [
+                                                        Text(
+                                                            'Rp ' +
+                                                                NumberFormat(
+                                                                        "#,###")
+                                                                    .format((mhotel[index]['dhotel'].length >
+                                                                            0)
+                                                                        ? mhotel[index]['dhotel'].map((m) => m['Harga']).reduce((a, b) => a + b) /
+                                                                            mhotel[index]['dhotel']
+                                                                                .length
+                                                                        : 0)
+                                                                    .replaceAll(
+                                                                        ",",
+                                                                        "."),
+                                                            style: TextStyle(
+                                                                color:
+                                                                    mainAmber,
+                                                                fontSize: (MediaQuery.of(context)
+                                                                            .size
+                                                                            .width <
+                                                                        750)
+                                                                    ? 17
+                                                                    : 20)),
+                                                        const Text(' / night',
+                                                            style: TextStyle(
+                                                                color: Color
+                                                                    .fromARGB(
+                                                                        255,
+                                                                        150,
+                                                                        150,
+                                                                        150),
+                                                                fontSize: 15)),
+                                                      ],
+                                                    ),
+                                                    Text(
+                                                        mhotel[index]['dhotel']
+                                                                .length
+                                                                .toString() +
+                                                            ' Room Type(s)',
+                                                        style: const TextStyle(
+                                                            color:
+                                                                Color.fromARGB(
+                                                                    255,
+                                                                    200,
+                                                                    200,
+                                                                    200),
+                                                            fontSize: 16))
+                                                  ],
+                                                ),
+                                            ],
                                           ),
-                                          Text(hotel["NamaHotel"],
-                                              style: const TextStyle(
-                                                  fontSize: 25,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white)),
+                                          Spacer(), // use Spacer
+                                          if (MediaQuery.of(context)
+                                                  .size
+                                                  .width >
+                                              750)
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.end,
+                                              children: [
+                                                Text(
+                                                    'Rp ' +
+                                                        NumberFormat("#,###")
+                                                            .format((mhotel[index]['dhotel']
+                                                                        .length >
+                                                                    0)
+                                                                ? mhotel[index]['dhotel'].map((m) => m['Harga']).reduce((a,
+                                                                            b) =>
+                                                                        a + b) /
+                                                                    mhotel[index]['dhotel']
+                                                                        .length
+                                                                : 0)
+                                                            .replaceAll(
+                                                                ",", "."),
+                                                    style: TextStyle(
+                                                        color: mainAmber,
+                                                        fontSize:
+                                                            (MediaQuery.of(context)
+                                                                        .size
+                                                                        .width <
+                                                                    750)
+                                                                ? 17
+                                                                : 20)),
+                                                const Text('/ night',
+                                                    style: TextStyle(
+                                                        color: Color.fromARGB(
+                                                            255, 150, 150, 150),
+                                                        fontSize: 15)),
+                                                Text(
+                                                    mhotel[index]['dhotel']
+                                                            .length
+                                                            .toString() +
+                                                        ' Room Type(s)',
+                                                    style: const TextStyle(
+                                                        color: Color.fromARGB(
+                                                            255, 200, 200, 200),
+                                                        fontSize: 16))
+                                              ],
+                                            ),
                                         ],
-                                      ),
-                                      Text(hotel["LokasiHotel"],
-                                          style: const TextStyle(
-                                              color: Color.fromARGB(
-                                                  255, 150, 150, 150))),
-                                      Row(
-                                        children: [
-                                          const Icon(Icons.star,
-                                              color: Colors.white, size: 15),
-                                          Text(
-                                              ' ' +
-                                                  (hotel["RatingHotel"] ?? 0)
-                                                      .toString(),
-                                              style:
-                                                  TextStyle(color: mainAmber)),
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                  const Spacer(), // use Spacer
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Text(
-                                          'Rp ' +
-                                              NumberFormat("#,###")
-                                                  .format((hotel['dhotel']
-                                                              .length >
-                                                          0)
-                                                      ? hotel['dhotel']
-                                                              .map((m) =>
-                                                                  m['Harga'])
-                                                              .reduce((a, b) =>
-                                                                  a + b) /
-                                                          hotel['dhotel'].length
-                                                      : 0)
-                                                  .replaceAll(",", "."),
-                                          style: TextStyle(
-                                              color: mainAmber, fontSize: 20)),
-                                      const Text('/ night',
-                                          style: TextStyle(
-                                              color: Color.fromARGB(
-                                                  255, 150, 150, 150),
-                                              fontSize: 15)),
-                                      Text(
-                                          hotel['dhotel'].length.toString() +
-                                              ' Room Type(s)',
-                                          style: TextStyle(
-                                              color: Color.fromARGB(
-                                                  255, 200, 200, 200),
-                                              fontSize: 16))
-                                    ],
-                                  ),
-                                ],
+                                      )),
+                                ),
                               ),
-                            ),
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ),
-              ],
-            ),
+                            ));
+                      })),
+            ],
           ),
         ));
   }
@@ -350,13 +445,32 @@ class _DetailScreenHotelState extends State<DetailScreenHotel> {
     Navigator.pop(context, 0);
   }
 
+  Future deleteRoom(roomID) async {
+    if (roomID != -1) {
+      try {
+        await Supabase.instance.client
+            .from('dhotel')
+            .delete()
+            .eq('DHotelID', roomID);
+      } catch (e) {
+        //print statment for identify insert error in if any , it will print the error in console
+        print("Error while inserting Data: $e ");
+      }
+    }
+    fetchTourData();
+  }
+
   var isInitial = 1;
   var hotelData = [];
   Future<dynamic> fetchTourData() async {
+    namaRoom = [];
+    hargaRoom = [];
     hotelData = await Supabase.instance.client
         .from('mhotel')
         .select("*, dhotel(*)")
-        .eq("HotelID", widget.hotelID); // woi nda urut
+        .eq("HotelID", widget.hotelID)
+        .order("HotelID", ascending: true)
+        .order("DHotelID", referencedTable: "dhotel", ascending: true);
     var dHotelDataTmp = hotelData[0]["dhotel"];
     for (int i = 0; i < dHotelDataTmp.length; i++) {
       namaRoom.add(dHotelDataTmp[i]["Tipe"]);
@@ -390,25 +504,59 @@ class _DetailScreenHotelState extends State<DetailScreenHotel> {
       fetchTourData();
     }
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 23, 26, 31),
+      backgroundColor: Color.fromARGB(255, 23, 26, 31),
       appBar: AppBar(
         title: Wrap(children: [
-          Text((((widget.isNew == 0) ? "Edit" : "Add") + " Hotel  "),
-              style: const TextStyle(fontWeight: FontWeight.bold)),
+          Text(
+            (((widget.isNew == 0) ? "Edit" : "Add") + " Hotel  "),
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: (MediaQuery.of(context).size.width < 750) ? 18 : 22),
+          ),
           const Icon(Icons.hotel)
         ]),
         backgroundColor: mainAmber,
         actions: [
+          if (widget.isNew == 0)
+            IconButton(
+              icon: const Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  Icon(Icons.delete, color: Colors.red),
+                ],
+              ),
+              onPressed: () {
+                PanaraConfirmDialog.showAnimatedGrow(
+                  context,
+                  title: "Delete?",
+                  message: "Are you sure want to delete?",
+                  confirmButtonText: "Delete",
+                  cancelButtonText: "Cancel",
+                  onTapCancel: () {
+                    Navigator.pop(context);
+                  },
+                  onTapConfirm: () {
+                    deleteData();
+                    Navigator.pop(context, 0);
+                  },
+                  panaraDialogType: PanaraDialogType.error,
+                  barrierDismissible:
+                      false, // optional parameter (default is true)
+                );
+              },
+            ),
           Padding(
-            padding: const EdgeInsets.only(right: 20),
+            padding: EdgeInsets.only(right: 20),
             child: IconButton(
               icon: Wrap(
                 crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
                   Icon((widget.isNew == 0) ? Icons.save : Icons.add,
                       color: const Color.fromARGB(255, 23, 26, 31)),
-                  Text((widget.isNew == 0) ? "Save" : "Add",
-                      style: const TextStyle(color: Color.fromARGB(255, 23, 26, 31))),
+                  if (MediaQuery.of(context).size.width > 750)
+                    Text((widget.isNew == 0) ? "Save" : "Add",
+                        style:
+                            const TextStyle(color: Color.fromARGB(255, 23, 26, 31))),
                 ],
               ),
               onPressed: () {
@@ -416,22 +564,6 @@ class _DetailScreenHotelState extends State<DetailScreenHotel> {
               },
             ),
           ),
-          if (widget.isNew == 0)
-            Padding(
-              padding: const EdgeInsets.only(right: 20),
-              child: IconButton(
-                icon: const Wrap(
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  children: [
-                    Icon(Icons.delete, color: Colors.red),
-                    Text("Delete", style: TextStyle(color: Colors.red)),
-                  ],
-                ),
-                onPressed: () {
-                  deleteData();
-                },
-              ),
-            )
         ],
       ),
       body: SingleChildScrollView(
@@ -586,32 +718,26 @@ class _DetailScreenHotelState extends State<DetailScreenHotel> {
                                         ],
                                       ),
                                     )));
-                            // setState(() {
-                            //   _selectedIndex = 0;
-                            //   logged = ;
-                            //   hivePassword.delete('password');
-                            //   password = 0;
-                            // });
                           },
+                          child: const Text('Add Room Type',
+                              style: TextStyle(fontSize: 20)),
                           style: ButtonStyle(
                             backgroundColor:
                                 MaterialStateProperty.all<Color>(mainBlue),
                             foregroundColor:
                                 MaterialStateProperty.all<Color>(Colors.white),
                           ),
-                          child: const Text('Add Room Type',
-                              style: TextStyle(fontSize: 20)),
                         ))),
                 Padding(
-                    padding: const EdgeInsets.only(top: 10),
+                    padding: EdgeInsets.only(top: 10),
                     child: Wrap(
                       children: [
                         Text(namaRoom.length.toString(),
-                            style: const TextStyle(
+                            style: TextStyle(
                                 fontSize: 20,
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold)),
-                        const Text(" Room(s)",
+                        Text(" Room(s)",
                             style: TextStyle(fontSize: 20, color: Colors.white))
                       ],
                     )),
@@ -664,29 +790,62 @@ class _DetailScreenHotelState extends State<DetailScreenHotel> {
                                                         child: ElevatedButton(
                                                           onPressed: () {
                                                             setState(() {
-                                                              namaRoom[index] =
-                                                                  (namaRoomField
-                                                                      .text);
-                                                              hargaRoom[index] =
-                                                                  (int.parse(
-                                                                      hargaRoomField
-                                                                          .text));
-                                                              roomUpdated.add({
-                                                                "DHotelID": hotelData[0]
-                                                                            [
-                                                                            "dhotel"]
-                                                                        [index][
-                                                                    "DHotelID"],
-                                                                "Tipe":
-                                                                    namaRoomField
-                                                                        .text,
-                                                                "Harga": int.parse(
+                                                              if (index >=
+                                                                  namaRoom.length -
+                                                                      namaRoomNew
+                                                                          .length) {
+                                                                namaRoom[
+                                                                        index] =
+                                                                    (namaRoomField
+                                                                        .text);
+                                                                hargaRoom[
+                                                                        index] =
+                                                                    (int.parse(
+                                                                        hargaRoomField
+                                                                            .text));
+                                                                namaRoomNew[index -
+                                                                        (namaRoom.length -
+                                                                            namaRoomNew.length)] =
+                                                                    (namaRoomField
+                                                                        .text);
+                                                                hargaRoomNew[index -
+                                                                    (namaRoom
+                                                                            .length -
+                                                                        namaRoomNew
+                                                                            .length)] = (int.parse(
                                                                     hargaRoomField
-                                                                        .text)
-                                                              });
-                                                              debugPrint(
-                                                                  roomUpdated[0]
-                                                                      .toString());
+                                                                        .text));
+                                                              } else {
+                                                                namaRoom[
+                                                                        index] =
+                                                                    (namaRoomField
+                                                                        .text);
+                                                                hargaRoom[
+                                                                        index] =
+                                                                    (int.parse(
+                                                                        hargaRoomField
+                                                                            .text));
+                                                                roomUpdated
+                                                                    .add({
+                                                                  "DHotelID": hotelData[0]
+                                                                              [
+                                                                              "dhotel"]
+                                                                          [
+                                                                          index]
+                                                                      [
+                                                                      "DHotelID"],
+                                                                  "Tipe":
+                                                                      namaRoomField
+                                                                          .text,
+                                                                  "Harga": int.parse(
+                                                                      hargaRoomField
+                                                                          .text)
+                                                                });
+                                                                debugPrint(
+                                                                    roomUpdated[
+                                                                            0]
+                                                                        .toString());
+                                                              }
                                                             });
                                                             Navigator.pop(
                                                                 context);
@@ -709,7 +868,9 @@ class _DetailScreenHotelState extends State<DetailScreenHotel> {
                                                     )
                                                   ],
                                                 ),
-                                              ))); //woi disini
+                                              )
+                                            )
+                                          );
                                       namaRoomField.text = namaRoom[index];
                                       hargaRoomField.text =
                                           hargaRoom[index].toString();
@@ -721,29 +882,93 @@ class _DetailScreenHotelState extends State<DetailScreenHotel> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(namaRoom[index],
-                                                style: const TextStyle(
-                                                    fontSize: 25,
+                                                style: TextStyle(
+                                                    fontSize: (MediaQuery.of(context).size.width < 750) ? 16 : 25,
                                                     fontWeight: FontWeight.bold,
                                                     color: Colors.white)),
+                                            if (MediaQuery.of(context)
+                                                    .size
+                                                    .width <=
+                                                750)
+                                              Wrap(
+                                                children: [
+                                                  Text(
+                                                      'Rp ${NumberFormat("#,###").format(hargaRoom[index]).replaceAll(",", ".")}',
+                                                      style: TextStyle(
+                                                          color: mainAmber,
+                                                          fontSize: 15)),
+                                                  const Text(' / night',
+                                                      style: TextStyle(
+                                                          color: Color.fromARGB(
+                                                              255,
+                                                              150,
+                                                              150,
+                                                              150),
+                                                          fontSize: 12))
+                                                ],
+                                              ),
                                           ],
                                         ),
                                         const Spacer(), // use Spacer
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.end,
+                                        Row(
                                           children: [
-                                            Text(
-                                                'Rp ${NumberFormat("#,###").format(hargaRoom[index]).replaceAll(",", ".")}',
-                                                style: TextStyle(
-                                                    color: mainAmber,
-                                                    fontSize: 20)),
-                                            const Text('/ night',
-                                                style: TextStyle(
-                                                    color: Color.fromARGB(
-                                                        255, 150, 150, 150),
-                                                    fontSize: 15))
+                                            if (MediaQuery.of(context)
+                                                    .size
+                                                    .width >
+                                                750)
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.end,
+                                                children: [
+                                                  Text(
+                                                      'Rp ${NumberFormat("#,###").format(hargaRoom[index]).replaceAll(",", ".")}',
+                                                      style: TextStyle(
+                                                          color: mainAmber,
+                                                          fontSize: 20)),
+                                                  const Text('/ night',
+                                                      style: TextStyle(
+                                                          color: Color.fromARGB(
+                                                              255,
+                                                              150,
+                                                              150,
+                                                              150),
+                                                          fontSize: 15))
+                                                ],
+                                              ),
+                                            Padding(
+                                                padding:
+                                                    const EdgeInsets.only(left: 10),
+                                                child: IconButton(
+                                                    onPressed: () {
+                                                      if (index >
+                                                          (hotelData[0]
+                                                                      ['dhotel']
+                                                                  .length) -
+                                                              1) {
+                                                        deleteRoom(-1);
+                                                        namaRoomNew.removeAt((index -
+                                                                (hotelData[0][
+                                                                        'dhotel']
+                                                                    .length))
+                                                            as int);
+                                                        hargaRoomNew.removeAt((index -
+                                                                (hotelData[0][
+                                                                        'dhotel']
+                                                                    .length))
+                                                            as int);
+                                                      } else {
+                                                        deleteRoom(hotelData[0]
+                                                                    ["dhotel"]
+                                                                [index]
+                                                            ["DHotelID"]);
+                                                      }
+                                                    },
+                                                    icon: const Icon(
+                                                      Icons.delete,
+                                                      color: Colors.red,
+                                                    ))),
                                           ],
-                                        ),
+                                        )
                                       ],
                                     )),
                               ),

@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:test2ambw/customer/login.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:test2ambw/others/auth.dart';
 import 'firebase_options.dart';
 
@@ -9,7 +10,7 @@ import 'admin/index.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -21,14 +22,20 @@ void main() async {
   runApp(MainApp());
 }
 
-class MainApp extends StatelessWidget {
-
-  final Color mainBlue = const Color.fromARGB(255, 3, 174, 210);
-  final Color mainYellow = const Color.fromARGB(255, 253, 222, 85);
-
-  final Color mainAmber = HexColor('#FFBF00');
+class MainApp extends StatefulWidget {
 
   MainApp({super.key});
+
+  @override
+  State<MainApp> createState() => _MainAppState();
+}
+
+class _MainAppState extends State<MainApp> {
+  final Color mainBlue = Color.fromARGB(255, 3, 174, 210);
+
+  final Color mainYellow = Color.fromARGB(255, 253, 222, 85);
+
+  final Color mainAmber = HexColor('#FFBF00');
 
   @override
   Widget build(BuildContext context) {
