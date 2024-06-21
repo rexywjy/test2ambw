@@ -16,18 +16,29 @@ import 'package:test2ambw/customer/index.dart';
 import 'package:test2ambw/customer/login.dart';
 import 'package:test2ambw/customer/profile.dart';
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key); // Keeping MyApp const
+// class MyApp extends StatelessWidget {
+//   const MyApp({Key? key}) : super(key: key); // Keeping MyApp const
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: MyHomePage(),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       home: MyHomePage(),
+//     );
+//   }
+// }
 
 class MyHomePage extends StatefulWidget {
+  // final int initialPageIndex;
+  final String name;
+  final String username;
+
+  const MyHomePage({
+    super.key,
+    
+    // this.initialPageIndex = 0,
+    required this.name,
+    required this.username,
+  });
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
@@ -39,7 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
   bool isFirstLoad = true;
   var nameProfile = "";
 
-  CustProfile custProfile = CustProfile();
+  // CustProfile custProfile = CustProfile(name: widget.name, username: widget.username,);
 
   Future<dynamic> fetchTourData(menuType) async {
     var resp = await Supabase.instance.client.from(menuType).select().limit(5);
@@ -99,7 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
+                        boxShadow: const [
                           BoxShadow(
                             color: Colors.black26,
                             offset: Offset(0, 2),
@@ -113,7 +124,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => HomeCustomer(initialPageIndex: 2)),
+                            MaterialPageRoute(builder: (context) => HomeCustomer(initialPageIndex: 2, name: widget.name, username: widget.username,)),
                           );
                         },
                         child: Padding(
@@ -143,7 +154,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                     padding:
                                         const EdgeInsets.only(left: 8, right: 5),
                                     child: Text(
-                                        nameProfile,
+                                        // nameProfile,
+                                        widget.name,
                                         style: GoogleFonts.montserrat(
                                             fontSize: 12,
                                             fontWeight: FontWeight.bold)),

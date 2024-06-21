@@ -7,10 +7,14 @@ import 'package:hexcolor/hexcolor.dart';
 
 class HomeCustomer extends StatefulWidget {
   final int initialPageIndex;
+  final String name;
+  final String username;
 
-  HomeCustomer({
+  const HomeCustomer({
     super.key,
     this.initialPageIndex = 0,
+    required this.name,
+    required this.username,
   });
 
   @override
@@ -81,13 +85,13 @@ class _HomeCustomerState extends State<HomeCustomer> {
       ),
       body: <Widget>[
         Center(
-          child: MyHomePage(),
+          child: MyHomePage(name: widget.name, username: widget.username),
         ),
         Center(
           child: Text('Cart'),
         ),
         Center(
-          child: CustProfile(),
+          child: CustProfile(name: widget.name, username: widget.username),
         ),
       ][currentPageIndex],
       // bottomNavigationBar: BottomNavigationBar(

@@ -12,7 +12,13 @@ import '../components/customlisttile.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 class CustProfile extends StatefulWidget {
-  const CustProfile({super.key});
+  final String name;
+  final String username;
+  const CustProfile({
+    super.key,
+    required this.name,
+    required this.username,
+    });
 
   @override
   State<CustProfile> createState() => _CustProfileState();
@@ -132,10 +138,10 @@ class _CustProfileState extends State<CustProfile> {
   
   @override
   Widget build(BuildContext context) {
-    if(isFirstLoad) {
-      fetchName();
-      isFirstLoad = false;
-    }
+    // if(isFirstLoad) {
+    //   fetchName();
+    //   isFirstLoad = false;
+    // }
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Scaffold(
@@ -185,10 +191,20 @@ class _CustProfileState extends State<CustProfile> {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      nameProfile,
-                      style: TextStyle(
+                      // nameProfile,
+                      widget.name,
+                      style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      // '@'+nameProfile,
+                      '@'+widget.username,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        // fontStyle: FontStyle.italic,
+                        color: Colors.grey,
                       ),
                     ),
                     // Row(

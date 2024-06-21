@@ -92,7 +92,7 @@ class _SellerRegisterState extends State<SellerRegister>
         
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => HomeCustomer(initialPageIndex: 2,)),
+          MaterialPageRoute(builder: (context) => HomeCustomer(initialPageIndex: 2, name: userr[0]['Name'], username: userr[0]['Username'],)),
         );
       } catch (e) {
         // Handle error

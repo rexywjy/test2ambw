@@ -48,32 +48,94 @@
 //     );
 //   }
 // }
-import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:ffi';
+
+import 'package:firebase_auth/firebase_auth.dart' as fbauth;
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:test2ambw/customer/index.dart';
 import 'package:test2ambw/customer/loginorregister.dart';
 
 class AuthPage extends StatelessWidget {
   const AuthPage({super.key});
 
-  @override
+  Future<List<String>> getName(String email) async {
+    try {
+      // Check if user is a customer
+      final customerResponse = await Supabase.instance.client
+          .from('mcustomer')
+          .select()
+          .eq('Email', email)
+          // .single()
+          ;
+
+      if (customerResponse.length > 0) {
+        return [customerResponse[0]['Name'].toString(), customerResponse[0]['Username'].toString()];
+      }
+
+      return ['unknown','unknown'];
+    } catch (e) {
+      return ['error','error'];
+    }
+  }
+
+@override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: StreamBuilder<User?>(
-        stream: FirebaseAuth.instance.authStateChanges(),
+      body: StreamBuilder<fbauth.User?>(
+        stream: fbauth.FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
-          // user is loggen in
-          debugPrint("SNAPSHOT DATA : "+snapshot.data.toString());
-          if(snapshot.hasData){
-            return HomeCustomer();
-          }else{
-            // return LoginPage();
+          // User is logged in
+          if (snapshot.hasData) {
+            return FutureBuilder<List<String>>(
+              future: getName(fbauth.FirebaseAuth.instance.currentUser!.email.toString()),
+              builder: (context, userDataSnapshot) {
+                if (userDataSnapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (userDataSnapshot.hasError) {
+                  return Center(child: Text('An error occurred'));
+                } else if (userDataSnapshot.hasData) {
+                  var userData = userDataSnapshot.data!;
+                  return HomeCustomer(username: userData[1], name: userData[0]);
+                } else {
+                  return Center(child: Text('Unknown error'));
+                }
+              },
+            );
+          } else {
+            // User is not logged in
             return LoginOrRegisterPage();
           }
         },
       ),
     );
   }
+  // @override
+  // Widget build(BuildContext context) {
+  //   return Scaffold(
+  //     body: StreamBuilder<fbauth.User?>(
+  //       stream: fbauth.FirebaseAuth.instance.authStateChanges(),
+  //       builder: (context, snapshot) {
+  //         // user is loggen in
+  //         debugPrint("SNAPSHOT DATA : "+snapshot.data.toString());
+  //         if(snapshot.hasData){
+  //           var userData = await getName(fbauth.FirebaseAuth.instance.currentUser!.email.toString());
+  //           // final supabase = Supabase.instance.client;
+  //           // final response = await supabase
+  //           //   .from('mcustomer')
+  //           //   .select('Name')
+  //           //   .eq('Email', FirebaseAuth.instance.currentUser!.email.toString())
+  //           //   // .execute()
+  //           //   ;
+  //           return HomeCustomer(username: userData[0], name: userData[1]);
+  //         }else{
+  //           // return LoginPage();
+  //           return LoginOrRegisterPage();
+  //         }
+  //       },
+  //     ),
+  //   );
+  // }
 }
 // 
 // import 'package:flutter/material.dart';
