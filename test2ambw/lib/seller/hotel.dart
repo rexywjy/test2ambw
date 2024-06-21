@@ -106,6 +106,7 @@ class _HomeSellerStateHotelState extends State<HomeSellerStateHotel> {
         body: SingleChildScrollView(
           child: Column(
             children: [
+              const SizedBox(height: 10,),
               SizedBox(
                 height: 50,
                 child: Padding(
@@ -150,208 +151,367 @@ class _HomeSellerStateHotelState extends State<HomeSellerStateHotel> {
                   ),
                 ),
               ),
+              const SizedBox(height: 20,),
               SizedBox(
-                  // height: double.minPositive,
-                  child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: mhotel.length,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                            padding:
-                                const EdgeInsets.only(left: 10, right: 10, top: 10),
-                            child: Container(
-                              child: Card(
-                                color: const Color.fromARGB(255, 49, 52, 57),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: ListTile(
-                                      onTap: () {
-                                        pindahKeForm(context,
-                                            hotelID: mhotel[index]["HotelID"],
-                                            isNew: 0);
-                                      },
-                                      title: Row(
+                child: Column(
+                  children: mhotel.map((hotel) {
+                    return Padding(
+                      padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
+                      child: Container(
+                        child: Card(
+                          color: const Color.fromARGB(255, 49, 52, 57),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ListTile(
+                              onTap: () {
+                                pindahKeForm(context, hotelID: hotel["HotelID"], isNew: 0);
+                              },
+                              title: Row(
+                                children: [
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Wrap(
                                         children: [
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Wrap(
-                                                children: [
-                                                  Padding(
-                                                    padding: EdgeInsets.only(
-                                                        top: (MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width <
-                                                                750)
-                                                            ? 6
-                                                            : 15,
-                                                        right: 5),
-                                                    child: Icon(Icons.circle,
-                                                        color: (mhotel[index][
-                                                                    "Status"] ==
-                                                                1)
-                                                            ? Colors.green
-                                                            : Colors.red,
-                                                        size: 10),
-                                                  ),
-                                                  Text(
-                                                      mhotel[index]
-                                                          ["NamaHotel"],
-                                                      style: TextStyle(
-                                                          fontSize: (MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width <
-                                                                  750)
-                                                              ? 20
-                                                              : 25,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color: Colors.white)),
-                                                ],
-                                              ),
-                                              Text(mhotel[index]["LokasiHotel"],
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                top: (MediaQuery.of(context).size.width < 750)
+                                                    ? 6
+                                                    : 15,
+                                                right: 5),
+                                            child: Icon(Icons.circle,
+                                                color: (hotel["Status"] == 1)
+                                                    ? Colors.green
+                                                    : Colors.red,
+                                                size: 10),
+                                          ),
+                                          Text(
+                                            hotel["NamaHotel"],
+                                            style: TextStyle(
+                                                fontSize: (MediaQuery.of(context).size.width <
+                                                        750)
+                                                    ? 20
+                                                    : 25,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white),
+                                          ),
+                                        ],
+                                      ),
+                                      Text(
+                                        hotel["LokasiHotel"],
+                                        style: TextStyle(
+                                            fontSize: (MediaQuery.of(context).size.width < 750)
+                                                ? 14
+                                                : 16,
+                                            color: const Color.fromARGB(255, 150, 150, 150)),
+                                      ),
+                                      Row(
+                                        children: [
+                                          const Icon(Icons.star, color: Colors.white, size: 15),
+                                          Text(
+                                            ' ' + (hotel["RatingHotel"] ?? 0).toString(),
+                                            style: TextStyle(color: mainAmber),
+                                          ),
+                                        ],
+                                      ),
+                                      if (MediaQuery.of(context).size.width <= 750)
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Wrap(
+                                              children: [
+                                                Text(
+                                                  'Rp ' +
+                                                      NumberFormat("#,###")
+                                                          .format(
+                                                              (hotel['dhotel'].length > 0)
+                                                                  ? hotel['dhotel']
+                                                                          .map((m) => m['Harga'])
+                                                                          .reduce((a, b) =>
+                                                                              a + b) /
+                                                                      hotel['dhotel'].length
+                                                                  : 0)
+                                                          .replaceAll(",", "."),
                                                   style: TextStyle(
-                                                      fontSize: (MediaQuery.of(
-                                                                      context)
+                                                      color: mainAmber,
+                                                      fontSize: (MediaQuery.of(context)
                                                                   .size
                                                                   .width <
                                                               750)
-                                                          ? 14
-                                                          : 16,
-                                                      color: const Color.fromARGB(
-                                                          255, 150, 150, 150))),
-                                              Row(
-                                                children: [
-                                                  const Icon(Icons.star,
-                                                      color: Colors.white,
-                                                      size: 15),
-                                                  Text(
-                                                      ' ' +
-                                                          (mhotel[index][
-                                                                      "RatingHotel"] ??
-                                                                  0)
-                                                              .toString(),
-                                                      style: TextStyle(
-                                                          color: mainAmber)),
-                                                ],
-                                              ),
-                                              if (MediaQuery.of(context)
-                                                      .size
-                                                      .width <=
-                                                  750)
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Wrap(
-                                                      children: [
-                                                        Text(
-                                                            'Rp ' +
-                                                                NumberFormat(
-                                                                        "#,###")
-                                                                    .format((mhotel[index]['dhotel'].length >
-                                                                            0)
-                                                                        ? mhotel[index]['dhotel'].map((m) => m['Harga']).reduce((a, b) => a + b) /
-                                                                            mhotel[index]['dhotel']
-                                                                                .length
-                                                                        : 0)
-                                                                    .replaceAll(
-                                                                        ",",
-                                                                        "."),
-                                                            style: TextStyle(
-                                                                color:
-                                                                    mainAmber,
-                                                                fontSize: (MediaQuery.of(context)
-                                                                            .size
-                                                                            .width <
-                                                                        750)
-                                                                    ? 17
-                                                                    : 20)),
-                                                        const Text(' / night',
-                                                            style: TextStyle(
-                                                                color: Color
-                                                                    .fromARGB(
-                                                                        255,
-                                                                        150,
-                                                                        150,
-                                                                        150),
-                                                                fontSize: 15)),
-                                                      ],
-                                                    ),
-                                                    Text(
-                                                        mhotel[index]['dhotel']
-                                                                .length
-                                                                .toString() +
-                                                            ' Room Type(s)',
-                                                        style: const TextStyle(
-                                                            color:
-                                                                Color.fromARGB(
-                                                                    255,
-                                                                    200,
-                                                                    200,
-                                                                    200),
-                                                            fontSize: 16))
-                                                  ],
+                                                          ? 17
+                                                          : 20),
                                                 ),
-                                            ],
-                                          ),
-                                          const Spacer(), // use Spacer
-                                          if (MediaQuery.of(context)
-                                                  .size
-                                                  .width >
-                                              750)
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.end,
-                                              children: [
-                                                Text(
-                                                    'Rp ' +
-                                                        NumberFormat("#,###")
-                                                            .format((mhotel[index]['dhotel']
-                                                                        .length >
-                                                                    0)
-                                                                ? mhotel[index]['dhotel'].map((m) => m['Harga']).reduce((a,
-                                                                            b) =>
-                                                                        a + b) /
-                                                                    mhotel[index]['dhotel']
-                                                                        .length
-                                                                : 0)
-                                                            .replaceAll(
-                                                                ",", "."),
-                                                    style: TextStyle(
-                                                        color: mainAmber,
-                                                        fontSize:
-                                                            (MediaQuery.of(context)
-                                                                        .size
-                                                                        .width <
-                                                                    750)
-                                                                ? 17
-                                                                : 20)),
-                                                const Text('/ night',
-                                                    style: TextStyle(
-                                                        color: Color.fromARGB(
-                                                            255, 150, 150, 150),
-                                                        fontSize: 15)),
-                                                Text(
-                                                    mhotel[index]['dhotel']
-                                                            .length
-                                                            .toString() +
-                                                        ' Room Type(s)',
-                                                    style: const TextStyle(
-                                                        color: Color.fromARGB(
-                                                            255, 200, 200, 200),
-                                                        fontSize: 16))
+                                                const Text(
+                                                  ' / night',
+                                                  style: TextStyle(
+                                                      color:
+                                                          Color.fromARGB(255, 150, 150, 150),
+                                                      fontSize: 15),
+                                                ),
                                               ],
                                             ),
-                                        ],
-                                      )),
-                                ),
+                                            Text(
+                                              hotel['dhotel'].length.toString() +
+                                                  ' Room Type(s)',
+                                              style: const TextStyle(
+                                                  color: Color.fromARGB(255, 200, 200, 200),
+                                                  fontSize: 16),
+                                            ),
+                                          ],
+                                        ),
+                                    ],
+                                  ),
+                                  const Spacer(),
+                                  if (MediaQuery.of(context).size.width > 750)
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          'Rp ' +
+                                              NumberFormat("#,###")
+                                                  .format(
+                                                      (hotel['dhotel'].length > 0)
+                                                          ? hotel['dhotel']
+                                                                  .map((m) => m['Harga'])
+                                                                  .reduce((a, b) => a + b) /
+                                                              hotel['dhotel'].length
+                                                          : 0)
+                                                  .replaceAll(",", "."),
+                                          style: TextStyle(
+                                              color: mainAmber,
+                                              fontSize: (MediaQuery.of(context).size.width <
+                                                      750)
+                                                  ? 17
+                                                  : 20),
+                                        ),
+                                        const Text(
+                                          '/ night',
+                                          style: TextStyle(
+                                              color: Color.fromARGB(255, 150, 150, 150),
+                                              fontSize: 15),
+                                        ),
+                                        Text(
+                                          hotel['dhotel'].length.toString() +
+                                              ' Room Type(s)',
+                                          style: const TextStyle(
+                                              color: Color.fromARGB(255, 200, 200, 200),
+                                              fontSize: 16),
+                                        ),
+                                      ],
+                                    ),
+                                ],
                               ),
-                            ));
-                      })),
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              )
+
+              // SizedBox(
+              //     // height: double.minPositive,
+              //     child: ListView.builder(
+              //         shrinkWrap: true,
+              //         itemCount: mhotel.length,
+              //         itemBuilder: (context, index) {
+              //           return Padding(
+              //               padding:
+              //                   const EdgeInsets.only(left: 10, right: 10, top: 10),
+              //               child: Container(
+              //                 child: Card(
+              //                   color: const Color.fromARGB(255, 49, 52, 57),
+              //                   child: Padding(
+              //                     padding: const EdgeInsets.all(8.0),
+              //                     child: ListTile(
+              //                         onTap: () {
+              //                           pindahKeForm(context,
+              //                               hotelID: mhotel[index]["HotelID"],
+              //                               isNew: 0);
+              //                         },
+              //                         title: Row(
+              //                           children: [
+              //                             Column(
+              //                               crossAxisAlignment:
+              //                                   CrossAxisAlignment.start,
+              //                               children: [
+              //                                 Wrap(
+              //                                   children: [
+              //                                     Padding(
+              //                                       padding: EdgeInsets.only(
+              //                                           top: (MediaQuery.of(
+              //                                                           context)
+              //                                                       .size
+              //                                                       .width <
+              //                                                   750)
+              //                                               ? 6
+              //                                               : 15,
+              //                                           right: 5),
+              //                                       child: Icon(Icons.circle,
+              //                                           color: (mhotel[index][
+              //                                                       "Status"] ==
+              //                                                   1)
+              //                                               ? Colors.green
+              //                                               : Colors.red,
+              //                                           size: 10),
+              //                                     ),
+              //                                     Text(
+              //                                         mhotel[index]
+              //                                             ["NamaHotel"],
+              //                                         style: TextStyle(
+              //                                             fontSize: (MediaQuery.of(
+              //                                                             context)
+              //                                                         .size
+              //                                                         .width <
+              //                                                     750)
+              //                                                 ? 20
+              //                                                 : 25,
+              //                                             fontWeight:
+              //                                                 FontWeight.bold,
+              //                                             color: Colors.white)),
+              //                                   ],
+              //                                 ),
+              //                                 Text(mhotel[index]["LokasiHotel"],
+              //                                     style: TextStyle(
+              //                                         fontSize: (MediaQuery.of(
+              //                                                         context)
+              //                                                     .size
+              //                                                     .width <
+              //                                                 750)
+              //                                             ? 14
+              //                                             : 16,
+              //                                         color: const Color.fromARGB(
+              //                                             255, 150, 150, 150))),
+              //                                 Row(
+              //                                   children: [
+              //                                     const Icon(Icons.star,
+              //                                         color: Colors.white,
+              //                                         size: 15),
+              //                                     Text(
+              //                                         ' ' +
+              //                                             (mhotel[index][
+              //                                                         "RatingHotel"] ??
+              //                                                     0)
+              //                                                 .toString(),
+              //                                         style: TextStyle(
+              //                                             color: mainAmber)),
+              //                                   ],
+              //                                 ),
+              //                                 if (MediaQuery.of(context)
+              //                                         .size
+              //                                         .width <=
+              //                                     750)
+              //                                   Column(
+              //                                     crossAxisAlignment:
+              //                                         CrossAxisAlignment.start,
+              //                                     children: [
+              //                                       Wrap(
+              //                                         children: [
+              //                                           Text(
+              //                                               'Rp ' +
+              //                                                   NumberFormat(
+              //                                                           "#,###")
+              //                                                       .format((mhotel[index]['dhotel'].length >
+              //                                                               0)
+              //                                                           ? mhotel[index]['dhotel'].map((m) => m['Harga']).reduce((a, b) => a + b) /
+              //                                                               mhotel[index]['dhotel']
+              //                                                                   .length
+              //                                                           : 0)
+              //                                                       .replaceAll(
+              //                                                           ",",
+              //                                                           "."),
+              //                                               style: TextStyle(
+              //                                                   color:
+              //                                                       mainAmber,
+              //                                                   fontSize: (MediaQuery.of(context)
+              //                                                               .size
+              //                                                               .width <
+              //                                                           750)
+              //                                                       ? 17
+              //                                                       : 20)),
+              //                                           const Text(' / night',
+              //                                               style: TextStyle(
+              //                                                   color: Color
+              //                                                       .fromARGB(
+              //                                                           255,
+              //                                                           150,
+              //                                                           150,
+              //                                                           150),
+              //                                                   fontSize: 15)),
+              //                                         ],
+              //                                       ),
+              //                                       Text(
+              //                                           mhotel[index]['dhotel']
+              //                                                   .length
+              //                                                   .toString() +
+              //                                               ' Room Type(s)',
+              //                                           style: const TextStyle(
+              //                                               color:
+              //                                                   Color.fromARGB(
+              //                                                       255,
+              //                                                       200,
+              //                                                       200,
+              //                                                       200),
+              //                                               fontSize: 16))
+              //                                     ],
+              //                                   ),
+              //                               ],
+              //                             ),
+              //                             const Spacer(), // use Spacer
+              //                             if (MediaQuery.of(context)
+              //                                     .size
+              //                                     .width >
+              //                                 750)
+              //                               Column(
+              //                                 crossAxisAlignment:
+              //                                     CrossAxisAlignment.end,
+              //                                 children: [
+              //                                   Text(
+              //                                       'Rp ' +
+              //                                           NumberFormat("#,###")
+              //                                               .format((mhotel[index]['dhotel']
+              //                                                           .length >
+              //                                                       0)
+              //                                                   ? mhotel[index]['dhotel'].map((m) => m['Harga']).reduce((a,
+              //                                                               b) =>
+              //                                                           a + b) /
+              //                                                       mhotel[index]['dhotel']
+              //                                                           .length
+              //                                                   : 0)
+              //                                               .replaceAll(
+              //                                                   ",", "."),
+              //                                       style: TextStyle(
+              //                                           color: mainAmber,
+              //                                           fontSize:
+              //                                               (MediaQuery.of(context)
+              //                                                           .size
+              //                                                           .width <
+              //                                                       750)
+              //                                                   ? 17
+              //                                                   : 20)),
+              //                                   const Text('/ night',
+              //                                       style: TextStyle(
+              //                                           color: Color.fromARGB(
+              //                                               255, 150, 150, 150),
+              //                                           fontSize: 15)),
+              //                                   Text(
+              //                                       mhotel[index]['dhotel']
+              //                                               .length
+              //                                               .toString() +
+              //                                           ' Room Type(s)',
+              //                                       style: const TextStyle(
+              //                                           color: Color.fromARGB(
+              //                                               255, 200, 200, 200),
+              //                                           fontSize: 16))
+              //                                 ],
+              //                               ),
+              //                           ],
+              //                         )),
+              //                   ),
+              //                 ),
+              //               ));
+              //         })),
             ],
           ),
         ));
