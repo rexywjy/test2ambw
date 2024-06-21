@@ -28,7 +28,7 @@ class LoginTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if(type == "username"){
+    if(type == "nospace"){
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 25.0),
         child: TextField(

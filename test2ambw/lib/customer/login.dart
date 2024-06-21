@@ -131,8 +131,12 @@ class _LoginPageState extends State<LoginPage> {
     // }
 
     try {
+
+      final sup = await supabase.from('mcustomer').select().eq('Username', usernameController.text);
+      final theemail = sup[0]['Email'];
+
       final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: usernameController.text,
+        email: theemail,
         password: passwordController.text,
       );
       // If successful, pop the loading circle
@@ -223,14 +227,25 @@ class _LoginPageState extends State<LoginPage> {
                 // email
                 LoginTextField(
                     controller: usernameController,
-                    hintText: 'Email',
+                    hintText: 'Username',
                     obscureText: false,
-                    iconInput: const Icon(Icons.email),
-                    type: ''
+                    iconInput: const Icon(Icons.person),
+                    type: 'nospace'
                   ),
                 const SizedBox(
                   height: 10,
                 ),
+                // // email
+                // LoginTextField(
+                //     controller: usernameController,
+                //     hintText: 'Email',
+                //     obscureText: false,
+                //     iconInput: const Icon(Icons.email),
+                //     type: 'nospace'
+                //   ),
+                // const SizedBox(
+                //   height: 10,
+                // ),
 
                 // password
                 LoginTextField(

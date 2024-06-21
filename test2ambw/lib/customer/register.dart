@@ -203,8 +203,8 @@ class _RegisterPageState extends State<RegisterPage> {
                   controller: usernamecontroller,
                   hintText: 'Username',
                   obscureText: false,
-                  iconInput: Icon(Icons.abc),
-                  type: 'username',
+                  iconInput: Icon(Icons.person),
+                  type: 'nospace',
                 ),
                 const SizedBox(
                   height: 10,
@@ -214,7 +214,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   controller: namacontroller,
                   hintText: 'Name',
                   obscureText: false,
-                  iconInput: Icon(Icons.person),
+                  iconInput: Icon(Icons.portrait),
                   type: ''
                 ),
                 const SizedBox(
@@ -226,7 +226,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   hintText: 'Email',
                   obscureText: false,
                   iconInput: Icon(Icons.email),
-                  type: ''
+                  type: 'nospace'
                 ),
                 const SizedBox(
                   height: 10,
