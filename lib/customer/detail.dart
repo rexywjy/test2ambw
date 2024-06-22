@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:test2ambw/customer/login.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -10,7 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: DetailPage(menuType: 'mdestinations', index: 1, id: "HotelID"),
+      // home: DetailPage(menuType: 'mdestinations', index: 1, id: "HotelID"),
     );
   }
 }
@@ -20,7 +21,9 @@ class DetailPage extends StatefulWidget {
   final int index;
   final String id;
 
-  DetailPage({required this.menuType, required this.index, required this.id});
+  final String username;
+
+  DetailPage({required this.menuType, required this.index, required this.id, required this.username});
 
   @override
   State<DetailPage> createState() => _DetailPageState();
@@ -53,6 +56,25 @@ class _DetailPageState extends State<DetailPage> {
   void initState() {
     super.initState();
     fetchTourData();
+  }
+
+  Future addToCart() async {
+    var user_id = widget.username;
+    var product_type = widget.menuType;
+    var product_id = widget.index;
+
+    print(user_id);
+    
+    await Supabase.instance.client
+    .from('mcart')
+    .insert({
+      'user_id': user_id,
+      'product_type': product_type,
+      'product_id': product_id,
+      'quantity': 1,
+      'is_selected': 1
+    })
+    .select();
   }
 
   @override
@@ -626,7 +648,7 @@ class _DetailPageState extends State<DetailPage> {
                             backgroundColor: Color(0xFFFFA800),
                           ),
                           onPressed: () {
-                            //Buat code e jodem
+                            addToCart();
                           },
                           child: Text(
                             'Book Now',

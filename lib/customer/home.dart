@@ -309,11 +309,12 @@ class _MyHomePageState extends State<MyHomePage> {
                   : selectedButton == 'tours'
                       ? ScrollImageCarousel(
                           menuData: menuData,
+                          username: widget.username,
                         )
                       : selectedButton == 'destinations'
-                          ? ScrollImageCarouselDestination(menuData: menuData)
+                          ? ScrollImageCarouselDestination(menuData: menuData, username: widget.username,)
                           : selectedButton == 'hotels'
-                              ? ScrollImageCarouselHotel(menuData: menuData)
+                              ? ScrollImageCarouselHotel(menuData: menuData, username: widget.username,)
                               : CircularProgressIndicator(),
               Padding(
                 padding: const EdgeInsets.only(top: 30.0, bottom: 20.0),

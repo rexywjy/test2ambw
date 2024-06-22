@@ -8,8 +8,9 @@ import 'package:test2ambw/customer/home.dart';
 
 class ScrollImageCarousel extends StatelessWidget {
   var menuData;
+  final String username;
 
-  ScrollImageCarousel({Key? key, required this.menuData}) : super(key: key);
+  ScrollImageCarousel({Key? key, required this.menuData, required this.username}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +32,7 @@ class ScrollImageCarousel extends StatelessWidget {
                             menuType: "mtour",
                             index: index + 1,
                             id: "TourID",
+                            username: username,
                           )),
                 );
               },
@@ -140,6 +142,7 @@ class ScrollImageCarousel extends StatelessWidget {
                                             menuType: "mtour",
                                             index: index + 1,
                                             id: "TourID",
+                                            username: username,
                                           )),
                                 );
                               },
