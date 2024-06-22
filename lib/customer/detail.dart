@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:panara_dialogs/panara_dialogs.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:supabase/supabase.dart';
 import 'package:test2ambw/customer/login.dart';
+import 'package:test2ambw/customer/cart/success_dialog.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -58,24 +61,74 @@ class _DetailPageState extends State<DetailPage> {
     fetchTourData();
   }
 
-  Future addToCart() async {
+  Future<void> addToCart() async {
     var user_id = widget.username;
     var product_type = widget.menuType;
     var product_id = widget.index;
 
     print(user_id);
-    
-    await Supabase.instance.client
-    .from('mcart')
-    .insert({
-      'user_id': user_id,
-      'product_type': product_type,
-      'product_id': product_id,
-      'quantity': 1,
-      'is_selected': 1
-    })
-    .select();
+
+    try {
+      final existingItemResponse = await Supabase.instance.client
+          .from('mcart')
+          .select()
+          .eq('user_id', user_id)
+          .eq('product_type', product_type)
+          .eq('product_id', product_id);
+      if (existingItemResponse != null && existingItemResponse.isNotEmpty) {
+        int currentQuantity = existingItemResponse[0]['quantity'] as int;
+        final response = await Supabase.instance.client
+            .from('mcart')
+            .update({
+              'quantity': currentQuantity + 1,
+              'is_selected': 1,
+            })
+            .eq('user_id', user_id)
+            .eq('product_type', product_type)
+            .eq('product_id', product_id);
+
+        print('Quantity incremented successfully: $response');
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return SuccessDialog(
+              msg: 'Add to Cart',
+              msg_detail: 'Product quantity incremented in your cart.',
+            );
+          },
+        );
+      } else {
+        final response = await Supabase.instance.client
+            .from('mcart')
+            .insert({
+              'user_id': user_id,
+              'product_type': product_type,
+              'product_id': product_id,
+              'quantity': 1,
+              'is_selected': 1,
+            })
+            .select();
+
+        if (response != null && response.isNotEmpty) {
+          print('Data inserted successfully: $response');
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return SuccessDialog(
+                msg: 'Add to Cart',
+                msg_detail: 'Product successfully added to your cart.',
+              );
+            },
+          );
+        } else {
+          print('No data returned after insertion.');
+        }
+      }
+    } catch (e) {
+      print('Error adding item to database: $e');
+    }
   }
+
 
   @override
   Widget build(BuildContext context) {
