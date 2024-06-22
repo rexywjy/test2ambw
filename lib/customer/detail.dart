@@ -28,20 +28,15 @@ class DetailPage extends StatefulWidget {
 
 class _DetailPageState extends State<DetailPage> {
   var fetchedData;
+  var hotelRooms;
   bool isLoading = true;
 
   Future<void> fetchTourData() async {
-    final response = await Supabase.instance.client
+    var response = await Supabase.instance.client
         .from(widget.menuType)
         .select()
         .eq(widget.id, widget.index)
         .single();
-
-    if (widget.menuType == "mhotel") {
-      final response = await Supabase.instance.client
-          .from(widget.menuType)
-          .select('*, dhotel(*)');
-    }
 
     setState(() {
       fetchedData = response;
@@ -361,7 +356,7 @@ class _DetailPageState extends State<DetailPage> {
                                 ),
                                 SizedBox(height: 20),
                                 Text(
-                                  "Description",
+                                  "Room Lists",
                                   style: GoogleFonts.montserrat(
                                       fontSize: 24,
                                       fontWeight: FontWeight.w700),
@@ -372,7 +367,52 @@ class _DetailPageState extends State<DetailPage> {
                                     border: Border.all(color: Colors.black),
                                     borderRadius: BorderRadius.circular(10),
                                   ),
-                                )
+                                ),
+                                Column(
+                                  children: List.generate(
+                                    fetchedData.length,
+                                    (index) => Container(
+                                      margin: EdgeInsets.only(bottom: 10),
+                                      padding: EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.withOpacity(0.3),
+                                            spreadRadius: 1,
+                                            blurRadius: 3,
+                                            offset: Offset(0, 2),
+                                          ),
+                                        ],
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            fetchedData!["dhotel.Tipe"] ??
+                                                'No Room',
+                                            style: GoogleFonts.montserrat(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          SizedBox(height: 5),
+                                          Text(
+                                            "Price: " +
+                                                fetchedData!['Harga']
+                                                    .toString() +
+                                                " / night",
+                                            style: GoogleFonts.montserrat(
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
                           ),
