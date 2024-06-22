@@ -124,7 +124,17 @@ class ScrollImageCarouselDestination extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => DetailPage(
+                                            menuType: "mdestinations",
+                                            index: index + 1,
+                                            id: "id",
+                                          )),
+                                );
+                              },
                               child: Text(
                                 'Details',
                                 style: GoogleFonts.montserrat(

@@ -145,7 +145,17 @@ class ScrollImageCarouselHotel extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => DetailPage(
+                                            menuType: "mhotel",
+                                            index: index + 1,
+                                            id: "HotelID",
+                                          )),
+                                );
+                              },
                               child: Text(
                                 'Details',
                                 style: GoogleFonts.montserrat(
