@@ -92,7 +92,7 @@ class ScrollImageCarouselDestination extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            convertToIdr(tour['price'], 0) + ' / pax',
+                            convertToIdr(tour['Price'], 0) + ' / pax',
                             style: GoogleFonts.montserrat(
                               color: Colors.white,
                               fontSize: 14,

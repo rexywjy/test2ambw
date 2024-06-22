@@ -37,6 +37,12 @@ class _DetailPageState extends State<DetailPage> {
         .eq(widget.id, widget.index)
         .single();
 
+    if (widget.menuType == "mhotel") {
+      final response = await Supabase.instance.client
+          .from(widget.menuType)
+          .select('*, dhotel(*)');
+    }
+
     setState(() {
       fetchedData = response;
       isLoading = false;
@@ -91,6 +97,16 @@ class _DetailPageState extends State<DetailPage> {
                             image: NetworkImage(fetchedData['image_url']),
                             fit: BoxFit.cover,
                           ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(
+                                  0.2), // Shadow color with 20% opacity
+                              spreadRadius: 2, // How much the shadow spreads
+                              blurRadius: 7, // The blur radius of the shadow
+                              offset: Offset(
+                                  0, 3), // The position of the shadow (x, y)
+                            ),
+                          ],
                         ),
                       ),
                       Padding(
@@ -105,16 +121,65 @@ class _DetailPageState extends State<DetailPage> {
                               style: GoogleFonts.montserrat(
                                   fontSize: 26, fontWeight: FontWeight.bold),
                             ),
-                            Text(
-                              fetchedData!['alamat'] ?? 'No Location',
-                              style: GoogleFonts.montserrat(
-                                  fontSize: 20, fontWeight: FontWeight.w500),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              child: Divider(
+                                height: 0.1,
+                                thickness: 2,
+                              ),
                             ),
-                            Text(
-                              "Rp. ${fetchedData!['price'] ?? 'No Price'}" +
-                                  " / pax",
-                              style: GoogleFonts.montserrat(
-                                  fontSize: 20, fontWeight: FontWeight.w600),
+                            Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 8.0),
+                                  child: FaIcon(
+                                    FontAwesomeIcons.locationPin,
+                                    color: Color(0xFFFFA800),
+                                  ),
+                                ),
+                                Text(
+                                  fetchedData!['alamat'] ?? 'No Location',
+                                  style: GoogleFonts.montserrat(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 10),
+                            Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 6.0),
+                                  child: FaIcon(FontAwesomeIcons.clock,
+                                      color: Color(0xFFFFA800), size: 20),
+                                ),
+                                RichText(
+                                  text: TextSpan(
+                                    children: <InlineSpan>[
+                                      TextSpan(
+                                        text: "Open",
+                                        style: GoogleFonts.montserrat(
+                                          color: Colors.black,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: " | Sun - Sat, 09:00 - 21.00",
+                                        style: GoogleFonts.montserrat(
+                                          color: Colors.black,
+                                          fontSize: 18,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 10),
+                            Divider(
+                              height: 0.1,
+                              thickness: 2,
                             ),
                             SizedBox(height: 20),
                             Text(
@@ -141,23 +206,7 @@ class _DetailPageState extends State<DetailPage> {
                                 ),
                               ),
                             ),
-                            SizedBox(height: 20),
-                            Center(
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Color(0xFFFFA800),
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 30, vertical: 10),
-                                ),
-                                onPressed: () {},
-                                child: Text(
-                                  'Book Now',
-                                  style: GoogleFonts.montserrat(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            ),
+                            SizedBox(height: 100),
                           ],
                         ),
                       ),
@@ -202,6 +251,18 @@ class _DetailPageState extends State<DetailPage> {
                                 image: NetworkImage(fetchedData['image_url']),
                                 fit: BoxFit.cover,
                               ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(
+                                      0.2), // Shadow color with 20% opacity
+                                  spreadRadius:
+                                      2, // How much the shadow spreads
+                                  blurRadius:
+                                      7, // The blur radius of the shadow
+                                  offset: Offset(0,
+                                      3), // The position of the shadow (x, y)
+                                ),
+                              ],
                             ),
                           ),
                           Padding(
@@ -213,51 +274,105 @@ class _DetailPageState extends State<DetailPage> {
                               children: <Widget>[
                                 SizedBox(height: 20),
                                 Text(
-                                  fetchedData!['NamaHotel'] ?? 'No Title',
+                                  fetchedData!['NamaHotel'] ?? 'No Name',
                                   style: GoogleFonts.montserrat(
                                       fontSize: 26,
                                       fontWeight: FontWeight.bold),
                                 ),
-                                Text(
-                                  fetchedData!['LokasiHotel'] ?? 'No Location',
-                                  style: GoogleFonts.montserrat(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w500),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    FaIcon(FontAwesomeIcons.solidStar,
+                                        color: Color(0xFFFFA800)),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 2.0, top: 2),
+                                      child: Text(
+                                        fetchedData!['RatingHotel'].toString() +
+                                                " Good" ??
+                                            'No Rating',
+                                        style: GoogleFonts.montserrat(
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.w700,
+                                            color: Color(0xFFFFA800)),
+                                      ),
+                                    )
+                                  ],
                                 ),
-                                Text(
-                                  "Rp. 1.000.000" + " / pax",
-                                  style: GoogleFonts.montserrat(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                                SizedBox(height: 20),
-                                //Placeholder List Kamar
-                                Column(children: [
-                                  Container(
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: Color(0xFFFFA800),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                  )
-                                ]),
-                                SizedBox(height: 20),
-                                Center(
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Color(0xFFFFA800),
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 30, vertical: 10),
-                                    ),
-                                    onPressed: () {},
-                                    child: Text(
-                                      'Book Now',
-                                      style: GoogleFonts.montserrat(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold),
-                                    ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 10),
+                                  child: Divider(
+                                    height: 0.1,
+                                    thickness: 2,
                                   ),
                                 ),
+                                Row(
+                                  children: [
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(right: 8.0),
+                                      child: FaIcon(
+                                        FontAwesomeIcons.locationPin,
+                                        color: Color(0xFFFFA800),
+                                      ),
+                                    ),
+                                    Text(
+                                      fetchedData!['LokasiHotel'] ??
+                                          'No Location',
+                                      style: GoogleFonts.montserrat(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 10),
+                                Row(
+                                  children: [
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(right: 6.0),
+                                      child: FaIcon(
+                                          FontAwesomeIcons.bellConcierge,
+                                          color: Color(0xFFFFA800),
+                                          size: 20),
+                                    ),
+                                    RichText(
+                                      text: TextSpan(
+                                        children: <InlineSpan>[
+                                          TextSpan(
+                                            text:
+                                                "Breakfast Included, Pool, Bar",
+                                            style: GoogleFonts.montserrat(
+                                              color: Colors.black,
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 10),
+                                Divider(
+                                  height: 0.1,
+                                  thickness: 2,
+                                ),
+                                SizedBox(height: 20),
+                                Text(
+                                  "Description",
+                                  style: GoogleFonts.montserrat(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.w700),
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: Color(0xFFFFA800).withOpacity(0.3),
+                                    border: Border.all(color: Colors.black),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                )
                               ],
                             ),
                           ),
@@ -305,6 +420,18 @@ class _DetailPageState extends State<DetailPage> {
                                         NetworkImage(fetchedData['image_url']),
                                     fit: BoxFit.cover,
                                   ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(
+                                          0.2), // Shadow color with 20% opacity
+                                      spreadRadius:
+                                          2, // How much the shadow spreads
+                                      blurRadius:
+                                          7, // The blur radius of the shadow
+                                      offset: Offset(0,
+                                          3), // The position of the shadow (x, y)
+                                    ),
+                                  ],
                                 ),
                               ),
                               Padding(
@@ -319,7 +446,7 @@ class _DetailPageState extends State<DetailPage> {
                                       text: TextSpan(
                                         children: <InlineSpan>[
                                           TextSpan(
-                                            text: fetchedData![
+                                            text: fetchedData[
                                                     'DepartureLocation'] +
                                                 " ",
                                             style: GoogleFonts.montserrat(
@@ -336,8 +463,8 @@ class _DetailPageState extends State<DetailPage> {
                                             ),
                                           ),
                                           TextSpan(
-                                            text: " " +
-                                                fetchedData![
+                                            text: ' ' +
+                                                fetchedData[
                                                     'DestinationLocation'],
                                             style: GoogleFonts.montserrat(
                                               color: Colors.black,
@@ -348,18 +475,83 @@ class _DetailPageState extends State<DetailPage> {
                                         ],
                                       ),
                                     ),
-                                    Text(
-                                      "Return Trip",
-                                      style: GoogleFonts.montserrat(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 10),
+                                      child: Divider(
+                                        height: 0.1,
+                                        thickness: 2,
+                                      ),
                                     ),
-                                    Text(
-                                      convertToIdr(fetchedData!["Price"], 0) +
-                                          " / pax",
-                                      style: GoogleFonts.montserrat(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w600),
+                                    Row(
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(right: 8.0),
+                                          child: FaIcon(
+                                            FontAwesomeIcons.calendar,
+                                            color: Color(0xFFFFA800),
+                                          ),
+                                        ),
+                                        Text(
+                                          DateFormat('dd MMMM yyyy').format(
+                                                      DateTime.parse(
+                                                          fetchedData![
+                                                              'StartDate'])) +
+                                                  " - " +
+                                                  DateFormat('dd MMMM yyyy')
+                                                      .format(DateTime.parse(
+                                                          fetchedData![
+                                                              'EndDate'])) ??
+                                              'No date',
+                                          style: GoogleFonts.montserrat(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 10),
+                                    Row(
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(right: 6.0),
+                                          child: FaIcon(
+                                              FontAwesomeIcons.peopleGroup,
+                                              color: Color(0xFFFFA800),
+                                              size: 20),
+                                        ),
+                                        RichText(
+                                          text: TextSpan(
+                                            children: <InlineSpan>[
+                                              TextSpan(
+                                                text: "Max Quota | ",
+                                                style: GoogleFonts.montserrat(
+                                                  color: Colors.black,
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              TextSpan(
+                                                text: fetchedData["MaxQuota"]
+                                                            .toString() +
+                                                        " People" ??
+                                                    'No Quota',
+                                                style: GoogleFonts.montserrat(
+                                                    color: Color(0xFFFFA800),
+                                                    fontSize: 18,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 10),
+                                    Divider(
+                                      height: 0.1,
+                                      thickness: 2,
                                     ),
                                     SizedBox(height: 20),
                                     Text(
@@ -368,34 +560,28 @@ class _DetailPageState extends State<DetailPage> {
                                           fontSize: 24,
                                           fontWeight: FontWeight.w700),
                                     ),
-                                    Text(
-                                      "Max Quota: " +
-                                              fetchedData!['MaxQuota']
-                                                  .toString() ??
-                                          'No Description',
-                                      textAlign: TextAlign.justify,
-                                      style: GoogleFonts.montserrat(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                    ),
                                     SizedBox(height: 20),
-                                    Center(
-                                      child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Color(0xFFFFA800),
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 30, vertical: 10),
-                                        ),
-                                        onPressed: () {},
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color:
+                                            Color(0xFFFFA800).withOpacity(0.3),
+                                        border: Border.all(color: Colors.black),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10.0),
                                         child: Text(
-                                          'Book Now',
+                                          "Experience the ultimate return trip adventure with our meticulously crafted tour package, offering an unforgettable blend of exploration, relaxation, and culinary delights." ??
+                                              'No Description',
+                                          textAlign: TextAlign.justify,
                                           style: GoogleFonts.montserrat(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold),
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.normal,
+                                          ),
                                         ),
                                       ),
                                     ),
+                                    SizedBox(height: 100),
                                   ],
                                 ),
                               ),
@@ -403,6 +589,57 @@ class _DetailPageState extends State<DetailPage> {
                           ),
                         )
                       : Container(),
+      bottomSheet: fetchedData == null
+          ? Container()
+          : widget.menuType != 'mhotel'
+              ? Container(
+                  color: Colors.white,
+                  width: double.infinity,
+                  height: 100,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("The Best Price",
+                                style: GoogleFonts.montserrat(
+                                    fontSize: 16, fontWeight: FontWeight.w400)),
+                            Text(
+                              convertToIdr(fetchedData!["Price"], 0) + "/ pax",
+                              style: GoogleFonts.montserrat(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w800,
+                                  color: Color(0xFFFFA800)),
+                            )
+                          ],
+                        ),
+                      ),
+                      SizedBox(width: 20),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 25.0),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color(0xFFFFA800),
+                          ),
+                          onPressed: () {
+                            //Buat code e jodem
+                          },
+                          child: Text(
+                            'Book Now',
+                            style: GoogleFonts.montserrat(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              : SizedBox(),
     );
   }
 
