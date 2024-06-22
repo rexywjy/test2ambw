@@ -64,7 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
-    fetchTourData("mtour2");
+    fetchTourData("mtour");
     fetchName();
   }
 
@@ -222,7 +222,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       padding: const EdgeInsets.only(right: 10),
                       child: GestureDetector(
                         onTap: () {
-                          fetchTourData('mtour2');
+                          fetchTourData('mtour');
                           selectedButton = 'tours';
                         },
                         child: Text(

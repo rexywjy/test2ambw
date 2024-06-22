@@ -74,7 +74,7 @@ class ScrollImageCarousel extends StatelessWidget {
                             text: TextSpan(
                               children: <InlineSpan>[
                                 TextSpan(
-                                  text: tour['departure_location'] + " ",
+                                  text: tour['DepartureLocation'] + " ",
                                   style: GoogleFonts.montserrat(
                                     color: Colors.white,
                                     fontSize: 15,
@@ -89,7 +89,7 @@ class ScrollImageCarousel extends StatelessWidget {
                                   ),
                                 ),
                                 TextSpan(
-                                  text: ' ' + tour['destination_location'],
+                                  text: ' ' + tour['DestinationLocation'],
                                   style: GoogleFonts.montserrat(
                                     color: Colors.white,
                                     fontSize: 15,
@@ -100,7 +100,7 @@ class ScrollImageCarousel extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            convertToIdr(tour['price'], 0) + ' / pax',
+                            convertToIdr(tour['Price'], 0) + ' / pax',
                             style: GoogleFonts.montserrat(
                               color: Colors.white,
                               fontSize: 14,
