@@ -1,15 +1,3 @@
-// import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:flutter/material.dart';
-// import 'package:firebase_core/firebase_core.dart';
-// import 'package:supabase_flutter/supabase_flutter.dart';
-// import 'package:test2ambw/others/auth.dart';
-// import 'package:test2ambw/customer/login.dart';
-// import '../../firebase_options.dart';
-// import '../index.dart';
-// import 'package:hexcolor/hexcolor.dart';
-// import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-// import 'package:test2ambw/customer/profile.dart';
-
 import 'dart:ffi';
 
 import 'package:firebase_auth/firebase_auth.dart';
