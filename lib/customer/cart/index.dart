@@ -219,6 +219,7 @@ class _CartState extends State<Cart> {
   List<CheckoutItem> convertToCheckoutItems(List<Map<String, dynamic>> list) {
   return list.map((item) {
     return CheckoutItem(
+      cartId: item['cart_id'] as int,
       productId: item['product_id'] as int,
       productName: item['product_name'] as String,
       productQty: item['product_qty'] as int,
@@ -291,7 +292,7 @@ class _CartState extends State<Cart> {
 
         if (qty <= max_capacity) {
           is_ok = true;
-          coList.add({'product_id': x['product_id'], 'product_name': name, 'product_qty': qty, 'product_price': price, 'product_subtotal': qty * price, 'product_img': img});
+          coList.add({'cart_id': x['cart_id'], 'product_id': x['product_id'], 'product_name': name, 'product_qty': qty, 'product_price': price, 'product_subtotal': qty * price, 'product_img': img});
         } else {
           is_ok = false;
           showDialog(

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ffi';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,6 +16,8 @@ import 'package:test2ambw/customer/profile.dart';
 import 'package:intl/intl.dart';
 import 'package:test2ambw/customer/cart/index.dart';
 import 'package:test2ambw/customer/cart/checkout_item.dart';
+import 'package:test2ambw/customer/cart/success_dialog.dart';
+import 'dart:convert';
 
 class Checkout extends StatefulWidget {
   final String name;
@@ -51,15 +54,92 @@ class _CheckoutState extends State<Checkout> {
     return widget.items.fold(0, (sum, item) => sum + item.productSubtotal);
   }
 
-  Future cekData() async {
-    for (var x in widget.items) {
-      print(x.productName);
+  // Future prepareData() async {
+  //   final response = await Supabase.instance.client
+  //     .from('mtransaction')
+  //     .select('*')
+  //     .eq('user_id', widget.username);
+
+  //   print("JSON ENCODE");
+  //   for (var x in response) {
+  //     print(x['transaction_product']);
+  //   }
+
+  // }
+
+  Future clearCart() async {
+    for (var i in widget.items) {
+      final response_cart = await Supabase.instance.client
+        .from('mcart')
+        .delete()
+        .eq('cart_id', i.cartId);
+    }
+
+    if (mounted) {
+      Navigator.pop(context);
+      Future.delayed(Duration.zero, () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return SuccessDialog(
+              msg: 'Success',
+              msg_detail: 'Transaction Successfully.',
+            );
+          },
+        ).then((_) {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => HomeCustomer(
+                initialPageIndex: 0,
+                name: widget.name,
+                username: widget.username,
+              ),
+            ),
+            (route) => false,
+          );
+        });
+      });
     }
   }
 
+  Future confirmTransaction(productJson) async {
+    
+    var user_id = widget.username;
+    var transaction_total = total;
+    var transaction_product = productJson;
+
+    final response = await Supabase.instance.client
+      .from('mtransaction')
+      .insert({
+        'user_id': user_id,
+        'transaction_total': transaction_total,
+        'transaction_product': transaction_product
+      })
+      .select();
+
+    clearCart();
+  }
+  
+  String encodeItemsToJson(List<CheckoutItem> items) {
+    List<Map<String, dynamic>> itemsList = items.map((item) => item.toJson()).toList();
+    return jsonEncode(itemsList);
+  }
+
+  List<CheckoutItem> decodeItemsFromJson(String jsonString) {
+    List<dynamic> itemsList = jsonDecode(jsonString);
+    return itemsList.map((json) => CheckoutItem.fromJson(json)).toList();
+  }
+
+  // to decode
+  // List<CheckoutItem> items = decodeItemsFromJson(jsonString);
+  // for (var item in items) {
+  //   print('Product Name: ${item.productName}, Quantity: ${item.productQty}, Price: ${item.productPrice}, Subtotal: ${item.productSubtotal}');
+  // }
+
   @override
   void initState() {
-    cekData();
+    // prepareData();
   }
 
   @override
@@ -179,6 +259,20 @@ class _CheckoutState extends State<Checkout> {
                         backgroundColor: Color(0xFFFFA800),
                       ),
                       onPressed: () {
+                        String itemsJson = encodeItemsToJson(widget.items);
+                        print(itemsJson);
+                        showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (context) {
+                            return const Center(
+                              child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(Colors.amber),
+                              ),
+                            );
+                          },
+                        );
+                        confirmTransaction(itemsJson);
                         // Navigator.pushAndRemoveUntil(
                         //   context,
                         //   MaterialPageRoute(
@@ -193,7 +287,7 @@ class _CheckoutState extends State<Checkout> {
                         // );
                       },
                       child: Text(
-                        'Checkout',
+                        'Confirm',
                         style: GoogleFonts.montserrat(
                             color: Colors.white,
                             fontWeight: FontWeight.bold),
