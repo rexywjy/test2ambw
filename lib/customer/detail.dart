@@ -63,7 +63,8 @@ class _DetailPageState extends State<DetailPage> {
 
   Future<void> addToCart() async {
     var user_id = widget.username;
-    var product_type = widget.menuType == 'mhotel' ? 'dhotel' : widget.menuType;
+    // var product_type = widget.menuType == 'mhotel' ? 'dhotel' : widget.menuType;
+    var product_type = widget.menuType;
     var product_id = widget.index;
 
     print(user_id);

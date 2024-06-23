@@ -42,6 +42,7 @@ class Cart extends StatefulWidget {
 }
 
 class Item {
+  final int id;
   final String name;
   final String imageUrl;
   int quantity;
@@ -49,22 +50,19 @@ class Item {
   bool isSelected;
 
   Item({
+    required this.id,
     required this.name,
     required this.imageUrl,
-    this.quantity = 1,
+    required this.quantity,
     required this.price,
-    this.isSelected = false,
+    required this.isSelected,
   });
 }
 
 class _CartState extends State<Cart> {
   
 
-  List<Item> items = [
-    Item(name: 'Item 1', imageUrl: 'https://via.placeholder.com/150', price: 10000),
-    Item(name: 'Item 2', imageUrl: 'https://via.placeholder.com/150', price: 20000),
-    Item(name: 'Item 3', imageUrl: 'https://via.placeholder.com/150', price: 15000),
-  ];
+  List<Item> items = [];
 
   static String convertToIdr(dynamic number, int decimalDigit) {
     NumberFormat currencyFormatter = NumberFormat.currency(
@@ -79,7 +77,41 @@ class _CartState extends State<Cart> {
     return items.where((item) => item.isSelected).fold(0.0, (sum, item) => sum + (item.price * item.quantity));
   }
 
+  Future minusQty(cartIdMinus) async {
+    final existingItemResponse = await Supabase.instance.client
+          .from('mcart')
+          .select()
+          .eq('cart_id', cartIdMinus);
+    int currentQuantity = existingItemResponse[0]['quantity'] as int;
+    final response = await Supabase.instance.client
+      .from('mcart')
+      .update({
+        'quantity': currentQuantity - 1
+      })
+      .eq('cart_id', cartIdMinus);
+  }
+
+  Future plusQty(cartIdPlus) async {
+    final existingItemResponse = await Supabase.instance.client
+          .from('mcart')
+          .select()
+          .eq('cart_id', cartIdPlus);
+    int currentQuantity = existingItemResponse[0]['quantity'] as int;
+    final response = await Supabase.instance.client
+      .from('mcart')
+      .update({
+        'quantity': currentQuantity - 1
+      })
+      .eq('cart_id', cartIdPlus);
+  }
+
+  Future changeSelected(cartIdSelected) async {
+    
+  }
+
   Future fetchCartItems() async {
+    items.clear();
+
     var response = await Supabase.instance.client
       .from('mcart')
       .select('*')
@@ -91,69 +123,48 @@ class _CartState extends State<Cart> {
     for (var product in response) {
       String productType = product['product_type'];
       int qty = product['quantity'];
-      String name = '';
+      String name = 'Item Dummy';
       int price = 0;
-      String img = '';
+      String img = 'https://via.placeholder.com/150';
       print(productType);
       print(qty);
 
-      if (productType == 'mhotel') {
+      if (productType == 'dhotel') {
         var responseMH = await Supabase.instance.client
-          .from('mhotel')
+          .from('dhotel')
           .select()
           .eq('HotelID', product['product_id']);
+        print(responseMH);
+        // name = responseMH[0]['attraction_name'];
+        price = qty * responseMH[0]['Price'] as int;
+        // img = responseMH[0]['image_url'];
       } else if (productType == 'mdestinations') {
         var responseMD = await Supabase.instance.client
           .from('mdestinations')
           .select()
           .eq('id', product['product_id']);
+        print(responseMD);
+        name = responseMD[0]['attraction_name'];
+        price = qty * responseMD[0]['Price'] as int;
+        img = responseMD[0]['image_url'];
       } else if (productType == 'mtour') {
         var responseMT = await Supabase.instance.client
           .from('mtour')
           .select()
           .eq('TourID', product['product_id']);
+        print(responseMT);
+        name = responseMT[0]['NamaTour'];
+        price = qty * responseMT[0]['Price'] as int;
+        img = responseMT[0]['image_url'];
       }
+
+      setState(() {
+        items.add(Item(id: product['cart_id'], name: name, imageUrl: img, quantity: qty, price: price, isSelected: product['is_selected'] as int == 1 ? true : false));
+      });
+      // items.add(Item(name: name, imageUrl: img, quantity: qty, price: price, isSelected: product['is_selected'] as int == 1 ? true : false));
     }
 
     
-
-    // Map the response rows to Item objects
-    // List<Item> items = response.map((row) async {
-    //   final productType = row['product_type'] as String;
-    //   final qty = row['quantity'] as int;
-    //   String name = '';
-    //   int price = 0 as int;
-    //   String img = '';
-
-    //   var responseCheck = await Supabase.instance.client
-    //     .from(productType)
-    //     .select()
-    //     .eq();
-
-    //   if (productType == 'mhotel') {
-    //     // name = responseCheck[0]['NamaTour'] as String;
-    //     // price = qty * responseCheck[0]['Price'] as int;
-    //     // img = responseCheck[0]['image_url'] as String;
-    //   } else if (productType == 'mdestinations') {
-    //     name = responseCheck[0]['attraction_name'] as String;
-    //     price = qty * responseCheck[0]['Price'] as int;
-    //     img = responseCheck[0]['image_url'] as String;
-    //   } else if (productType == 'mtour') {
-    //     name = responseCheck[0]['NamaTour'] as String;
-    //     price = qty * responseCheck[0]['Price'] as int;
-    //     img = responseCheck[0]['image_url'] as String;
-    //   }
-
-    //   return Item(
-    //     name: name,
-    //     imageUrl: img,
-    //     quantity: row['quantity'] as int,
-    //     price: price,
-    //     isSelected: row['is_selected'] == 1 ? true : false,
-    //   );
-    // }).cast<Item>().toList();
-
-    // return items;
   }
 
   @override
@@ -186,7 +197,7 @@ class _CartState extends State<Cart> {
                 return Card(
                   margin: EdgeInsets.all(8.0),
                   child: Padding(
-                    padding: EdgeInsets.all(8.0),
+                    padding: EdgeInsets.only(top: 20.0, right: 8.0, left: 8.0, bottom: 8.0),
                     child: Column(
                       children: [
                         Row(
@@ -228,6 +239,7 @@ class _CartState extends State<Cart> {
                             IconButton(
                               icon: Icon(Icons.remove),
                               onPressed: () {
+                                minusQty(item.id);
                                 setState(() {
                                   if (item.quantity > 1) item.quantity--;
                                 });
@@ -237,6 +249,7 @@ class _CartState extends State<Cart> {
                             IconButton(
                               icon: Icon(Icons.add),
                               onPressed: () {
+                                plusQty(item.id);
                                 setState(() {
                                   item.quantity++;
                                 });
