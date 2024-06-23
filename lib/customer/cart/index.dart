@@ -135,6 +135,16 @@ class _CartState extends State<Cart> {
     });
   }
 
+  Future checkoutItem() async {
+    
+    print('Item Checkout:');
+    for (var x in items) {
+      if (x.isSelected == true) {
+        print(x);
+      }
+    }
+  }
+
   Future fetchCartItems() async {
     items.clear();
 
@@ -152,8 +162,8 @@ class _CartState extends State<Cart> {
       String name = 'Item Dummy';
       int price = 0;
       String img = 'https://via.placeholder.com/150';
-      print(productType);
-      print(qty);
+      // print(productType);
+      // print(qty);
 
       if (productType == 'dhotel') {
         var responseMH = await Supabase.instance.client
@@ -207,7 +217,8 @@ class _CartState extends State<Cart> {
             'Shopping Cart', 
             style: GoogleFonts.montserrat(
               fontSize: 25,
-              fontWeight: FontWeight.bold
+              fontWeight: FontWeight.bold,
+              color: Colors.white
             )
           ),
         ),
@@ -229,6 +240,7 @@ class _CartState extends State<Cart> {
                         Row(
                           children: [
                             Checkbox(
+                              activeColor: Color(0xFFFFA800),
                               value: item.isSelected,
                               onChanged: (bool? value) {
                                 setState(() {
@@ -264,7 +276,7 @@ class _CartState extends State<Cart> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             IconButton(
-                              icon: Icon(item.quantity == 1 ? Icons.delete_outline : Icons.remove_circle_outline),
+                              icon: Icon(item.quantity == 1 ? Icons.delete_outline : Icons.remove_circle_outline, color: item.quantity == 1 ? Colors.red : null,),
                               onPressed: () {
                                 minusQty(item.id);
                                 setState(() {
@@ -292,21 +304,64 @@ class _CartState extends State<Cart> {
             ),
           ),
           if (items.any((item) => item.isSelected))
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  Text('Total: ${convertToIdr(total, 0)}', style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
-                  SizedBox(height: 8.0),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Implement your checkout logic here
-                    },
-                    child: Text('Checkout'),
+            Container(
+              // color: Colors.white,
+              width: double.infinity,
+              height: 100,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1), // Shadow color
+                    spreadRadius: 1, // Spread radius
+                    blurRadius: 10, // Blur radius
+                    offset: Offset(0, -5), // Offset in the x (0) and y (-5) directions
                   ),
                 ],
               ),
-            ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 25.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Total:",
+                            style: GoogleFonts.montserrat(
+                                fontSize: 16, fontWeight: FontWeight.w400)),
+                        Text(
+                          '${convertToIdr(total, 0)}',
+                          style: GoogleFonts.montserrat(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w800,
+                              color: Color(0xFFFFA800)),
+                        )
+                      ],
+                    ),
+                  ),
+                  SizedBox(width: 20),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4.0),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xFFFFA800),
+                      ),
+                      onPressed: () {
+                        checkoutItem();
+                      },
+                      child: Text(
+                        'Checkout',
+                        style: GoogleFonts.montserrat(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            )
         ],
       ),
     );
