@@ -117,7 +117,22 @@ class _CartState extends State<Cart> {
   }
 
   Future changeSelected(cartIdSelected) async {
-    
+     final existingItemResponse = await Supabase.instance.client
+          .from('mcart')
+          .select()
+          .eq('cart_id', cartIdSelected);
+    int currentStatus = existingItemResponse[0]['is_selected'] as int;
+    final response = await Supabase.instance.client
+        .from('mcart')
+        .update({
+          'is_selected': currentStatus == 1 ? 0 : 1
+        })
+        .eq('cart_id', cartIdSelected);
+    setState(() {
+      items.forEach((item) {
+        if (item.id == cartIdSelected) item.isSelected = currentStatus == 1 ? false : true;
+      });
+    });
   }
 
   Future fetchCartItems() async {
@@ -217,6 +232,7 @@ class _CartState extends State<Cart> {
                               value: item.isSelected,
                               onChanged: (bool? value) {
                                 setState(() {
+                                  changeSelected(item.id);
                                   item.isSelected = value!;
                                 });
                               },
