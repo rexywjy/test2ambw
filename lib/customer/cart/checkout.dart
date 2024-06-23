@@ -68,36 +68,87 @@ class _CheckoutState extends State<Checkout> {
   // }
 
   Future clearCart() async {
+    for (var x in widget.items) {
+      final response_item = await Supabase.instance.client
+        .from('mcart')
+        .select()
+        .eq('cart_id', x.cartId);
+      
+      var pt = response_item[0]['product_type'];
+      var pId = response_item[0]['product_id'];
+      final check_qty;
+
+      if (pt == 'dhotel') {
+        check_qty = await Supabase.instance.client
+          .from('dhotel')
+          .select()
+          .eq('DHotelID', pId);
+        await Supabase.instance.client
+          .from('dhotel')
+          .update({
+            'MaxQuota': check_qty[0]['MaxQuota'] - x.productQty
+          })
+          .eq('DHotelID', pId);
+      } else if (pt == 'mdestinations') {
+        check_qty = await Supabase.instance.client
+          .from('mdestinations')
+          .select()
+          .eq('id', pId);
+        await Supabase.instance.client
+          .from('mdestinations')
+          .update({
+            'MaxQuota': check_qty[0]['MaxQuota'] - x.productQty
+          })
+          .eq('id', pId);
+      } else if (pt == 'mtour') {
+        check_qty = await Supabase.instance.client
+          .from('mtour')
+          .select()
+          .eq('TourID', pId);
+        await Supabase.instance.client
+          .from('mtour')
+          .update({
+            'MaxQuota': check_qty[0]['MaxQuota'] - x.productQty
+          })
+          .eq('TourID', pId);
+      }
+
+
+    }
+
     for (var i in widget.items) {
       final response_cart = await Supabase.instance.client
         .from('mcart')
         .delete()
         .eq('cart_id', i.cartId);
+        
     }
 
     if (mounted) {
-      Navigator.pop(context);
       Future.delayed(Duration.zero, () {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return SuccessDialog(
-              msg: 'Success',
-              msg_detail: 'Transaction Successfully.',
-            );
-          },
-        ).then((_) {
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-              builder: (context) => HomeCustomer(
-                initialPageIndex: 0,
-                name: widget.name,
-                username: widget.username,
+        Navigator.pop(context);
+        Future.delayed(Duration.zero, () {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return SuccessDialog(
+                msg: 'Success',
+                msg_detail: 'Transaction Successfully.',
+              );
+            },
+          ).then((_) {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => HomeCustomer(
+                  initialPageIndex: 0,
+                  name: widget.name,
+                  username: widget.username,
+                ),
               ),
-            ),
-            (route) => false,
-          );
+              (route) => false,
+            );
+          });
         });
       });
     }
