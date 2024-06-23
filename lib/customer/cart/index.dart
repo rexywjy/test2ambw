@@ -42,6 +42,7 @@ class Cart extends StatefulWidget {
 }
 
 class Item {
+  final int id;
   final String name;
   final String imageUrl;
   int quantity;
@@ -49,22 +50,19 @@ class Item {
   bool isSelected;
 
   Item({
+    required this.id,
     required this.name,
     required this.imageUrl,
-    this.quantity = 1,
+    required this.quantity,
     required this.price,
-    this.isSelected = false,
+    required this.isSelected,
   });
 }
 
 class _CartState extends State<Cart> {
   
 
-  List<Item> items = [
-    Item(name: 'Item 1', imageUrl: 'https://via.placeholder.com/150', price: 10000),
-    Item(name: 'Item 2', imageUrl: 'https://via.placeholder.com/150', price: 20000),
-    Item(name: 'Item 3', imageUrl: 'https://via.placeholder.com/150', price: 15000),
-  ];
+  List<Item> items = [];
 
   static String convertToIdr(dynamic number, int decimalDigit) {
     NumberFormat currencyFormatter = NumberFormat.currency(
@@ -75,11 +73,86 @@ class _CartState extends State<Cart> {
     return currencyFormatter.format(number);
   }
 
-  double get total {
-    return items.where((item) => item.isSelected).fold(0.0, (sum, item) => sum + (item.price * item.quantity));
+  int get total {
+    return items.where((item) => item.isSelected).fold(0, (sum, item) => sum + (item.price * item.quantity));
+  }
+
+  Future minusQty(cartIdMinus) async {
+    final existingItemResponse = await Supabase.instance.client
+          .from('mcart')
+          .select()
+          .eq('cart_id', cartIdMinus);
+    int currentQuantity = existingItemResponse[0]['quantity'] as int;
+    if (currentQuantity > 1) {
+      final response = await Supabase.instance.client
+        .from('mcart')
+        .update({
+          'quantity': currentQuantity - 1
+        })
+        .eq('cart_id', cartIdMinus);
+    } else {
+      final response = await Supabase.instance.client
+        .from('mcart')
+        .delete()
+        .eq('cart_id', cartIdMinus);
+      // setState(() {
+        fetchCartItems();
+      // });
+    }
+    
+  }
+
+  Future plusQty(cartIdPlus) async {
+    final existingItemResponse = await Supabase.instance.client
+          .from('mcart')
+          .select()
+          .eq('cart_id', cartIdPlus);
+    int currentQuantity = existingItemResponse[0]['quantity'] as int;
+    final response = await Supabase.instance.client
+      .from('mcart')
+      .update({
+        'quantity': currentQuantity + 1
+      })
+      .eq('cart_id', cartIdPlus);
+  }
+
+  Future changeSelected(cartIdSelected) async {
+     final existingItemResponse = await Supabase.instance.client
+          .from('mcart')
+          .select()
+          .eq('cart_id', cartIdSelected);
+    int currentStatus = existingItemResponse[0]['is_selected'] as int;
+    final response = await Supabase.instance.client
+        .from('mcart')
+        .update({
+          'is_selected': currentStatus == 1 ? 0 : 1
+        })
+        .eq('cart_id', cartIdSelected);
+    setState(() {
+      items.forEach((item) {
+        if (item.id == cartIdSelected) item.isSelected = currentStatus == 1 ? false : true;
+      });
+    });
+  }
+
+  Future checkoutItem() async {
+    List<Map<String, dynamic>> coList = [];
+    print('Item Checkout:');
+    for (var x in items) {
+      if (x.isSelected == true) {
+        coList.add({'product_id': x.id, 'product_name': x.name, 'product_qty': x.quantity, 'product_price': x.price, 'product_subtotal': x.quantity * x.price, 'product_img': x.imageUrl});
+      }
+    }
+
+    // for (var y in coList) {
+    //   print(y);
+    // }
+    print('Total: ' + total.toString());
   }
 
   Future fetchCartItems() async {
+    items.clear();
+
     var response = await Supabase.instance.client
       .from('mcart')
       .select('*')
@@ -91,69 +164,48 @@ class _CartState extends State<Cart> {
     for (var product in response) {
       String productType = product['product_type'];
       int qty = product['quantity'];
-      String name = '';
+      String name = 'Item Dummy';
       int price = 0;
-      String img = '';
-      print(productType);
-      print(qty);
+      String img = 'https://via.placeholder.com/150';
+      // print(productType);
+      // print(qty);
 
-      if (productType == 'mhotel') {
+      if (productType == 'dhotel') {
         var responseMH = await Supabase.instance.client
-          .from('mhotel')
+          .from('dhotel')
           .select()
           .eq('HotelID', product['product_id']);
+        print(responseMH);
+        // name = responseMH[0]['attraction_name'];
+        price = qty * responseMH[0]['Price'] as int;
+        // img = responseMH[0]['image_url'];
       } else if (productType == 'mdestinations') {
         var responseMD = await Supabase.instance.client
           .from('mdestinations')
           .select()
           .eq('id', product['product_id']);
+        print(responseMD);
+        name = responseMD[0]['attraction_name'];
+        price = qty * responseMD[0]['Price'] as int;
+        img = responseMD[0]['image_url'];
       } else if (productType == 'mtour') {
         var responseMT = await Supabase.instance.client
           .from('mtour')
           .select()
           .eq('TourID', product['product_id']);
+        print(responseMT);
+        name = responseMT[0]['NamaTour'];
+        price = qty * responseMT[0]['Price'] as int;
+        img = responseMT[0]['image_url'];
       }
+
+      setState(() {
+        items.add(Item(id: product['cart_id'], name: name, imageUrl: img, quantity: qty, price: price, isSelected: product['is_selected'] as int == 1 ? true : false));
+      });
+      // items.add(Item(name: name, imageUrl: img, quantity: qty, price: price, isSelected: product['is_selected'] as int == 1 ? true : false));
     }
 
     
-
-    // Map the response rows to Item objects
-    // List<Item> items = response.map((row) async {
-    //   final productType = row['product_type'] as String;
-    //   final qty = row['quantity'] as int;
-    //   String name = '';
-    //   int price = 0 as int;
-    //   String img = '';
-
-    //   var responseCheck = await Supabase.instance.client
-    //     .from(productType)
-    //     .select()
-    //     .eq();
-
-    //   if (productType == 'mhotel') {
-    //     // name = responseCheck[0]['NamaTour'] as String;
-    //     // price = qty * responseCheck[0]['Price'] as int;
-    //     // img = responseCheck[0]['image_url'] as String;
-    //   } else if (productType == 'mdestinations') {
-    //     name = responseCheck[0]['attraction_name'] as String;
-    //     price = qty * responseCheck[0]['Price'] as int;
-    //     img = responseCheck[0]['image_url'] as String;
-    //   } else if (productType == 'mtour') {
-    //     name = responseCheck[0]['NamaTour'] as String;
-    //     price = qty * responseCheck[0]['Price'] as int;
-    //     img = responseCheck[0]['image_url'] as String;
-    //   }
-
-    //   return Item(
-    //     name: name,
-    //     imageUrl: img,
-    //     quantity: row['quantity'] as int,
-    //     price: price,
-    //     isSelected: row['is_selected'] == 1 ? true : false,
-    //   );
-    // }).cast<Item>().toList();
-
-    // return items;
   }
 
   @override
@@ -170,7 +222,8 @@ class _CartState extends State<Cart> {
             'Shopping Cart', 
             style: GoogleFonts.montserrat(
               fontSize: 25,
-              fontWeight: FontWeight.bold
+              fontWeight: FontWeight.bold,
+              color: Colors.white
             )
           ),
         ),
@@ -184,17 +237,19 @@ class _CartState extends State<Cart> {
               itemBuilder: (context, index) {
                 final item = items[index];
                 return Card(
-                  margin: EdgeInsets.all(8.0),
+                  margin: EdgeInsets.only(top: 8.0, bottom: 8.0, right: 8.0, left: 2.0),
                   child: Padding(
-                    padding: EdgeInsets.all(8.0),
+                    padding: EdgeInsets.only(top: 20.0, right: 8.0, left: 8.0, bottom: 8.0),
                     child: Column(
                       children: [
                         Row(
                           children: [
                             Checkbox(
+                              activeColor: Color(0xFFFFA800),
                               value: item.isSelected,
                               onChanged: (bool? value) {
                                 setState(() {
+                                  changeSelected(item.id);
                                   item.isSelected = value!;
                                 });
                               },
@@ -226,8 +281,9 @@ class _CartState extends State<Cart> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             IconButton(
-                              icon: Icon(Icons.remove),
+                              icon: Icon(item.quantity == 1 ? Icons.delete_outline : Icons.remove_circle_outline, color: item.quantity == 1 ? Colors.red : null,),
                               onPressed: () {
+                                minusQty(item.id);
                                 setState(() {
                                   if (item.quantity > 1) item.quantity--;
                                 });
@@ -235,8 +291,9 @@ class _CartState extends State<Cart> {
                             ),
                             Text(item.quantity.toString(), style: TextStyle(fontSize: 18.0)),
                             IconButton(
-                              icon: Icon(Icons.add),
+                              icon: Icon(Icons.add_circle_outline),
                               onPressed: () {
+                                plusQty(item.id);
                                 setState(() {
                                   item.quantity++;
                                 });
@@ -252,21 +309,64 @@ class _CartState extends State<Cart> {
             ),
           ),
           if (items.any((item) => item.isSelected))
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  Text('Total: ${convertToIdr(total, 0)}', style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
-                  SizedBox(height: 8.0),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Implement your checkout logic here
-                    },
-                    child: Text('Checkout'),
+            Container(
+              // color: Colors.white,
+              width: double.infinity,
+              height: 100,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1), // Shadow color
+                    spreadRadius: 1, // Spread radius
+                    blurRadius: 10, // Blur radius
+                    offset: Offset(0, -5), // Offset in the x (0) and y (-5) directions
                   ),
                 ],
               ),
-            ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 25.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Total:",
+                            style: GoogleFonts.montserrat(
+                                fontSize: 16, fontWeight: FontWeight.w400)),
+                        Text(
+                          '${convertToIdr(total, 0)}',
+                          style: GoogleFonts.montserrat(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w800,
+                              color: Color(0xFFFFA800)),
+                        )
+                      ],
+                    ),
+                  ),
+                  SizedBox(width: 20),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4.0),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xFFFFA800),
+                      ),
+                      onPressed: () {
+                        checkoutItem();
+                      },
+                      child: Text(
+                        'Checkout',
+                        style: GoogleFonts.montserrat(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            )
         ],
       ),
     );

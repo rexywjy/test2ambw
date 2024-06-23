@@ -78,7 +78,8 @@ class _DetailPageState extends State<DetailPage> {
 
   Future<void> addToCart() async {
     var user_id = widget.username;
-    var product_type = widget.menuType == 'mhotel' ? 'dhotel' : widget.menuType;
+    // var product_type = widget.menuType == 'mhotel' ? 'dhotel' : widget.menuType;
+    var product_type = widget.menuType;
     var product_id = widget.index;
 
     print(user_id);
@@ -108,7 +109,7 @@ class _DetailPageState extends State<DetailPage> {
           builder: (BuildContext context) {
             return SuccessDialog(
               msg: 'Add to Cart',
-              msg_detail: 'Product quantity incremented in your cart.',
+              msg_detail: 'Item added to your cart.',
             );
           },
         );
@@ -128,7 +129,7 @@ class _DetailPageState extends State<DetailPage> {
             builder: (BuildContext context) {
               return SuccessDialog(
                 msg: 'Add to Cart',
-                msg_detail: 'Product successfully added to your cart.',
+                msg_detail: 'Item added to your cart.',
               );
             },
           );
