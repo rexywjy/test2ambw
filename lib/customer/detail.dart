@@ -76,11 +76,11 @@ class _DetailPageState extends State<DetailPage> {
     fetchTourData();
   }
 
-  Future<void> addToCart() async {
+  Future<void> addToCart(dhotel_id) async {
     var user_id = widget.username;
-    // var product_type = widget.menuType == 'mhotel' ? 'dhotel' : widget.menuType;
-    var product_type = widget.menuType;
-    var product_id = widget.index;
+    var product_type = widget.menuType == 'mhotel' ? 'dhotel' : widget.menuType;
+    // var product_type = widget.menuType;
+    var product_id = widget.menuType == 'mhotel' ? dhotel_id : widget.index;
 
     print(user_id);
 
@@ -526,7 +526,7 @@ class _DetailPageState extends State<DetailPage> {
                                               minimumSize: Size(100, 40),
                                             ),
                                             onPressed: () {
-                                              addToCart();
+                                              addToCart(fetchedData![0]['dhotel'][index]['DHotelID']);
                                             },
                                             child: Text(
                                               'Book Now',
@@ -793,7 +793,7 @@ class _DetailPageState extends State<DetailPage> {
                             backgroundColor: Color(0xFFFFA800),
                           ),
                           onPressed: () {
-                            addToCart();
+                            addToCart(0);
                           },
                           child: Text(
                             'Book Now',

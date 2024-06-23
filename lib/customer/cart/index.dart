@@ -159,14 +159,18 @@ class _CartState extends State<Cart> {
       // print(qty);
 
       if (productType == 'dhotel') {
-        var responseMH = await Supabase.instance.client
+        var responseDH = await Supabase.instance.client
           .from('dhotel')
           .select()
-          .eq('HotelID', product['product_id']);
-        print(responseMH);
-        // name = responseMH[0]['attraction_name'];
-        price = qty * responseMH[0]['Price'] as int;
-        // img = responseMH[0]['image_url'];
+          .eq('DHotelID', product['product_id']);
+        print(responseDH);
+        var responseMH = await Supabase.instance.client
+          .from('mhotel')
+          .select()
+          .eq('HotelID', responseDH[0]['HotelID']);
+        name = responseMH[0]['NamaHotel'] + '-' + responseDH[0]['Tipe'];
+        price = qty * responseDH[0]['Harga'] as int;
+        img = responseMH[0]['image_url'];
       } else if (productType == 'mdestinations') {
         var responseMD = await Supabase.instance.client
           .from('mdestinations')
