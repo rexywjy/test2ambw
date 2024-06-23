@@ -83,12 +83,23 @@ class _CartState extends State<Cart> {
           .select()
           .eq('cart_id', cartIdMinus);
     int currentQuantity = existingItemResponse[0]['quantity'] as int;
-    final response = await Supabase.instance.client
-      .from('mcart')
-      .update({
-        'quantity': currentQuantity - 1
-      })
-      .eq('cart_id', cartIdMinus);
+    if (currentQuantity > 1) {
+      final response = await Supabase.instance.client
+        .from('mcart')
+        .update({
+          'quantity': currentQuantity - 1
+        })
+        .eq('cart_id', cartIdMinus);
+    } else {
+      final response = await Supabase.instance.client
+        .from('mcart')
+        .delete()
+        .eq('cart_id', cartIdMinus);
+      // setState(() {
+        fetchCartItems();
+      // });
+    }
+    
   }
 
   Future plusQty(cartIdPlus) async {
@@ -100,7 +111,7 @@ class _CartState extends State<Cart> {
     final response = await Supabase.instance.client
       .from('mcart')
       .update({
-        'quantity': currentQuantity - 1
+        'quantity': currentQuantity + 1
       })
       .eq('cart_id', cartIdPlus);
   }
@@ -237,7 +248,7 @@ class _CartState extends State<Cart> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             IconButton(
-                              icon: Icon(Icons.remove),
+                              icon: Icon(item.quantity == 1 ? Icons.delete_outline : Icons.remove_circle_outline),
                               onPressed: () {
                                 minusQty(item.id);
                                 setState(() {
@@ -247,7 +258,7 @@ class _CartState extends State<Cart> {
                             ),
                             Text(item.quantity.toString(), style: TextStyle(fontSize: 18.0)),
                             IconButton(
-                              icon: Icon(Icons.add),
+                              icon: Icon(Icons.add_circle_outline),
                               onPressed: () {
                                 plusQty(item.id);
                                 setState(() {
