@@ -588,11 +588,10 @@ class _DetailPageState extends State<DetailPage> {
                                             onPressed: () {
                                               addToCart(fetchedData![0]['dhotel'][index]['DHotelID']);
                                             },
-                                            child: Text(
-                                              'Book Now',
-                                              style: GoogleFonts.montserrat(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold),
+                                            child: Icon(
+                                              Icons.shopping_cart_checkout_rounded,
+                                              color: Colors.white,
+                                              size: 24.0, // Adjust the size as needed
                                             ),
                                           ),
                                         ],
@@ -855,11 +854,10 @@ class _DetailPageState extends State<DetailPage> {
                           onPressed: () {
                             addToCart(0);
                           },
-                          child: Text(
-                            'Book Now',
-                            style: GoogleFonts.montserrat(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
+                          child: Icon(
+                            Icons.shopping_cart_checkout_rounded,
+                            color: Colors.white,
+                            size: 24.0, // Adjust the size as needed
                           ),
                         ),
                       ),

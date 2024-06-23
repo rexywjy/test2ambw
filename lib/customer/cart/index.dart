@@ -15,6 +15,8 @@ import 'package:test2ambw/customer/login.dart';
 import 'package:test2ambw/customer/profile.dart';
 import 'package:intl/intl.dart';
 import 'package:test2ambw/customer/cart/warning_dialog.dart';
+import 'package:test2ambw/customer/cart/checkout.dart';
+import 'package:test2ambw/customer/cart/checkout_item.dart';
 
 
 class Cart extends StatefulWidget {
@@ -214,6 +216,19 @@ class _CartState extends State<Cart> {
     }
   }
 
+  List<CheckoutItem> convertToCheckoutItems(List<Map<String, dynamic>> list) {
+  return list.map((item) {
+    return CheckoutItem(
+      productId: item['product_id'] as int,
+      productName: item['product_name'] as String,
+      productQty: item['product_qty'] as int,
+      productPrice: item['product_price'] as int,
+      productSubtotal: item['product_subtotal'] as int,
+      productImg: item['product_img'] as String,
+    );
+  }).toList();
+}
+
   Future checkoutItem() async {
     bool is_ok = false;
     List<Map<String, dynamic>> coList = [];
@@ -294,13 +309,26 @@ class _CartState extends State<Cart> {
       }
     }
 
+    for (var y in coList) {
+      print(y);
+    }
+
     if (is_ok == true) {
       print('Gas OKE');
       print('Total: ' + total.toString());
-    }
 
-    for (var y in coList) {
-      print(y);
+      List<CheckoutItem> checkoutItems = convertToCheckoutItems(coList);
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Checkout(
+            name: widget.name,
+            username: widget.username,
+            items: checkoutItems,
+          )
+        ),
+      );
     }
     
   }
