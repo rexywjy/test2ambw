@@ -5,11 +5,12 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:test2ambw/customer/detail.dart';
 import 'package:test2ambw/customer/home.dart';
+import 'package:test2ambw/customer/login.dart';
 
 class ScrollImageCarouselDestination extends StatelessWidget {
   var menuData;
-
-  ScrollImageCarouselDestination({Key? key, required this.menuData})
+  final String username;
+  ScrollImageCarouselDestination({Key? key, required this.menuData, required this.username})
       : super(key: key);
 
   @override
@@ -32,6 +33,7 @@ class ScrollImageCarouselDestination extends StatelessWidget {
                             menuType: "mdestinations",
                             index: index + 1,
                             id: "id",
+                            username: username,
                           )),
                 );
               },
@@ -124,7 +126,18 @@ class ScrollImageCarouselDestination extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => DetailPage(
+                                            menuType: "mdestinations",
+                                            index: index + 1,
+                                            id: "id",
+                                            username: username,
+                                          )),
+                                );
+                              },
                               child: Text(
                                 'Details',
                                 style: GoogleFonts.montserrat(

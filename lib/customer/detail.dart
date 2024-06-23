@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:panara_dialogs/panara_dialogs.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:supabase/supabase.dart';
+import 'package:test2ambw/customer/login.dart';
+import 'package:test2ambw/customer/cart/success_dialog.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -10,8 +14,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: DetailPage(menuType: 'mdestinations', index: 1, id: "HotelID"),
-    );
+        // home: DetailPage(menuType: 'mdestinations', index: 1, id: "HotelID"),
+        );
   }
 }
 
@@ -20,7 +24,13 @@ class DetailPage extends StatefulWidget {
   final int index;
   final String id;
 
-  DetailPage({required this.menuType, required this.index, required this.id});
+  final String username;
+
+  DetailPage(
+      {required this.menuType,
+      required this.index,
+      required this.id,
+      required this.username});
 
   @override
   State<DetailPage> createState() => _DetailPageState();
@@ -32,22 +42,103 @@ class _DetailPageState extends State<DetailPage> {
   bool isLoading = true;
 
   Future<void> fetchTourData() async {
-    var response = await Supabase.instance.client
-        .from(widget.menuType)
-        .select()
-        .eq(widget.id, widget.index)
-        .single();
+    if (widget.menuType == "mhotel") {
+      var response = await Supabase.instance.client
+          .from(widget.menuType)
+          .select("*, dhotel(*)")
+          .eq("HotelID", widget.index);
 
-    setState(() {
-      fetchedData = response;
-      isLoading = false;
-    });
+      setState(() {
+        fetchedData = response;
+        isLoading = false;
+
+        print(fetchedData);
+        print(fetchedData[0]['dhotel'][0]["Tipe"]);
+        print(widget.index);
+      });
+    } else {
+      var response = await Supabase.instance.client
+          .from(widget.menuType)
+          .select()
+          .eq(widget.id, widget.index)
+          .single();
+
+      setState(() {
+        fetchedData = response;
+        isLoading = false;
+      });
+    }
   }
 
   @override
   void initState() {
     super.initState();
     fetchTourData();
+  }
+
+  Future<void> addToCart() async {
+    var user_id = widget.username;
+    var product_type = widget.menuType == 'mhotel' ? 'dhotel' : widget.menuType;
+    var product_id = widget.index;
+
+    print(user_id);
+
+    try {
+      final existingItemResponse = await Supabase.instance.client
+          .from('mcart')
+          .select()
+          .eq('user_id', user_id)
+          .eq('product_type', product_type)
+          .eq('product_id', product_id);
+      if (existingItemResponse != null && existingItemResponse.isNotEmpty) {
+        int currentQuantity = existingItemResponse[0]['quantity'] as int;
+        final response = await Supabase.instance.client
+            .from('mcart')
+            .update({
+              'quantity': currentQuantity + 1,
+              'is_selected': 1,
+            })
+            .eq('user_id', user_id)
+            .eq('product_type', product_type)
+            .eq('product_id', product_id);
+
+        print('Quantity incremented successfully: $response');
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return SuccessDialog(
+              msg: 'Add to Cart',
+              msg_detail: 'Product quantity incremented in your cart.',
+            );
+          },
+        );
+      } else {
+        final response = await Supabase.instance.client.from('mcart').insert({
+          'user_id': user_id,
+          'product_type': product_type,
+          'product_id': product_id,
+          'quantity': 1,
+          'is_selected': 1,
+        }).select();
+
+        if (response != null && response.isNotEmpty) {
+          print('Data inserted successfully: $response');
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return SuccessDialog(
+                msg: 'Add to Cart',
+                msg_detail: 'Product successfully added to your cart.',
+              );
+            },
+          );
+        } else {
+          print('No data returned after insertion.');
+        }
+      }
+    } catch (e) {
+      print('Error adding item to database: $e');
+    }
   }
 
   @override
@@ -243,7 +334,9 @@ class _DetailPageState extends State<DetailPage> {
                             height: 260,
                             decoration: BoxDecoration(
                               image: DecorationImage(
-                                image: NetworkImage(fetchedData['image_url']),
+                                image: NetworkImage(fetchedData[0]
+                                        ['image_url'] ??
+                                    'https://cf.bstatic.com/xdata/images/hotel/max1024x768/319064923.jpg?k=013b1855b63bf575274680f025f17c8161e6891d482e0a330e1b165392c2824e&o=&hp=1'),
                                 fit: BoxFit.cover,
                               ),
                               boxShadow: [
@@ -269,7 +362,7 @@ class _DetailPageState extends State<DetailPage> {
                               children: <Widget>[
                                 SizedBox(height: 20),
                                 Text(
-                                  fetchedData!['NamaHotel'] ?? 'No Name',
+                                  fetchedData![0]['NamaHotel'] ?? 'No Name',
                                   style: GoogleFonts.montserrat(
                                       fontSize: 26,
                                       fontWeight: FontWeight.bold),
@@ -283,7 +376,8 @@ class _DetailPageState extends State<DetailPage> {
                                       padding: const EdgeInsets.only(
                                           left: 2.0, top: 2),
                                       child: Text(
-                                        fetchedData!['RatingHotel'].toString() +
+                                        fetchedData![0]['RatingHotel']
+                                                    .toString() +
                                                 " Good" ??
                                             'No Rating',
                                         style: GoogleFonts.montserrat(
@@ -313,7 +407,7 @@ class _DetailPageState extends State<DetailPage> {
                                       ),
                                     ),
                                     Text(
-                                      fetchedData!['LokasiHotel'] ??
+                                      fetchedData![0]['LokasiHotel'] ??
                                           'No Location',
                                       style: GoogleFonts.montserrat(
                                           fontSize: 18,
@@ -370,10 +464,11 @@ class _DetailPageState extends State<DetailPage> {
                                 ),
                                 Column(
                                   children: List.generate(
-                                    fetchedData.length,
+                                    fetchedData[0]["dhotel"].length,
                                     (index) => Container(
                                       margin: EdgeInsets.only(bottom: 10),
                                       padding: EdgeInsets.all(10),
+                                      width: double.infinity,
                                       decoration: BoxDecoration(
                                         color: Colors.white,
                                         boxShadow: [
@@ -386,26 +481,57 @@ class _DetailPageState extends State<DetailPage> {
                                         ],
                                         borderRadius: BorderRadius.circular(10),
                                       ),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                      child: Row(
                                         children: [
-                                          Text(
-                                            fetchedData!["dhotel.Tipe"] ??
-                                                'No Room',
-                                            style: GoogleFonts.montserrat(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold,
+                                          Container(
+                                            width: 210,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  fetchedData![0]["dhotel"]
+                                                          [index]["Tipe"] ??
+                                                      'No Room',
+                                                  style: GoogleFonts.montserrat(
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                SizedBox(height: 5),
+                                                Text(
+                                                  "Price: " +
+                                                      convertToIdr(
+                                                          fetchedData![0]
+                                                                  ["dhotel"]
+                                                              [index]["Harga"],
+                                                          0) +
+                                                      " / night",
+                                                  style: GoogleFonts.montserrat(
+                                                    fontSize: 14,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ),
-                                          SizedBox(height: 5),
-                                          Text(
-                                            "Price: " +
-                                                fetchedData!['Harga']
-                                                    .toString() +
-                                                " / night",
-                                            style: GoogleFonts.montserrat(
-                                              fontSize: 16,
+                                          ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor:
+                                                  Color(0xFFFFA800),
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 16.0,
+                                                  vertical:
+                                                      8.0), // Adjust padding to make button smaller
+                                              minimumSize: Size(100, 40),
+                                            ),
+                                            onPressed: () {
+                                              addToCart();
+                                            },
+                                            child: Text(
+                                              'Book Now',
+                                              style: GoogleFonts.montserrat(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold),
                                             ),
                                           ),
                                         ],
@@ -666,7 +792,7 @@ class _DetailPageState extends State<DetailPage> {
                             backgroundColor: Color(0xFFFFA800),
                           ),
                           onPressed: () {
-                            //Buat code e jodem
+                            addToCart();
                           },
                           child: Text(
                             'Book Now',

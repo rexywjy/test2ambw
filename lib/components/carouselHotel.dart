@@ -9,8 +9,10 @@ import 'package:test2ambw/customer/detail.dart';
 
 class ScrollImageCarouselHotel extends StatelessWidget {
   var menuData;
+  final String username;
 
-  ScrollImageCarouselHotel({Key? key, required this.menuData})
+  ScrollImageCarouselHotel(
+      {Key? key, required this.menuData, required this.username})
       : super(key: key);
 
   @override
@@ -24,6 +26,7 @@ class ScrollImageCarouselHotel extends StatelessWidget {
         child: Row(
           children: List.generate(menuData.length, (index) {
             final tour = menuData[index];
+            print(index);
             return GestureDetector(
               onTap: () {
                 Navigator.push(
@@ -33,6 +36,7 @@ class ScrollImageCarouselHotel extends StatelessWidget {
                             menuType: "mhotel",
                             index: index + 1,
                             id: "HotelID",
+                            username: username,
                           )),
                 );
               },
@@ -145,7 +149,18 @@ class ScrollImageCarouselHotel extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => DetailPage(
+                                            menuType: "mhotel",
+                                            index: index + 1,
+                                            id: "HotelID",
+                                            username: username,
+                                          )),
+                                );
+                              },
                               child: Text(
                                 'Details',
                                 style: GoogleFonts.montserrat(

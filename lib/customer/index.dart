@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:test2ambw/customer/cart/index.dart';
 import 'package:test2ambw/customer/home.dart';
 import 'package:test2ambw/customer/profile.dart';
 import 'login.dart';
@@ -87,8 +88,8 @@ class _HomeCustomerState extends State<HomeCustomer> {
         Center(
           child: MyHomePage(name: widget.name, username: widget.username),
         ),
-        const Center(
-          child: Text('Cart'),
+        Center(
+          child: Cart(name: widget.name, username: widget.username),
         ),
         Center(
           child: CustProfile(name: widget.name, username: widget.username),

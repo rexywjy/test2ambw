@@ -53,13 +53,34 @@ class _MyHomePageState extends State<MyHomePage> {
   // CustProfile custProfile = CustProfile(name: widget.name, username: widget.username,);
 
   Future<dynamic> fetchTourData(menuType) async {
-    var resp = await Supabase.instance.client.from(menuType).select().limit(5);
-
-    setState(() {
-      menuData = resp;
-    });
-
-    return resp;
+    if (menuType == "mhotel") {
+      var resp = await Supabase.instance.client
+          .from(menuType)
+          .select()
+          .limit(5)
+          .order("HotelID", ascending: true);
+      setState(() {
+        menuData = resp;
+      });
+    } else if (menuType == "mtour") {
+      var resp = await Supabase.instance.client
+          .from(menuType)
+          .select()
+          .limit(5)
+          .order("TourID", ascending: true);
+      setState(() {
+        menuData = resp;
+      });
+    } else if (menuType == "mdestinations") {
+      var resp = await Supabase.instance.client
+          .from(menuType)
+          .select()
+          .limit(5)
+          .order("id", ascending: true);
+      setState(() {
+        menuData = resp;
+      });
+    }
   }
 
   @override
@@ -309,11 +330,18 @@ class _MyHomePageState extends State<MyHomePage> {
                   : selectedButton == 'tours'
                       ? ScrollImageCarousel(
                           menuData: menuData,
+                          username: widget.username,
                         )
                       : selectedButton == 'destinations'
-                          ? ScrollImageCarouselDestination(menuData: menuData)
+                          ? ScrollImageCarouselDestination(
+                              menuData: menuData,
+                              username: widget.username,
+                            )
                           : selectedButton == 'hotels'
-                              ? ScrollImageCarouselHotel(menuData: menuData)
+                              ? ScrollImageCarouselHotel(
+                                  menuData: menuData,
+                                  username: widget.username,
+                                )
                               : CircularProgressIndicator(),
               Padding(
                 padding: const EdgeInsets.only(top: 30.0, bottom: 20.0),
