@@ -7,6 +7,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:supabase/supabase.dart';
 import 'package:test2ambw/customer/login.dart';
 import 'package:test2ambw/customer/cart/success_dialog.dart';
+import 'package:test2ambw/customer/cart/error_dialog.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -84,61 +85,120 @@ class _DetailPageState extends State<DetailPage> {
 
     print(user_id);
 
-    try {
-      final existingItemResponse = await Supabase.instance.client
-          .from('mcart')
-          .select()
-          .eq('user_id', user_id)
-          .eq('product_type', product_type)
-          .eq('product_id', product_id);
-      if (existingItemResponse != null && existingItemResponse.isNotEmpty) {
-        int currentQuantity = existingItemResponse[0]['quantity'] as int;
-        final response = await Supabase.instance.client
+    final check_avail;
+    int max_capacity = 0;
+
+    if (product_type == 'dhotel') {
+      check_avail = await Supabase.instance.client
+        .from('dhotel')
+        .select()
+        .eq('DHotelID', product_id);
+      max_capacity = check_avail[0]['MaxQuota'];
+    } else if (product_type == 'mdestinations') {
+      check_avail = await Supabase.instance.client
+        .from('mdestinations')
+        .select()
+        .eq('id', product_id);
+      max_capacity = check_avail[0]['MaxQuota'];
+    } else if (product_type == 'mtour') {
+      check_avail = await Supabase.instance.client
+        .from('mtour')
+        .select()
+        .eq('TourID', product_id);
+      max_capacity = check_avail[0]['MaxQuota'];
+    }
+    print(max_capacity);
+    if (max_capacity > 0) {
+      try {
+        final existingItemResponse = await Supabase.instance.client
             .from('mcart')
-            .update({
-              'quantity': currentQuantity + 1,
-              'is_selected': 1,
-            })
+            .select()
             .eq('user_id', user_id)
             .eq('product_type', product_type)
             .eq('product_id', product_id);
+        if (existingItemResponse != null && existingItemResponse.isNotEmpty) {
+          int currentQuantity = existingItemResponse[0]['quantity'] as int;
+          if (currentQuantity < max_capacity) {
+            final response = await Supabase.instance.client
+                .from('mcart')
+                .update({
+                  'quantity': currentQuantity + 1,
+                  'is_selected': 1,
+                })
+                .eq('user_id', user_id)
+                .eq('product_type', product_type)
+                .eq('product_id', product_id);
 
-        print('Quantity incremented successfully: $response');
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return SuccessDialog(
-              msg: 'Success',
-              msg_detail: 'Item added to your cart.',
+            print('Quantity incremented successfully: $response');
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return SuccessDialog(
+                  msg: 'Success',
+                  msg_detail: 'Item added to your cart.',
+                );
+              },
             );
-          },
-        );
-      } else {
-        final response = await Supabase.instance.client.from('mcart').insert({
-          'user_id': user_id,
-          'product_type': product_type,
-          'product_id': product_id,
-          'quantity': 1,
-          'is_selected': 1,
-        }).select();
-
-        if (response != null && response.isNotEmpty) {
-          print('Data inserted successfully: $response');
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return SuccessDialog(
-                msg: 'Success',
-                msg_detail: 'Item added to your cart.',
-              );
-            },
-          );
+          } else {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return WarningErrorDialog(
+                  msg: 'Failed',
+                  msg_detail: "You've reached the maximum stock.",
+                );
+              },
+            );
+          }
         } else {
-          print('No data returned after insertion.');
+          if (max_capacity >= 1) {
+            final response = await Supabase.instance.client.from('mcart').insert({
+              'user_id': user_id,
+              'product_type': product_type,
+              'product_id': product_id,
+              'quantity': 1,
+              'is_selected': 1,
+            }).select();
+
+            if (response != null && response.isNotEmpty) {
+              print('Data inserted successfully: $response');
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return SuccessDialog(
+                    msg: 'Success',
+                    msg_detail: 'Item added to your cart.',
+                  );
+                },
+              );
+            } else {
+              print('No data returned after insertion.');
+            }
+          } else {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return WarningErrorDialog(
+                  msg: 'Failed',
+                  msg_detail: "Item out of stock.",
+                );
+              },
+            );
+          }
         }
+      } catch (e) {
+        print('Error adding item to database: $e');
       }
-    } catch (e) {
-      print('Error adding item to database: $e');
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return WarningErrorDialog(
+            msg: 'Failed',
+            msg_detail: "Item out of stock.",
+          );
+        },
+      );
     }
   }
 
