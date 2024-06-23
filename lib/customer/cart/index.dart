@@ -73,8 +73,8 @@ class _CartState extends State<Cart> {
     return currencyFormatter.format(number);
   }
 
-  double get total {
-    return items.where((item) => item.isSelected).fold(0.0, (sum, item) => sum + (item.price * item.quantity));
+  int get total {
+    return items.where((item) => item.isSelected).fold(0, (sum, item) => sum + (item.price * item.quantity));
   }
 
   Future minusQty(cartIdMinus) async {
@@ -136,13 +136,18 @@ class _CartState extends State<Cart> {
   }
 
   Future checkoutItem() async {
-    
+    List<Map<String, dynamic>> coList = [];
     print('Item Checkout:');
     for (var x in items) {
       if (x.isSelected == true) {
-        print(x);
+        coList.add({'product_id': x.id, 'product_name': x.name, 'product_qty': x.quantity, 'product_price': x.price, 'product_subtotal': x.quantity * x.price, 'product_img': x.imageUrl});
       }
     }
+
+    // for (var y in coList) {
+    //   print(y);
+    // }
+    print('Total: ' + total.toString());
   }
 
   Future fetchCartItems() async {
@@ -232,7 +237,7 @@ class _CartState extends State<Cart> {
               itemBuilder: (context, index) {
                 final item = items[index];
                 return Card(
-                  margin: EdgeInsets.all(8.0),
+                  margin: EdgeInsets.only(top: 8.0, bottom: 8.0, right: 8.0, left: 2.0),
                   child: Padding(
                     padding: EdgeInsets.only(top: 20.0, right: 8.0, left: 8.0, bottom: 8.0),
                     child: Column(
