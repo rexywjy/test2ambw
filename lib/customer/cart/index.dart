@@ -133,6 +133,16 @@ class _CartState extends State<Cart> {
           if (item.quantity > max_capacity) item.quantity = max_capacity;
         });
       });
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return WarningDialog(
+            msg: 'Check your cart!',
+            msg_detail: "You've reached the maximum stock.",
+          );
+        },
+      );
     }
   }
 
@@ -196,7 +206,7 @@ class _CartState extends State<Cart> {
           builder: (BuildContext context) {
             return WarningDialog(
               msg: 'Check your cart!',
-              msg_detail: "You've exceeded the maximum of stock.",
+              msg_detail: "You've exceeded the maximum stock.",
             );
           },
         );
@@ -205,18 +215,94 @@ class _CartState extends State<Cart> {
   }
 
   Future checkoutItem() async {
+    bool is_ok = false;
     List<Map<String, dynamic>> coList = [];
     print('Item Checkout:');
-    for (var x in items) {
-      if (x.isSelected == true) {
-        coList.add({'product_id': x.id, 'product_name': x.name, 'product_qty': x.quantity, 'product_price': x.price, 'product_subtotal': x.quantity * x.price, 'product_img': x.imageUrl});
+
+    var response = await Supabase.instance.client
+      .from('mcart')
+      .select('*')
+      .eq('user_id', widget.username)
+      .order('cart_id', ascending: true);
+      
+    // for (var x in response) {
+    //   print(x);
+    // }
+
+    for (var x in response) {
+      if (x['is_selected'] == 1) {
+        int id = x['cart_id'];
+        int qty = x['quantity'];
+        int status = x['is_selected'];
+
+        int max_capacity = 0;
+        String name = '';
+        int price = 0;
+        String img = 'https://via.placeholder.com/150';
+        final check_avail;
+
+        if (x['product_type'] == 'dhotel') {
+          check_avail = await Supabase.instance.client
+            .from('dhotel')
+            .select()
+            .eq('DHotelID', x['product_id']);
+          max_capacity = check_avail[0]['MaxQuota'];
+          var responseMH = await Supabase.instance.client
+            .from('mhotel')
+            .select()
+            .eq('HotelID', check_avail[0]['HotelID']);
+          name = responseMH[0]['NamaHotel'] + '-' + check_avail[0]['Tipe'];
+          price = check_avail[0]['Harga'] as int;
+          img = responseMH[0]['image_url'];
+        } else if (x['product_type'] == 'mdestinations') {
+          check_avail = await Supabase.instance.client
+            .from('mdestinations')
+            .select()
+            .eq('id', x['product_id']);
+          max_capacity = check_avail[0]['MaxQuota'];
+          name = check_avail[0]['attraction_name'];
+          price = check_avail[0]['Price'];
+          img = check_avail[0]['image_url'];
+        } else if (x['product_type'] == 'mtour') {
+          check_avail = await Supabase.instance.client
+            .from('mtour')
+            .select()
+            .eq('TourID', x['product_id']);
+          max_capacity = check_avail[0]['MaxQuota'];
+          name = check_avail[0]['NamaTour'];
+          price = check_avail[0]['Price'];
+          img = check_avail[0]['image_url'];
+        }
+
+        if (qty <= max_capacity) {
+          is_ok = true;
+          coList.add({'product_id': x['product_id'], 'product_name': name, 'product_qty': qty, 'product_price': price, 'product_subtotal': qty * price, 'product_img': img});
+        } else {
+          is_ok = false;
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return WarningDialog(
+                msg: 'Check your cart!',
+                msg_detail: 'Some item may not available.',
+              );
+            },
+          );
+          check_avail_item();
+          break;
+        }
       }
     }
 
-    // for (var y in coList) {
-    //   print(y);
-    // }
-    print('Total: ' + total.toString());
+    if (is_ok == true) {
+      print('Gas OKE');
+      print('Total: ' + total.toString());
+    }
+
+    for (var y in coList) {
+      print(y);
+    }
+    
   }
 
   Future check_avail_item() async {
@@ -317,7 +403,7 @@ class _CartState extends State<Cart> {
           .select()
           .eq('HotelID', responseDH[0]['HotelID']);
         name = responseMH[0]['NamaHotel'] + '-' + responseDH[0]['Tipe'];
-        price = qty * responseDH[0]['Harga'] as int;
+        price = responseDH[0]['Harga'] as int;
         img = responseMH[0]['image_url'];
       } else if (productType == 'mdestinations') {
         var responseMD = await Supabase.instance.client
@@ -326,7 +412,7 @@ class _CartState extends State<Cart> {
           .eq('id', product['product_id']);
         print(responseMD);
         name = responseMD[0]['attraction_name'];
-        price = qty * responseMD[0]['Price'] as int;
+        price = responseMD[0]['Price'] as int;
         img = responseMD[0]['image_url'];
       } else if (productType == 'mtour') {
         var responseMT = await Supabase.instance.client
@@ -335,7 +421,7 @@ class _CartState extends State<Cart> {
           .eq('TourID', product['product_id']);
         print(responseMT);
         name = responseMT[0]['NamaTour'];
-        price = qty * responseMT[0]['Price'] as int;
+        price = responseMT[0]['Price'] as int;
         img = responseMT[0]['image_url'];
       }
 

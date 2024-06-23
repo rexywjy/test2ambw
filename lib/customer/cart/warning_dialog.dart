@@ -16,7 +16,7 @@ class _WarningDialogState extends State<WarningDialog> {
   void initState() {
     super.initState();
     // Start a timer to automatically close the dialog after 1 second
-    Timer(Duration(seconds: 3), () {
+    Timer(Duration(seconds: 2), () {
       Navigator.of(context).pop();
     });
   }
