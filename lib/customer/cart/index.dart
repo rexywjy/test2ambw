@@ -10,6 +10,8 @@
 // import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 // import 'package:test2ambw/customer/profile.dart';
 
+import 'dart:ffi';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -43,7 +45,7 @@ class Item {
   final String name;
   final String imageUrl;
   int quantity;
-  final double price;
+  int price;
   bool isSelected;
 
   Item({
@@ -56,10 +58,12 @@ class Item {
 }
 
 class _CartState extends State<Cart> {
+  
+
   List<Item> items = [
-    Item(name: 'Item 1', imageUrl: 'https://via.placeholder.com/150', price: 10000.0),
-    Item(name: 'Item 2', imageUrl: 'https://via.placeholder.com/150', price: 20000.0),
-    Item(name: 'Item 3', imageUrl: 'https://via.placeholder.com/150', price: 15000.0),
+    Item(name: 'Item 1', imageUrl: 'https://via.placeholder.com/150', price: 10000),
+    Item(name: 'Item 2', imageUrl: 'https://via.placeholder.com/150', price: 20000),
+    Item(name: 'Item 3', imageUrl: 'https://via.placeholder.com/150', price: 15000),
   ];
 
   static String convertToIdr(dynamic number, int decimalDigit) {
@@ -75,10 +79,86 @@ class _CartState extends State<Cart> {
     return items.where((item) => item.isSelected).fold(0.0, (sum, item) => sum + (item.price * item.quantity));
   }
 
-  Future<dynamic> fetchCart() async {
-    var resp = await Supabase.instance.client.from('mcart').select();
+  Future fetchCartItems() async {
+    var response = await Supabase.instance.client
+      .from('mcart')
+      .select('*')
+      .eq('user_id', widget.username)
+      .order('cart_id', ascending: true);
+    
+    print(response);
 
+    for (var product in response) {
+      String productType = product['product_type'];
+      int qty = product['quantity'];
+      String name = '';
+      int price = 0;
+      String img = '';
+      print(productType);
+      print(qty);
 
+      if (productType == 'mhotel') {
+        var responseMH = await Supabase.instance.client
+          .from('mhotel')
+          .select()
+          .eq('HotelID', product['product_id']);
+      } else if (productType == 'mdestinations') {
+        var responseMD = await Supabase.instance.client
+          .from('mdestinations')
+          .select()
+          .eq('id', product['product_id']);
+      } else if (productType == 'mtour') {
+        var responseMT = await Supabase.instance.client
+          .from('mtour')
+          .select()
+          .eq('TourID', product['product_id']);
+      }
+    }
+
+    
+
+    // Map the response rows to Item objects
+    // List<Item> items = response.map((row) async {
+    //   final productType = row['product_type'] as String;
+    //   final qty = row['quantity'] as int;
+    //   String name = '';
+    //   int price = 0 as int;
+    //   String img = '';
+
+    //   var responseCheck = await Supabase.instance.client
+    //     .from(productType)
+    //     .select()
+    //     .eq();
+
+    //   if (productType == 'mhotel') {
+    //     // name = responseCheck[0]['NamaTour'] as String;
+    //     // price = qty * responseCheck[0]['Price'] as int;
+    //     // img = responseCheck[0]['image_url'] as String;
+    //   } else if (productType == 'mdestinations') {
+    //     name = responseCheck[0]['attraction_name'] as String;
+    //     price = qty * responseCheck[0]['Price'] as int;
+    //     img = responseCheck[0]['image_url'] as String;
+    //   } else if (productType == 'mtour') {
+    //     name = responseCheck[0]['NamaTour'] as String;
+    //     price = qty * responseCheck[0]['Price'] as int;
+    //     img = responseCheck[0]['image_url'] as String;
+    //   }
+
+    //   return Item(
+    //     name: name,
+    //     imageUrl: img,
+    //     quantity: row['quantity'] as int,
+    //     price: price,
+    //     isSelected: row['is_selected'] == 1 ? true : false,
+    //   );
+    // }).cast<Item>().toList();
+
+    // return items;
+  }
+
+  @override
+  void initState() {
+    fetchCartItems();
   }
   
   @override
