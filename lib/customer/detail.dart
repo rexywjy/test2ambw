@@ -108,7 +108,7 @@ class _DetailPageState extends State<DetailPage> {
           context: context,
           builder: (BuildContext context) {
             return SuccessDialog(
-              msg: 'Add to Cart',
+              msg: 'Success',
               msg_detail: 'Item added to your cart.',
             );
           },
@@ -128,7 +128,7 @@ class _DetailPageState extends State<DetailPage> {
             context: context,
             builder: (BuildContext context) {
               return SuccessDialog(
-                msg: 'Add to Cart',
+                msg: 'Success',
                 msg_detail: 'Item added to your cart.',
               );
             },

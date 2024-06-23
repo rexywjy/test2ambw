@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ffi';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -13,6 +14,7 @@ import 'package:test2ambw/customer/index.dart';
 import 'package:test2ambw/customer/login.dart';
 import 'package:test2ambw/customer/profile.dart';
 import 'package:intl/intl.dart';
+import 'package:test2ambw/customer/cart/warning_dialog.dart';
 
 
 class Cart extends StatefulWidget {
@@ -49,7 +51,6 @@ class Item {
 
 class _CartState extends State<Cart> {
   
-
   List<Item> items = [];
 
   static String convertToIdr(dynamic number, int decimalDigit) {
@@ -84,7 +85,7 @@ class _CartState extends State<Cart> {
         .delete()
         .eq('cart_id', cartIdMinus);
       // setState(() {
-        fetchCartItems();
+        check_avail_item();
       // });
     }
     
@@ -96,31 +97,111 @@ class _CartState extends State<Cart> {
           .select()
           .eq('cart_id', cartIdPlus);
     int currentQuantity = existingItemResponse[0]['quantity'] as int;
-    final response = await Supabase.instance.client
-      .from('mcart')
-      .update({
-        'quantity': currentQuantity + 1
-      })
-      .eq('cart_id', cartIdPlus);
+    int max_capacity = 0;
+    final check_avail;
+
+    if (existingItemResponse[0]['product_type'] == 'dhotel') {
+      check_avail = await Supabase.instance.client
+        .from('dhotel')
+        .select()
+        .eq('DHotelID', existingItemResponse[0]['product_id']);
+      max_capacity = check_avail[0]['MaxQuota'];
+    } else if (existingItemResponse[0]['product_type'] == 'mdestinations') {
+      check_avail = await Supabase.instance.client
+        .from('mdestinations')
+        .select()
+        .eq('id', existingItemResponse[0]['product_id']);
+      max_capacity = check_avail[0]['MaxQuota'];
+    } else if (existingItemResponse[0]['product_type'] == 'mtour') {
+      check_avail = await Supabase.instance.client
+        .from('mtour')
+        .select()
+        .eq('TourID', existingItemResponse[0]['product_id']);
+      max_capacity = check_avail[0]['MaxQuota'];
+    }
+
+    if (currentQuantity < max_capacity) {
+      final response = await Supabase.instance.client
+        .from('mcart')
+        .update({
+          'quantity': currentQuantity + 1
+        })
+        .eq('cart_id', cartIdPlus);
+      setState(() {
+        items.forEach((item) {
+          if (item.id == cartIdPlus) item.quantity++;
+          if (item.quantity > max_capacity) item.quantity = max_capacity;
+        });
+      });
+    }
   }
 
   Future changeSelected(cartIdSelected) async {
-     final existingItemResponse = await Supabase.instance.client
-          .from('mcart')
-          .select()
-          .eq('cart_id', cartIdSelected);
+
+    final existingItemResponse = await Supabase.instance.client
+      .from('mcart')
+      .select()
+      .eq('cart_id', cartIdSelected);
     int currentStatus = existingItemResponse[0]['is_selected'] as int;
-    final response = await Supabase.instance.client
+    int currentQuantity = existingItemResponse[0]['quantity'] as int;
+    int max_capacity = 0;
+    final check_avail;
+
+    if (existingItemResponse[0]['product_type'] == 'dhotel') {
+      check_avail = await Supabase.instance.client
+        .from('dhotel')
+        .select()
+        .eq('DHotelID', existingItemResponse[0]['product_id']);
+      max_capacity = check_avail[0]['MaxQuota'];
+    } else if (existingItemResponse[0]['product_type'] == 'mdestinations') {
+      check_avail = await Supabase.instance.client
+        .from('mdestinations')
+        .select()
+        .eq('id', existingItemResponse[0]['product_id']);
+      max_capacity = check_avail[0]['MaxQuota'];
+    } else if (existingItemResponse[0]['product_type'] == 'mtour') {
+      check_avail = await Supabase.instance.client
+        .from('mtour')
+        .select()
+        .eq('TourID', existingItemResponse[0]['product_id']);
+      max_capacity = check_avail[0]['MaxQuota'];
+    }
+
+    if (currentQuantity <= max_capacity) {
+      final response = await Supabase.instance.client
         .from('mcart')
         .update({
           'is_selected': currentStatus == 1 ? 0 : 1
         })
         .eq('cart_id', cartIdSelected);
-    setState(() {
-      items.forEach((item) {
-        if (item.id == cartIdSelected) item.isSelected = currentStatus == 1 ? false : true;
+      setState(() {
+        items.forEach((item) {
+          if (item.id == cartIdSelected) item.isSelected = currentStatus == 1 ? false : true;
+        });
       });
-    });
+    } else {
+      if (max_capacity == 0) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return WarningDialog(
+              msg: 'Check your cart!',
+              msg_detail: 'Item out of stock.',
+            );
+          },
+        );
+      } else if (max_capacity > 0 && currentQuantity > max_capacity) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return WarningDialog(
+              msg: 'Check your cart!',
+              msg_detail: "You've exceeded the maximum of stock.",
+            );
+          },
+        );
+      }
+    }
   }
 
   Future checkoutItem() async {
@@ -138,7 +219,74 @@ class _CartState extends State<Cart> {
     print('Total: ' + total.toString());
   }
 
+  Future check_avail_item() async {
+    var response = await Supabase.instance.client
+      .from('mcart')
+      .select('*')
+      .eq('user_id', widget.username)
+      .order('cart_id', ascending: true);
+
+    for (var product in response) {
+      var id = product['cart_id'];
+      String productType = product['product_type'];
+      int qty = product['quantity'];
+
+      int max_capacity = 0;
+      final check_avail;
+
+      if (productType == 'dhotel') {
+        check_avail = await Supabase.instance.client
+          .from('dhotel')
+          .select()
+          .eq('DHotelID', product['product_id']);
+        max_capacity = check_avail[0]['MaxQuota'];
+      } else if (productType == 'mdestinations') {
+        check_avail = await Supabase.instance.client
+          .from('mdestinations')
+          .select()
+          .eq('id', product['product_id']);
+        max_capacity = check_avail[0]['MaxQuota'];
+      } else if (productType == 'mtour') {
+        check_avail = await Supabase.instance.client
+          .from('mtour')
+          .select()
+          .eq('TourID', product['product_id']);
+        max_capacity = check_avail[0]['MaxQuota'];
+      }
+
+      if (qty > max_capacity) {
+        final response = await Supabase.instance.client
+          .from('mcart')
+          .update({
+            'is_selected': 0
+          })
+          .eq('cart_id', id);
+        
+        // setState(() {
+          
+        // });
+      }
+    }
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return const Center(
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.amber),
+          ),
+        );
+      },
+    );
+    fetchCartItems();
+    // if (mounted) {
+    //   Navigator.pop(context);
+    // }
+  }
+
   Future fetchCartItems() async {
+    // check_avail_item();
+    
     items.clear();
 
     var response = await Supabase.instance.client
@@ -196,13 +344,16 @@ class _CartState extends State<Cart> {
       });
       // items.add(Item(name: name, imageUrl: img, quantity: qty, price: price, isSelected: product['is_selected'] as int == 1 ? true : false));
     }
-
+    if (mounted) {
+      Navigator.pop(context);
+    }
     
   }
 
   @override
   void initState() {
-    fetchCartItems();
+    check_avail_item();
+    // fetchCartItems();
   }
   
   @override
@@ -242,7 +393,7 @@ class _CartState extends State<Cart> {
                               onChanged: (bool? value) {
                                 setState(() {
                                   changeSelected(item.id);
-                                  item.isSelected = value!;
+                                  // item.isSelected = value!;
                                 });
                               },
                             ),
@@ -286,9 +437,9 @@ class _CartState extends State<Cart> {
                               icon: Icon(Icons.add_circle_outline),
                               onPressed: () {
                                 plusQty(item.id);
-                                setState(() {
-                                  item.quantity++;
-                                });
+                                // setState(() {
+                                //   item.quantity++;
+                                // });
                               },
                             ),
                           ],

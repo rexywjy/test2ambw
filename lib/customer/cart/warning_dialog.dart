@@ -2,16 +2,16 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class SuccessDialog extends StatefulWidget {
+class WarningDialog extends StatefulWidget {
   final String msg;
   final String msg_detail;
-  const SuccessDialog({Key? key, required this.msg, required this.msg_detail}) : super(key: key);
+  const WarningDialog({Key? key, required this.msg, required this.msg_detail}) : super(key: key);
 
   @override
-  _SuccessDialogState createState() => _SuccessDialogState();
+  _WarningDialogState createState() => _WarningDialogState();
 }
 
-class _SuccessDialogState extends State<SuccessDialog> {
+class _WarningDialogState extends State<WarningDialog> {
   @override
   void initState() {
     super.initState();
@@ -34,12 +34,12 @@ class _SuccessDialogState extends State<SuccessDialog> {
               padding: EdgeInsets.all(16),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.green.withOpacity(0.2),
+                color: Colors.orange.withOpacity(0.2),
               ),
               child: Icon(
-                Icons.check_circle,
+                Icons.warning_rounded,
                 size: 80,
-                color: Colors.green,
+                color: Colors.orange,
               ),
             ),
           ),
