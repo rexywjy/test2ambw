@@ -234,7 +234,7 @@ class _CustProfileState extends State<CustProfile> {
                         title: "About", icon: Icons.info_outline_rounded),
                       const Divider(),
                       ListTile(
-                        title: Text(
+                        title: const Text(
                           "Sign out",
                           style: TextStyle(color: Colors.red, fontSize: 16, fontWeight: FontWeight.w900,)
                         ),
