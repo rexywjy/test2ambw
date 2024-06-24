@@ -84,7 +84,7 @@ class _CustProfileState extends State<CustProfile> {
       context,
       MaterialPageRoute(
           // builder: (context) => DetailScreen(note: note, isNew: isNew)),
-          builder: (context) => CustHistory()),
+          builder: (context) => CustHistory(username: widget.username)),
     );
   }
 
