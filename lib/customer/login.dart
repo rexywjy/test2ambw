@@ -1,5 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fauth;
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:test2ambw/components/errordialog.dart';
 import 'package:test2ambw/components/squaretile.dart';
@@ -42,6 +43,44 @@ class _LoginPageState extends State<LoginPage> {
     'public_anon_key',
   );
 
+  static Future<fauth.User?> signInWithGoogle({required BuildContext context}) async {
+    fauth.FirebaseAuth auth = fauth.FirebaseAuth.instance;
+    fauth.User? user;
+
+    final GoogleSignIn googleSignIn = GoogleSignIn();
+
+    final GoogleSignInAccount? googleSignInAccount =
+        await googleSignIn.signIn();
+
+    if (googleSignInAccount != null) {
+      final GoogleSignInAuthentication googleSignInAuthentication =
+          await googleSignInAccount.authentication;
+
+      final fauth.AuthCredential credential = fauth.GoogleAuthProvider.credential(
+        accessToken: googleSignInAuthentication.accessToken,
+        idToken: googleSignInAuthentication.idToken,
+      );
+
+      try {
+        final fauth.UserCredential userCredential =
+            await auth.signInWithCredential(credential);
+
+        user = userCredential.user;
+      } on fauth.FirebaseAuthException catch (e) {
+        if (e.code == 'account-exists-with-different-credential') {
+          // handle the error here
+        }
+        else if (e.code == 'invalid-credential') {
+          // handle the error here
+        }
+      } catch (e) {
+        // handle the error here
+      }
+    }
+
+    return user;
+  }
+
   Future<bool> checkIfCustomer(String userId) async {
     try{
       final response = await Supabase.instance.client
@@ -55,6 +94,17 @@ class _LoginPageState extends State<LoginPage> {
       return false;
     }
   }
+
+  static SnackBar customSnackBar({required String content}) {
+    return SnackBar(
+      backgroundColor: Colors.black,
+      content: Text(
+        content,
+        style: TextStyle(color: Colors.redAccent, letterSpacing: 0.5),
+      ),
+    );
+  }
+
 
   // sign in user button method
   void signInUser() async {
@@ -147,7 +197,7 @@ class _LoginPageState extends State<LoginPage> {
       }
       final theemail = sup[0]['Email'];
 
-      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+      final credential = await fauth.FirebaseAuth.instance.signInWithEmailAndPassword(
         email: theemail,
         password: passwordController.text,
       );
@@ -155,7 +205,7 @@ class _LoginPageState extends State<LoginPage> {
       if(mounted){
         Navigator.pop(context);
       }
-    } on FirebaseAuthException catch (e) {
+    } on fauth.FirebaseAuthException catch (e) {
       // Handle the error, show a message, etc.
       // print('Error: $e');
       // Dismiss the loading circle
